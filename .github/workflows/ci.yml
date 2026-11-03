@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      # pnpm's version comes from "packageManager" in package.json
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Type-check Svelte and TypeScript
+        run: pnpm check
+
+      - name: Type-check Convex functions
+        run: npx tsc -p src/convex --noEmit
+
+      # The build only needs these to exist; nothing here talks to a real deployment
+      - name: Build
+        run: pnpm build
+        env:
+          PUBLIC_CONVEX_URL: https://example.convex.cloud
+          PUBLIC_CONVEX_SITE_URL: https://example.convex.site

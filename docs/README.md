@@ -12,6 +12,7 @@ code came from the `@auth/svelte` jsrepo registry (see `jsrepo.config.ts`).
 | [05 – Configuration](./05-configuration.md) | Feature flags, sign-in providers, email, branding, deployment |
 | [06 – Phone sign-in](./06-phone-otp.md) | Phone OTP architecture and the textbee → WhatsApp/Truecaller → Fast2SMS rollout |
 | [07 – Email verification](./07-email-verification.md) | Resend setup, the verification flow, rate limits, troubleshooting |
+| [08 – Environments and deployment](./08-environments-and-deployment.md) | Local / staging / production, the Vercel + Convex pipeline, CI, moving to production |
 
 ## Stack
 

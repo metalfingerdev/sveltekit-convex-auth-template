@@ -7,6 +7,7 @@ A full-stack starter on current versions, with sign-in built for Indian users:
 - **Phone OTP sign-in** for Indian mobiles (`+91`), delivered by textbee (SMS from an Android phone), WhatsApp or Fast2SMS (DLT), with fallback between channels, rate limits and a delivery log
 - **Email verification** through Resend, with resend button, rate limits and placeholder-email protection for phone-only accounts
 - Email + password, social providers, organizations, admin dashboard and API keys, each behind a flag in `src/convex/auth.constants.ts`
+- **Deploys to Vercel** (Mumbai region) with the Convex backend, plus a GitHub Actions CI check on every pull request
 
 ## Quick start
 
@@ -46,5 +47,6 @@ Start at [docs/README.md](./docs/README.md):
 | [05 – Configuration](./docs/05-configuration.md) | Feature flags, providers, deployment |
 | [06 – Phone sign-in](./docs/06-phone-otp.md) | OTP channels, DLT, WhatsApp, Truecaller plan |
 | [07 – Email verification](./docs/07-email-verification.md) | Resend setup and the verification flow |
+| [08 – Environments and deployment](./docs/08-environments-and-deployment.md) | Vercel + Convex pipeline, CI, staging vs production |
 
 `MIGRATION_TASKS.md` lists SvelteKit 3 migration items still to review.

@@ -2,6 +2,7 @@
   import { resolve } from "$app/paths";
   import "../app.css";
   import favicon from "#lib/assets/favicon.svg";
+  import { PUBLIC_APP_ENV } from "$app/env/public";
 
   import { createSvelteAuthClient } from "@mmailaender/convex-better-auth-svelte/svelte";
   import { authClient } from "#lib/auth/api/auth-client.js";
@@ -39,6 +40,14 @@
         class="mr-auto min-w-0 truncate text-xl font-bold text-orange-500 sm:text-2xl"
         >Svelte</a
       >
+      {#if PUBLIC_APP_ENV === "staging"}
+        <span
+          class="badge preset-filled-warning-500 text-xs font-semibold uppercase"
+          title="This is the staging site, not production"
+        >
+          Staging
+        </span>
+      {/if}
       {#if AUTH_CONSTANTS.organizations}
         <OrganizationSwitcher initialData={data.initialData} />
       {/if}

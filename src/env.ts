@@ -10,5 +10,11 @@ export const variables = defineEnvVars({
 		description: 'Convex HTTP actions URL (`*.convex.site`) that serves the Better Auth routes',
 		public: true,
 		static: true
+	},
+	PUBLIC_APP_ENV: {
+		description: 'Set to `staging` on the staging site to show a "Staging" badge. Leave unset in production',
+		public: true,
+		static: true,
+		schema: (value) => value || undefined
 	}
 });

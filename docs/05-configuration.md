@@ -86,22 +86,10 @@ plugin that adds tables or fields, also:
   [local install guide](https://labs.convex.dev/better-auth/features/local-install). Put custom
   indexes in `betterAuth/schema.ts` so they survive regeneration.
 
-## Production deployment
+## Deployment
 
-1. **Convex**: `npx convex deploy` (or set `CONVEX_DEPLOY_KEY` in CI). Set all the env vars from
-   [02 – Getting started](./02-getting-started.md) on the **prod** deployment, with your real
-   domain:
-   ```sh
-   npx convex env set --prod BETTER_AUTH_ALLOWED_HOSTS "example.com,www.example.com"
-   npx convex env set --prod BETTER_AUTH_FALLBACK_URL "https://example.com"
-   ```
-2. **SvelteKit**: the project uses `adapter-auto`, which works on Vercel, Netlify, Cloudflare and
-   similar hosts. Set `PUBLIC_CONVEX_URL` and `PUBLIC_CONVEX_SITE_URL` to the prod deployment's
-   URLs. On Vercel or Netlify the build command can be
-   `npx convex deploy --cmd 'pnpm build'`, which injects the URL.
-3. **OAuth apps**: add the production callback URLs.
-4. For preview deployments, add their host pattern (e.g. `*.vercel.app`) to
-   `BETTER_AUTH_ALLOWED_HOSTS`.
+Environments, the Vercel + Convex pipeline, CI and the checklist for moving to production are in
+[08 – Environments and deployment](./08-environments-and-deployment.md).
 
 ## Security notes
 

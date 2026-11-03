@@ -1,0 +1,5 @@
+{
+	"$schema": "https://openapi.vercel.sh/vercel.json",
+	"buildCommand": "npx convex deploy --cmd 'pnpm build' --cmd-url-env-var-name PUBLIC_CONVEX_URL",
+	"ignoreCommand": "[ \"$VERCEL_GIT_COMMIT_REF\" != \"main\" ]"
+}

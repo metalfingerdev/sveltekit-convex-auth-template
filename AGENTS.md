@@ -21,6 +21,7 @@ email verification. See `README.md` and `docs/README.md`.
 - Check with `pnpm check` and `npx tsc -p src/convex --noEmit`; both must pass.
 - Never accept a `userId` argument for authorization; derive the user on the server.
 - Secrets live in Convex env vars, never in the repo.
+- Deploys: merging to `main` deploys through Vercel (`vercel.json`); CI runs on every PR. See `docs/08-environments-and-deployment.md`.
 
 ## Skills
 
