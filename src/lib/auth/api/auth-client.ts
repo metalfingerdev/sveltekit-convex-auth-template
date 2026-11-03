@@ -1,0 +1,26 @@
+import { createAuthClient } from 'better-auth/svelte';
+import { convexClient } from '@convex-dev/better-auth/client/plugins';
+import {
+	adminClient,
+	emailOTPClient,
+	organizationClient,
+	magicLinkClient,
+	deviceAuthorizationClient,
+	phoneNumberClient
+} from 'better-auth/client/plugins';
+import { apiKeyClient } from '@better-auth/api-key/client';
+
+import { AUTH_CONSTANTS } from '#convex/auth.constants.js';
+
+export const authClient = createAuthClient({
+	plugins: [
+		convexClient(),
+		...(AUTH_CONSTANTS.organizations ? [organizationClient()] : []),
+		...(AUTH_CONSTANTS.providers.emailOTP ? [emailOTPClient()] : []),
+		...(AUTH_CONSTANTS.providers.magicLink ? [magicLinkClient()] : []),
+		...(AUTH_CONSTANTS.providers.phoneOTP ? [phoneNumberClient()] : []),
+		...(AUTH_CONSTANTS.apiKeys ? [apiKeyClient()] : []),
+		...(AUTH_CONSTANTS.deviceAuthorization ? [deviceAuthorizationClient()] : []),
+		...(AUTH_CONSTANTS.admin ? [adminClient()] : [])
+	]
+});

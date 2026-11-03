@@ -1,0 +1,5 @@
+engineStrict: true
+allowBuilds:
+  esbuild: true
+minimumReleaseAgeExclude:
+  - '@ark-ui/svelte@5.25.1'

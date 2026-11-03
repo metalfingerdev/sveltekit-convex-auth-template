@@ -1,0 +1,20 @@
+<script lang="ts">
+	import { Select as SelectPrimitive } from '@ark-ui/svelte/select';
+	import { cn } from '../../utils.js';
+
+	let {
+		ref = $bindable(null),
+		class: className,
+		children,
+		...restProps
+	}: SelectPrimitive.ItemGroupLabelProps = $props();
+</script>
+
+<SelectPrimitive.ItemGroupLabel
+	bind:ref
+	data-slot="select-group-heading"
+	class={cn('text-muted-foreground px-2 py-1.5 text-xs', className)}
+	{...restProps}
+>
+	{@render children?.()}
+</SelectPrimitive.ItemGroupLabel>
