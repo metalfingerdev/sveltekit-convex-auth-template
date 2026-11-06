@@ -4,8 +4,8 @@
 	import * as Drawer from '../../primitives/ui/drawer/index.js';
 	import * as Avatar from '../../primitives/ui/avatar/index.js';
 	import * as Select from '../../primitives/ui/select/index.js';
-	import { Portal } from '@ark-ui/svelte/portal';
-	import { createListCollection } from '@ark-ui/svelte/select';
+	import { Portal } from 'bits-ui';
+	import { createListCollection } from '../../primitives/ui/select/index.js';
 	import { toast } from 'svelte-sonner';
 	// Icons
 	import SearchIcon from '@lucide/svelte/icons/search';

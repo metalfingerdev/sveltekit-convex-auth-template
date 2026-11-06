@@ -1,177 +1,152 @@
 <script lang="ts">
-	// Primitives
-	import * as Popover from '../../primitives/ui/popover/index.js';
-	import * as Dialog from '../../primitives/ui/dialog/index.js';
-	import * as Avatar from '../../primitives/ui/avatar/index.js';
-	import WaitsForHydration from '../../primitives/ui/WaitsForHydration.svelte';
-	// Icons
-	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
-	// Components
-	import SignIn from '../../auth/ui/SignIn.svelte';
-	import SignOutButton from '../../auth/ui/SignOutButton.svelte';
+  import { resolve } from "$app/paths";
+  import { refreshAll } from "$app/navigation";
+  import { Popover, Avatar } from "bits-ui";
+  import { useAuth } from "@mmailaender/convex-better-auth-svelte/svelte";
+  import { useQuery } from "convex-svelte";
+  import type { Snippet } from "svelte";
 
-	// SvelteKit navigation/state
-	import { page } from '$app/state';
-	import { gotoApp } from '../../primitives/utils/navigation.js';
+  import { getAuthContext } from "#lib/auth/context.svelte.js";
+  import type { GetActiveUserType } from "#lib/auth/types.js";
+  import SignIn from "#lib/auth/ui/SignIn.svelte";
+  import { useIsAppAdmin } from "#lib/admin/api/admin.svelte.js";
+  import { ADMIN_ROUTE } from "#lib/admin/utils/admin.constants.js";
+  import Button from "#lib/ui/Button.svelte";
+  import Modal from "#lib/ui/Modal.svelte";
 
-	// API
-	import { useAuth } from '@mmailaender/convex-better-auth-svelte/svelte';
-	import { useQuery } from 'convex-svelte';
-	import { getAuthContext } from '../../auth/context.svelte.js';
-	const { api } = getAuthContext();
+  // The signed-in user's menu, or a Sign in button. The name opens the account page.
+  let {
+    initialData,
+    signInTrigger,
+  }: {
+    initialData?: { activeUser?: GetActiveUserType };
+    /** Replaces the default Sign in button. `open` launches the sign-in modal. */
+    signInTrigger?: Snippet<[{ open: () => void }]>;
+  } = $props();
 
-	// Constants
-	import { DIALOG_KEY } from '../utils/user.constants.js';
+  const auth = useAuth();
+  const { api, authClient, authConstants } = getAuthContext();
+  const admin = useIsAppAdmin();
 
-	// Types
-	import type { Snippet } from 'svelte';
-	import type { PopoverRootProps } from '@ark-ui/svelte';
-	import type { GetActiveUserType, ListAccountsType } from '../../auth/types.js';
+  const activeUserResponse = useQuery(
+    api.users.queries.getActiveUser,
+    () => (auth.isAuthenticated ? {} : "skip"),
+    () => ({ initialData: initialData?.activeUser }),
+  );
+  const user = $derived(activeUserResponse?.data);
 
-	// Props
-	const {
-		popoverPlacement = 'bottom',
-		initialData,
-		signInTrigger
-	}: {
-		popoverPlacement?: NonNullable<PopoverRootProps['positioning']>['placement'];
-		initialData?: {
-			activeUser?: GetActiveUserType;
-			accountList?: ListAccountsType;
-		};
-		/** Optional replacement for the default sign-in button. Receives `open` to
-		 * launch the UserButton-owned sign-in dialog. */
-		signInTrigger?: Snippet<[{ open: () => void }]>;
-	} = $props();
+  let menuOpen = $state(false);
+  let signInOpen = $state(false);
 
-	// Auth
-	const auth = useAuth();
+  const initials = $derived(
+    (user?.name ?? "")
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((word) => word[0]?.toUpperCase())
+      .join("") || "?",
+  );
+  // A phone-only sign-up has no email, only a placeholder one
+  const secondLine = $derived(
+    user?.email && !user.email.endsWith(".invalid") ? user.email : "",
+  );
 
-	// Queries
-	const activeUserResponse = useQuery(
-		api.users.queries.getActiveUser,
-		() => (auth.isAuthenticated ? {} : 'skip'),
-		() => ({
-			initialData: initialData?.activeUser
-		})
-	);
-	const activeUser = $derived(activeUserResponse?.data);
-
-	// State
-	let userPopoverOpen = $state(false);
-	let signInDialogOpen = $state(false);
-	let avatarStatus = $state('');
-
-	// Ensure SignIn form resets every time the dialog opens
-	let signInKey = $state(0);
-	let prevSignInDialogOpen = false;
-
-	/**
-	 * Open profile modal and close popover (via shallow routing)
-	 */
-	function openProfileModal(): void {
-		userPopoverOpen = false;
-		const url = new URL(page.url.href);
-		if (url.searchParams.get('dialog') !== DIALOG_KEY) {
-			url.searchParams.set('dialog', DIALOG_KEY);
-			void gotoApp(url, {
-				replace: false,
-				reset: false
-			});
-		}
-	}
-
-	// Bump key when dialog transitions from closed -> open to remount SignIn
-	$effect(() => {
-		if (signInDialogOpen && !prevSignInDialogOpen) {
-			signInKey += 1;
-		}
-		prevSignInDialogOpen = signInDialogOpen;
-	});
+  const signOut = async () => {
+    const result = await authClient.signOut();
+    if (result.data?.success) {
+      menuOpen = false;
+      // Refreshes all data and runs the server hooks again
+      refreshAll();
+    }
+  };
 </script>
 
-{#if auth.isAuthenticated && activeUser}
-	<Popover.Root
-		bind:open={userPopoverOpen}
-		positioning={{
-			placement: popoverPlacement,
-			strategy: 'absolute',
-			offset: { mainAxis: 8, crossAxis: 0 }
-		}}
-	>
-		<WaitsForHydration>
-			<Popover.Trigger class="flex size-10 items-center justify-center rounded-full">
-				<Avatar.Root
-					class="ring-surface-100-900 size-9 ring-0 duration-200 ease-out ring-inset hover:ring-4"
-					onStatusChange={(details) => (avatarStatus = details.status)}
-				>
-					<Avatar.Image src={activeUser?.image} alt={activeUser?.name} />
-					<Avatar.Fallback>
-						{#if avatarStatus === 'loading'}
-							<div class="placeholder-circle size-full animate-pulse"></div>
-						{:else}
-							<Avatar.Marble name={activeUser?.name} />
-						{/if}
-					</Avatar.Fallback>
-				</Avatar.Root>
-			</Popover.Trigger>
-		</WaitsForHydration>
-		<Popover.Content>
-			<div class="flex flex-col gap-1 p-0">
-				<button
-					class="bg-surface-50-950 hover:bg-surface-100-900 rounded-container flex flex-row items-center gap-4 p-3 pr-6 duration-200 ease-in-out"
-					onclick={openProfileModal}
-				>
-					<Avatar.Root class="size-12">
-						<Avatar.Image src={activeUser?.image} alt={activeUser?.name} />
-						<Avatar.Fallback>
-							<Avatar.Marble name={activeUser?.name} />
-						</Avatar.Fallback>
-					</Avatar.Root>
-					<div class="flex flex-1 flex-col gap-0 overflow-hidden">
-						<p class="truncate text-left text-sm font-medium">{activeUser?.name}</p>
-						<p class="truncate text-left text-xs opacity-75">
-							{activeUser?.email}
-						</p>
-					</div>
-					<ChevronRightIcon class="size-4" />
-				</button>
-				<SignOutButton
-					onSuccess={() => (userPopoverOpen = false)}
-					class="btn preset-faded-surface-50-950 hover:bg-surface-200-800 h-10 justify-between gap-1 text-sm"
-				/>
-			</div>
-		</Popover.Content>
-	</Popover.Root>
+{#if auth.isAuthenticated && user}
+  <Popover.Root bind:open={menuOpen}>
+    <Popover.Trigger class="ui-account-trigger" aria-label="Account menu">
+      <Avatar.Root class="ui-avatar">
+        <Avatar.Image src={user.image} alt="" class="ui-avatar-image" />
+        <Avatar.Fallback class="ui-account-initials">{initials}</Avatar.Fallback>
+      </Avatar.Root>
+    </Popover.Trigger>
+    <Popover.Portal>
+      <Popover.Content class="ui-account-menu" align="end" sideOffset={8}>
+        <a href={resolve("/account")} class="who" onclick={() => (menuOpen = false)}>
+          <Avatar.Root class="ui-avatar big">
+            <Avatar.Image src={user.image} alt="" class="ui-avatar-image" />
+            <Avatar.Fallback class="ui-account-initials">{initials}</Avatar.Fallback>
+          </Avatar.Root>
+          <span class="names">
+            <b>{user.name}</b>
+            {#if secondLine}<span class="small">{secondLine}</span>{/if}
+          </span>
+        </a>
+        {#if authConstants.admin && admin.isAppAdmin}
+          <a href={resolve(ADMIN_ROUTE)} class="item" onclick={() => (menuOpen = false)}>
+            Admin
+          </a>
+        {/if}
+        <button type="button" class="item" onclick={signOut}>Sign out</button>
+      </Popover.Content>
+    </Popover.Portal>
+  </Popover.Root>
 {:else if auth.isLoading || auth.isAuthenticated}
-	<div class="flex size-10 items-center justify-center">
-		<div class="placeholder-circle size-9 animate-pulse"></div>
-	</div>
+  <span class="waiting bone" aria-hidden="true"></span>
 {:else if signInTrigger}
-	{@render signInTrigger({ open: () => (signInDialogOpen = true) })}
+  {@render signInTrigger({ open: () => (signInOpen = true) })}
 {:else}
-	<WaitsForHydration>
-		<button class="btn preset-filled-primary-500" onclick={() => (signInDialogOpen = true)}>
-			Sign in
-		</button>
-	</WaitsForHydration>
+  <Button onclick={() => (signInOpen = true)}>Sign in</Button>
 {/if}
-<!-- SignIn Dialog - Outside of auth wrappers to prevent disappearing during registration -->
-<Dialog.Root
-	bind:open={signInDialogOpen}
-	onOpenChange={(status) => {
-		// When dialog closes, bump the key so next open is a fresh mount
-		if (!status.open) {
-			signInKey += 1;
-		}
-	}}
->
-	<Dialog.Content
-		class="sm:rounded-container h-full max-h-dvh w-full rounded-none sm:h-auto sm:max-h-[90vh] sm:w-4xl sm:max-w-md"
-	>
-		{#key signInKey}
-			<SignIn onSignIn={() => (signInDialogOpen = false)} class="p-2 sm:p-8" />
-		{/key}
-		<Dialog.CloseX />
-	</Dialog.Content>
-</Dialog.Root>
+
+<Modal bind:open={signInOpen} title="Sign in" closeLabel="Close">
+  <SignIn onSignIn={() => (signInOpen = false)} />
+</Modal>
+
+<style lang="postcss">
+  @reference 'src/app.css';
+
+  .waiting {
+    @apply block size-10 rounded-full;
+  }
+  .who {
+    @apply flex items-center gap-3 rounded-base p-2 text-left;
+  }
+  .names {
+    @apply flex min-w-0 flex-1 flex-col;
+  }
+  .names b {
+    @apply truncate;
+  }
+  .small {
+    @apply truncate text-xs text-text-muted;
+  }
+  .item {
+    @apply flex min-h-11 items-center rounded-base px-2 text-left font-semibold;
+  }
+
+  /* Bits renders these elements itself, so they are styled with :global */
+  :global(.ui-account-trigger) {
+    @apply grid size-11 place-items-center rounded-full;
+  }
+  :global(.ui-avatar) {
+    --fill: var(--color-secondary);
+    @apply edge-flat relative grid size-9 place-items-center overflow-hidden rounded-full bg-secondary text-sm font-extrabold text-on-secondary;
+  }
+  :global(.ui-avatar.big) {
+    @apply size-12 shrink-0;
+  }
+  :global(.ui-account-initials) {
+    @apply grid size-full place-items-center;
+  }
+  :global(.ui-avatar-image) {
+    @apply size-full object-cover;
+  }
+  :global(.ui-account-menu) {
+    --fill: var(--color-foreground);
+    @apply edge z-30 flex w-72 max-w-[calc(100vw-1rem)] flex-col gap-1 rounded-container bg-foreground p-2 text-text;
+  }
+  :global(.ui-account-menu .who:hover),
+  :global(.ui-account-menu .item:hover) {
+    @apply bg-midground;
+  }
+</style>

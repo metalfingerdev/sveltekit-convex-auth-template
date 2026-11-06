@@ -5,6 +5,8 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
+	// bits-ui ships .svelte files, so it has to be compiled with the app on the server too
+	ssr: { noExternal: ['bits-ui'] },
 	plugins: [
 		tailwindcss(),
 		sveltekit({

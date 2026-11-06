@@ -1,17 +1,9 @@
 <script lang="ts">
-	import { Dialog as DialogPrimitive } from '@ark-ui/svelte/dialog';
+	import { Dialog } from 'bits-ui';
+	import type { ComponentProps } from 'svelte';
 	import { cn } from '../../utils.js';
 
-	let {
-		ref = $bindable(null),
-		class: className,
-		...restProps
-	}: DialogPrimitive.DescriptionProps = $props();
+	let { ref = $bindable(null), class: className, ...restProps }: ComponentProps<typeof Dialog.Description> = $props();
 </script>
 
-<DialogPrimitive.Description
-	bind:ref
-	data-scope="drawer"
-	class={cn('text-surface-600-400 text-sm', className)}
-	{...restProps}
-/>
+<Dialog.Description bind:ref class={cn('ui-dialog-text', className)} {...restProps} />

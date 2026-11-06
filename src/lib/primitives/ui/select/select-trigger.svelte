@@ -1,34 +1,37 @@
 <script lang="ts">
-	import { Select as SelectPrimitive } from '@ark-ui/svelte/select';
+	import { Select } from 'bits-ui';
+	import { getContext, type ComponentProps } from 'svelte';
 	import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
-	import { cn, type WithoutChild } from '../../utils.js';
+	import { cn } from '../../utils.js';
+	import { SELECT, type SelectItem } from './select-root.svelte';
 
 	let {
 		ref = $bindable(null),
 		class: className,
-		size = 'default',
 		placeholder,
 		...restProps
-	}: WithoutChild<SelectPrimitive.TriggerProps> & {
-		size?: 'sm' | 'default';
-		placeholder?: string;
-	} = $props();
+	}: ComponentProps<typeof Select.Trigger> & { placeholder?: string } = $props();
+
+	const select = getContext<{ items: SelectItem[]; value: string | undefined }>(SELECT);
+	const label = $derived(select.items.find((item) => item.value === select.value)?.label);
 </script>
 
-<SelectPrimitive.Control>
-	<SelectPrimitive.Trigger
-		bind:ref
-		data-slot="select-trigger"
-		data-size={size}
-		class={cn(
-			"data-[placeholder]:text-muted-foreground [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 border-surface-400-600 rounded-base hover:border-surface-500 flex w-fit items-center justify-between gap-2 border bg-transparent px-3 py-2 text-sm whitespace-nowrap transition-[color,box-shadow] outline-none select-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-			className
-		)}
-		{...restProps}
-	>
-		<SelectPrimitive.ValueText {placeholder} />
-		<SelectPrimitive.Indicator>
-			<ChevronDownIcon class="size-4" />
-		</SelectPrimitive.Indicator>
-	</SelectPrimitive.Trigger>
-</SelectPrimitive.Control>
+<Select.Trigger bind:ref class={cn('ui-select-trigger', className)} {...restProps}>
+	<span class:muted={!label}>{label ?? placeholder ?? ''}</span>
+	<ChevronDownIcon class="size-4 shrink-0" aria-hidden="true" />
+</Select.Trigger>
+
+<style lang="postcss">
+	@reference 'src/app.css';
+
+	:global(.ui-select-trigger) {
+		--fill: var(--color-foreground);
+		@apply edge-flat flex min-h-9 w-fit items-center justify-between gap-2 rounded-base bg-foreground px-3 text-sm whitespace-nowrap text-text select-none;
+	}
+	:global(.ui-select-trigger:disabled) {
+		@apply cursor-not-allowed opacity-50;
+	}
+	.muted {
+		@apply text-text-muted;
+	}
+</style>

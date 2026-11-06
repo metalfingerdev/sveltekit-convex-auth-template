@@ -1,33 +1,27 @@
 <script lang="ts">
+	import { DropdownMenu } from 'bits-ui';
+	import type { ComponentProps } from 'svelte';
 	import { cn } from '../../utils.js';
-	import { Menu as MenuPrimitive } from '@ark-ui/svelte';
+
 	let {
 		ref = $bindable(null),
-		positionerProps,
 		class: className,
+		children,
 		...restProps
-	}: MenuPrimitive.ContentProps & {
-		positionerProps?: MenuPrimitive.PositionerProps;
-	} = $props();
+	}: ComponentProps<typeof DropdownMenu.Content> = $props();
 </script>
 
-<MenuPrimitive.Positioner {...positionerProps}>
-	<MenuPrimitive.Content
-		bind:ref
-		data-slot="menu-content"
-		class={cn(
-			'bg-surface-50 dark:bg-surface-900 ' +
-				'data-[state=open]:animate-in data-[state=closed]:animate-out ' +
-				'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 ' +
-				'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 ' +
-				'[&[data-placement^="bottom"]]:slide-in-from-top-2 ' +
-				'[&[data-placement^="left"]]:slide-in-from-right-2 ' +
-				'[&[data-placement^="right"]]:slide-in-from-left-2 ' +
-				'[&[data-placement^="top"]]:slide-in-from-bottom-2 ' +
-				'z-50 max-h-[var(--available-height)] min-w-[8rem] origin-[var(--transform-origin)] ' +
-				'rounded-container border-surface-100-900/50 overflow-x-hidden overflow-y-auto border  p-1 shadow-md outline-none',
-			className
-		)}
-		{...restProps}
-	/>
-</MenuPrimitive.Positioner>
+<DropdownMenu.Portal>
+	<DropdownMenu.Content bind:ref align="end" sideOffset={6} class={cn('ui-menu', className)} {...restProps}>
+		{@render children?.()}
+	</DropdownMenu.Content>
+</DropdownMenu.Portal>
+
+<style lang="postcss">
+	@reference 'src/app.css';
+
+	:global(.ui-menu) {
+		--fill: var(--color-foreground);
+		@apply edge z-50 min-w-32 overflow-x-hidden overflow-y-auto rounded-container bg-foreground p-1 text-text outline-none;
+	}
+</style>

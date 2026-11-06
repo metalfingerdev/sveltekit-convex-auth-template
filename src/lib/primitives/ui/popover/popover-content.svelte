@@ -1,25 +1,41 @@
 <script lang="ts">
+	import { Popover } from 'bits-ui';
+	import { getContext, type ComponentProps } from 'svelte';
 	import { cn } from '../../utils.js';
-	import { Popover as PopoverPrimitive } from '@ark-ui/svelte/popover';
+	import { PLACEMENT } from './popover-root.svelte';
 
 	let {
 		ref = $bindable(null),
 		class: className,
-		positionerProps,
+		children,
 		...restProps
-	}: PopoverPrimitive.ContentProps & {
-		positionerProps?: PopoverPrimitive.PositionerProps;
-	} = $props();
+	}: ComponentProps<typeof Popover.Content> = $props();
+
+	const placement = getContext<() => string>(PLACEMENT)?.() ?? 'bottom';
+	const [side, align] = placement.split('-') as [
+		'top' | 'bottom' | 'left' | 'right',
+		'start' | 'end' | undefined
+	];
 </script>
 
-<PopoverPrimitive.Positioner {...positionerProps}>
-	<PopoverPrimitive.Content
+<Popover.Portal>
+	<Popover.Content
 		bind:ref
-		data-slot="popover-content"
-		class={cn(
-			'bg-surface-200-800 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2 rounded-container z-50 w-80 max-w-[90svw] p-1 outline-hidden',
-			className
-		)}
+		{side}
+		align={align ?? 'center'}
+		sideOffset={8}
+		class={cn('ui-popover', className)}
 		{...restProps}
-	/>
-</PopoverPrimitive.Positioner>
+	>
+		{@render children?.()}
+	</Popover.Content>
+</Popover.Portal>
+
+<style lang="postcss">
+	@reference 'src/app.css';
+
+	:global(.ui-popover) {
+		--fill: var(--color-foreground);
+		@apply edge z-50 w-80 max-w-[90svw] rounded-container bg-foreground p-1 text-text outline-hidden;
+	}
+</style>

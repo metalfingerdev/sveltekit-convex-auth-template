@@ -1,19 +1,20 @@
 <script lang="ts">
-	import { Tabs as TabsPrimitive } from '@ark-ui/svelte/tabs';
+	import { Tabs } from 'bits-ui';
+	import type { ComponentProps } from 'svelte';
 	import { cn } from '../../utils.js';
 
-	let { ref = $bindable(null), class: className, ...restProps }: TabsPrimitive.ListProps = $props();
+	let { ref = $bindable(null), class: className, ...restProps }: ComponentProps<typeof Tabs.List> = $props();
 </script>
 
-<TabsPrimitive.List
-	bind:ref
-	data-slot="tabs-list"
-	class={cn(
-		'text-surface-700-300 rounded-base bg-transparent',
-		'inline-flex items-center justify-center gap-1',
-		'data-[orientation=horizontal]:w-fit',
-		'data-[orientation=vertical]:w-full data-[orientation=vertical]:flex-col data-[orientation=vertical]:items-start data-[orientation=vertical]:justify-start',
-		className
-	)}
-	{...restProps}
-/>
+<Tabs.List bind:ref class={cn('ui-tab-list', className)} {...restProps} />
+
+<style lang="postcss">
+	@reference 'src/app.css';
+
+	:global(.ui-tab-list) {
+		@apply inline-flex w-fit items-center justify-center gap-1;
+	}
+	:global([data-orientation='vertical'] > .ui-tab-list) {
+		@apply w-full flex-col items-start justify-start;
+	}
+</style>

@@ -1,4 +1,3 @@
-import type { AvatarRootProps, DialogContentProps } from '@ark-ui/svelte';
 import type { Snippet } from 'svelte';
 import type { CropperProps } from 'svelte-easy-crop';
 import type { HTMLAttributes, HTMLInputAttributes } from 'svelte/elements';
@@ -28,7 +27,7 @@ export type ImageCropperRootPropsWithoutHTML = WithChildren<{
 
 export type ImageCropperRootProps = ImageCropperRootPropsWithoutHTML & HTMLInputAttributes;
 
-export type ImageCropperDialogProps = DialogContentProps;
+export type ImageCropperDialogProps = { class?: string; children?: Snippet };
 
 export type ImageCropperCropperProps = Omit<Partial<CropperProps>, 'oncropcomplete' | 'image'>;
 
@@ -43,8 +42,7 @@ export type ImageCropperPreviewPropsWithoutHTML = {
 	child?: Snippet<[{ src: string }]>;
 };
 
-export type ImageCropperPreviewProps = ImageCropperPreviewPropsWithoutHTML &
-	WithoutChild<AvatarRootProps>;
+export type ImageCropperPreviewProps = ImageCropperPreviewPropsWithoutHTML & { class?: string };
 
 export type ImageCropperUploadTriggerPropsWithoutHTML = WithChildren<{
 	ref?: HTMLLabelElement | null;

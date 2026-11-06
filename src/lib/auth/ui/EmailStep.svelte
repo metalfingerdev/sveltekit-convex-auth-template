@@ -5,6 +5,9 @@
 	// API
 	import { useConvexClient } from 'convex-svelte';
 	import { getAuthContext } from '../context.svelte.js';
+	import Button from '#lib/ui/Button.svelte';
+	import Field from '#lib/ui/Field.svelte';
+	import Spinner from '#lib/ui/Spinner.svelte';
 	const { api } = getAuthContext();
 
 	type AuthMethod = 'password' | 'emailOTP' | 'magicLink';
@@ -74,9 +77,8 @@
 	}
 </script>
 
-<div class="flex flex-col gap-8">
-	<div class="flex flex-col">
-		<label class="label" for="email">Email</label>
+<div class="form">
+	<Field label="Email">
 		<input
 			id="email"
 			name="email"
@@ -84,94 +86,84 @@
 			autocomplete="email"
 			value={email}
 			oninput={(e) => onEmailChange(e.currentTarget.value)}
-			class="input preset-filled-surface-200 text-sm"
 			placeholder="Enter your email"
 			required
 			disabled={submitting || validatingEmail}
 		/>
-	</div>
+	</Field>
 
 	{#if availableMethods.length === 1}
 		<!-- Single method available -->
-		<button
-			type="button"
+		<Button
+			variant="primary"
+			large
+			block
 			onclick={() => handleMethodClick(availableMethods[0])}
-			class="btn preset-filled w-full"
 			disabled={submitting || validatingEmail || !email}
 		>
 			{#if validatingEmail}
-				<div class="flex items-center gap-2">
-					<div
-						class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
-					></div>
-					{validatingEmailMethod === 'password' ? 'Verifying...' : 'Sending...'}
-				</div>
+				<Spinner /> {validatingEmailMethod === 'password' ? 'Verifying...' : 'Sending...'}
 			{:else}
 				{getSingleMethodButtonText()}
 			{/if}
-		</button>
+		</Button>
 	{:else}
 		<!-- Multiple methods available -->
-		<div class="flex flex-col gap-2">
+		<div class="actions">
 			{#if availableMethods.includes('password')}
-				<button
-					type="button"
+				<Button
+					variant="primary"
+					large
+					block
 					onclick={() => handleMethodClick('password')}
-					class="btn preset-filled w-full"
 					disabled={submitting || validatingEmail || !email}
 				>
 					{#if validatingEmail && validatingEmailMethod === 'password'}
-						<div class="flex items-center gap-2">
-							<div
-								class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
-							></div>
-							Verifying...
-						</div>
+						<Spinner /> Verifying...
 					{:else}
 						Continue with Password
 					{/if}
-				</button>
+				</Button>
 			{/if}
 
 			{#if availableMethods.includes('emailOTP')}
-				<button
-					type="button"
+				<Button
+					block
 					onclick={() => handleMethodClick('emailOTP')}
-					class="btn preset-tonal w-full"
 					disabled={submitting || validatingEmail || !email}
 				>
 					{#if validatingEmail && validatingEmailMethod === 'emailOTP'}
-						<div class="flex items-center gap-2">
-							<div
-								class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
-							></div>
-							Sending...
-						</div>
+						<Spinner /> Sending...
 					{:else}
 						Continue with Email OTP
 					{/if}
-				</button>
+				</Button>
 			{/if}
 
 			{#if availableMethods.includes('magicLink')}
-				<button
-					type="button"
+				<Button
+					block
 					onclick={() => handleMethodClick('magicLink')}
-					class="btn preset-tonal w-full"
 					disabled={submitting || validatingEmail || !email}
 				>
 					{#if validatingEmail && validatingEmailMethod === 'magicLink'}
-						<div class="flex items-center gap-2">
-							<div
-								class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
-							></div>
-							Sending...
-						</div>
+						<Spinner /> Sending...
 					{:else}
 						Continue with Magic Link
 					{/if}
-				</button>
+				</Button>
 			{/if}
 		</div>
 	{/if}
 </div>
+
+<style lang="postcss">
+	@reference 'src/app.css';
+
+	.form {
+		@apply flex flex-col gap-5;
+	}
+	.actions {
+		@apply flex flex-col gap-2;
+	}
+</style>

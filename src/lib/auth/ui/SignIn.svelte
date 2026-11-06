@@ -19,7 +19,6 @@
 	import MailIcon from '@lucide/svelte/icons/mail';
 
 	// Utils
-	import { cn } from '../../primitives/utils.js';
 	import { safeRedirect } from '../utils/safeRedirect.js';
 	import {
 		resolveSignInCallbackURL,
@@ -28,6 +27,7 @@
 
 	// Context
 	import { getAuthContext } from '../context.svelte.js';
+	import Button from '#lib/ui/Button.svelte';
 	const { authConstants, authClient } = getAuthContext();
 
 	// Types
@@ -343,26 +343,20 @@
 	});
 </script>
 
-<div class={cn('mx-auto flex h-full w-full max-w-md flex-col justify-center p-4 pb-8', className)}>
+<div class="signin {className ?? ''}">
 	{#if authConstants.sendEmails && (currentStep === 'verify-email' || (verifyContext === 'magicLink' && magicLinkSent))}
-		<div class="flex flex-col">
-			<!-- Circle -->
-			<div class="mb-4 flex">
-				<div class="bg-surface-200-800 flex h-16 w-16 items-center justify-center rounded-full">
-					<MailIcon class="text-surface-600-400 size-8" />
-				</div>
-			</div>
+		<div class="verify">
+			<span class="mail"><MailIcon class="size-8" aria-hidden="true" /></span>
 
-			<!-- Info -->
-			<h3 class="h5 w-full text-left leading-8">Check your email</h3>
-			<p class="text-surface-600-400 mt-2 text-sm">
+			<h3 class="title">Check your email</h3>
+			<p class="muted">
 				{#if verifyContext === 'magicLink'}
 					We've sent a magic link to <strong>{email}</strong>.
 				{:else}
 					We've sent a verification link to <strong>{email}</strong>.
 				{/if}
 			</p>
-			<p class="text-surface-600-400 pb-8 text-sm">
+			<p class="muted">
 				{#if verifyContext === 'magicLink'}
 					Click the link in your email to sign in instantly.
 				{:else}
@@ -370,12 +364,12 @@
 				{/if}
 			</p>
 
-			<!-- Actions -->
-			<div class="flex flex-col gap-2">
+			<div class="actions">
 				{#if verifyContext === 'emailVerification'}
-					<button
-						type="button"
-						class="btn preset-filled"
+					<Button
+						variant="primary"
+						large
+						block
 						onclick={handleResendVerification}
 						disabled={isResending || resendIn > 0}
 					>
@@ -386,20 +380,16 @@
 						{:else}
 							Resend email
 						{/if}
-					</button>
+					</Button>
 				{/if}
-				<button type="button" class="btn preset-filled-surface-300-700" onclick={resetToEmailStep}>
-					Use a different email
-				</button>
+				<Button block onclick={resetToEmailStep}>Use a different email</Button>
 			</div>
 		</div>
 	{:else}
-		<h5 class="h5 w-full text-left leading-8">{getStepTitle()}</h5>
-		<p class="text-surface-600-400 mt-2 max-w-96 pb-16 text-left text-sm sm:pb-12">
-			{getStepDescription()}
-		</p>
+		<h1 class="title">{getStepTitle()}</h1>
+		<p class="muted lead">{getStepDescription()}</p>
 
-		<div class="flex h-full w-full flex-col gap-6">
+		<div class="steps">
 			<!-- Social Sign In -->
 			<SocialFlow
 				show={currentStep === 'email' || (currentStep === 'phone' && phoneStep === 'phone')}
@@ -431,14 +421,9 @@
 						availableMethods={availableEmailMethods}
 					/>
 					{#if phoneEnabled}
-						<button
-							type="button"
-							class="btn -mt-4"
-							onclick={() => (currentStep = 'phone')}
-							disabled={submitting}
-						>
+						<Button block onclick={() => (currentStep = 'phone')} disabled={submitting}>
 							Continue with mobile number instead
-						</button>
+						</Button>
 					{/if}
 				{:else if currentStep === 'password-flow'}
 					<PasswordFlow
@@ -482,23 +467,54 @@
 		</div>
 
 		{#if showLegal}
-			<div>
-				<p class="text-surface-600-400 mt-10 text-xs">
-					By continuing, you agree to our
-					{#if showTerms}
-						<a href={termsUrl} rel="external noreferrer" class="anchor text-surface-950-50">Terms</a
-						>
-					{/if}
-					{#if showTerms && showPrivacy}
-						and
-					{/if}
-					{#if showPrivacy}
-						<a href={privacyUrl} rel="external noreferrer" class="anchor text-surface-950-50"
-							>Privacy Policies</a
-						>
-					{/if}
-				</p>
-			</div>
+			<p class="legal">
+				By continuing, you agree to our
+				{#if showTerms}
+					<a href={termsUrl} rel="external noreferrer">Terms</a>
+				{/if}
+				{#if showTerms && showPrivacy}
+					and
+				{/if}
+				{#if showPrivacy}
+					<a href={privacyUrl} rel="external noreferrer">Privacy Policies</a>
+				{/if}
+			</p>
 		{/if}
 	{/if}
 </div>
+
+<style lang="postcss">
+	@reference 'src/app.css';
+
+	.signin {
+		@apply mx-auto flex h-full w-full max-w-md flex-col justify-center gap-2 p-4 pb-8;
+	}
+	.title {
+		@apply text-2xl leading-tight font-extrabold;
+	}
+	.muted {
+		@apply text-sm text-text-muted;
+	}
+	.lead {
+		@apply pb-6;
+	}
+	.steps {
+		@apply flex w-full flex-col gap-6;
+	}
+	.verify {
+		@apply flex flex-col gap-2;
+	}
+	.mail {
+		--fill: var(--color-background);
+		@apply edge-flat mb-2 grid size-16 place-items-center rounded-full bg-background text-text-muted;
+	}
+	.actions {
+		@apply mt-4 flex flex-col gap-2;
+	}
+	.legal {
+		@apply mt-6 text-xs text-text-muted;
+	}
+	.legal a {
+		@apply font-bold text-text underline;
+	}
+</style>

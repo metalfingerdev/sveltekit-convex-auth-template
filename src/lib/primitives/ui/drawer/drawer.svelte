@@ -1,26 +1,19 @@
 <script lang="ts">
-	import { Dialog as DialogPrimitive } from '@ark-ui/svelte/dialog';
+	import { Dialog } from 'bits-ui';
+	import type { Snippet } from 'svelte';
 
+	// A panel that slides in from an edge, built on the same Bits dialog as the centred one
 	let {
 		open = $bindable(false),
-		onInteractOutside,
-		...restProps
-	}: DialogPrimitive.RootProps = $props();
+		onOpenChange,
+		children
+	}: {
+		open?: boolean;
+		onOpenChange?: (details: { open: boolean }) => void;
+		children?: Snippet;
+	} = $props();
 </script>
 
-<DialogPrimitive.Root
-	bind:open
-	onInteractOutside={onInteractOutside
-		? onInteractOutside
-		: (e) => {
-				const originalEvent = e.detail?.originalEvent || e.detail;
-				if (originalEvent && originalEvent.target instanceof Element) {
-					const sonnerElement = originalEvent.target.closest('[data-sonner-toast]');
-					if (sonnerElement) {
-						e.preventDefault();
-						return;
-					}
-				}
-			}}
-	{...restProps}
-/>
+<Dialog.Root bind:open onOpenChange={(next) => onOpenChange?.({ open: next })}>
+	{@render children?.()}
+</Dialog.Root>

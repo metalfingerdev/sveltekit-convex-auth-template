@@ -12,10 +12,14 @@
 	const updateAvatar = useMutation(api.users.mutations.updateAvatar);
 
 	// Icons
+	import ProfileField from './ProfileField.svelte';
+	import Field from '#lib/ui/Field.svelte';
+	import Button from '#lib/ui/Button.svelte';
+	import Spinner from '#lib/ui/Spinner.svelte';
+	import { Avatar as BitsAvatar } from 'bits-ui';
 	import PencilIcon from '@lucide/svelte/icons/pencil';
 	// Primitives
 	import { toast } from 'svelte-sonner';
-	import * as Avatar from '../../primitives/ui/avatar/index.js';
 	import * as ImageCropper from '../../primitives/ui/image-cropper/index.js';
 	import { getFileFromUrl } from '../../primitives/ui/image-cropper/index.js';
 
@@ -173,143 +177,123 @@
 	);
 </script>
 
-<div class="flex flex-col gap-6">
+<div class="profile-info">
 	{#if !activeUser}
-		<div class="placeholder h-16 w-full animate-pulse"></div>
+		<div class="loading bone"></div>
 	{:else}
-		<!-- Avatar + Upload via ImageCropper (rounded crop) -->
-		<div class="rounded-base flex items-center justify-start pt-6 pl-0.5">
-			<ImageCropper.Root bind:src={cropSrc} accept="image/*" onCropped={handleCropped}>
+		<ImageCropper.Root bind:src={cropSrc} accept="image/*" onCropped={handleCropped}>
+			<div class="who">
 				<ImageCropper.UploadTrigger>
-					<div
-						class="rounded-container relative size-20 cursor-pointer transition-all duration-200"
-					>
-						<div class="relative cursor-pointer transition-colors">
-							{#key avatarKey}
-								<Avatar.Root class="size-20" onStatusChange={(e) => (loadingStatus = e.status)}>
-									<Avatar.Image src={displayedAvatarSrc} alt={activeUser.name} />
-									<Avatar.Fallback
-										class="bg-surface-300-700 hover:bg-surface-400-600/80 rounded-container duration-150 ease-in-out"
-									>
-										<Avatar.Marble name={activeUser.name} />
-									</Avatar.Fallback>
-								</Avatar.Root>
-							{/key}
-
-							{#if showAvatarOverlay}
-								<div
-									class="bg-surface-50-950 pointer-events-none absolute inset-0 flex items-center justify-center rounded-full"
-								>
-									<div
-										class="h-6 w-6 animate-spin rounded-full border-2 border-white border-b-transparent"
-									></div>
-								</div>
-							{/if}
-
-							<div
-								class="badge-icon preset-filled-surface-300-700 ring-surface-50-950 dark:ring-surface-100-900 hover:bg-surface-400-600 absolute -right-1.5 -bottom-1.5 size-3 rounded-full ring-4"
+					<span class="picture">
+						{#key avatarKey}
+							<BitsAvatar.Root
+								class="photo"
+								onLoadingStatusChange={(status) => (loadingStatus = status)}
 							>
-								<PencilIcon class="size-4" />
-							</div>
-						</div>
-					</div>
+								<BitsAvatar.Image src={displayedAvatarSrc} alt={activeUser.name} class="fit" />
+								<BitsAvatar.Fallback class="initials">
+									{activeUser.name.trim().charAt(0).toUpperCase() || '?'}
+								</BitsAvatar.Fallback>
+							</BitsAvatar.Root>
+						{/key}
+						{#if showAvatarOverlay}
+							<span class="busy"><Spinner /></span>
+						{/if}
+						<span class="pencil"><PencilIcon class="size-4" aria-hidden="true" /></span>
+					</span>
 				</ImageCropper.UploadTrigger>
-				<ImageCropper.Dialog>
-					<ImageCropper.Cropper cropShape="round" />
-					<ImageCropper.Controls>
-						<ImageCropper.Cancel />
-						<ImageCropper.Crop>Upload</ImageCropper.Crop>
-					</ImageCropper.Controls>
-				</ImageCropper.Dialog>
-			</ImageCropper.Root>
-		</div>
-
-		<!-- Inline editable name -->
-		<div
-			class={[
-				'border-surface-300-700 rounded-container relative w-full border px-3.5 py-2 transition-all duration-200 ease-in-out',
-				{
-					'cursor-pointer': !isEditingName,
-					'hover:bg-surface-200-800': !isEditingName,
-					'hover:border-surface-200-800': !isEditingName
-				}
-			]}
-		>
-			<div class="flex items-center justify-between gap-3 transition-all duration-200 ease-in-out">
-				<div class="flex w-full flex-col">
-					<span class="text-surface-600-400 text-xs">Name</span>
-					<!-- View mode (collapses when editing) -->
-					<div
-						class={[
-							'grid transition-[grid-template-rows] duration-200 ease-in-out',
-							isEditingName ? 'grid-rows-[0fr]' : 'grid-rows-[1fr]',
-							{ 'mt-1': !isEditingName }
-						]}
-						aria-hidden={isEditingName}
-						inert={isEditingName}
-					>
-						<div class="overflow-hidden">
-							<span class="truncate text-sm">{activeUser.name}</span>
-						</div>
-					</div>
-
-					<!-- Edit mode (expands when editing) -->
-					<div
-						class={[
-							'grid transition-[grid-template-rows] duration-200 ease-in-out',
-							isEditingName ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
-							{ 'mt-1': isEditingName }
-						]}
-						aria-hidden={!isEditingName}
-						inert={!isEditingName}
-					>
-						<div class="overflow-hidden">
-							<form onsubmit={handleSubmit} class="flex w-full flex-col gap-3">
-								<input bind:this={nameInputEl} type="text" class="input w-full" bind:value={name} />
-								<div class="mb-1 flex gap-1.5">
-									<button
-										type="button"
-										class="btn btn-sm preset-tonal w-full"
-										onclick={() => {
-											name = activeUser.name;
-											isEditingName = false;
-										}}
-									>
-										Cancel
-									</button>
-									<button
-										type="submit"
-										class="btn btn-sm preset-filled-primary-500 w-full"
-										disabled={!name || name.trim() === '' || name.trim() === activeUser.name.trim()}
-									>
-										Save
-									</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-				<!-- Edit affordance and full-area overlay button in view mode -->
-				{#if !isEditingName}
-					<div>
-						<span class="btn-icon preset-filled-surface-50-950 pointer-events-none p-2">
-							<PencilIcon class="size-4" />
-						</span>
-					</div>
-					<button
-						class="absolute inset-0 h-full w-full"
-						aria-label="Edit name"
-						type="button"
-						onclick={async () => {
-							isEditingName = true;
-							name = activeUser.name;
-							await tick();
-							nameInputEl?.focus();
-							nameInputEl?.select();
-						}}
-					></button>
-				{/if}
+				<p class="hint">Tap the picture to change it</p>
 			</div>
-		</div>
+			<ImageCropper.Dialog>
+				<ImageCropper.Cropper cropShape="round" />
+				<ImageCropper.Controls>
+					<ImageCropper.Cancel />
+					<ImageCropper.Crop>Upload</ImageCropper.Crop>
+				</ImageCropper.Controls>
+			</ImageCropper.Dialog>
+		</ImageCropper.Root>
+
+		<ProfileField
+			label="Name"
+			editing={isEditingName}
+			editLabel="Edit name"
+			onedit={async () => {
+				isEditingName = true;
+				name = activeUser.name;
+				await tick();
+				nameInputEl?.focus();
+				nameInputEl?.select();
+			}}
+		>
+			{#snippet icon()}<PencilIcon class="size-4" />{/snippet}
+			{#snippet view()}<span class="truncate">{activeUser.name}</span>{/snippet}
+			{#snippet edit()}
+				<form onsubmit={handleSubmit} class="form">
+					<Field label="Name" hideLabel>
+						<input bind:this={nameInputEl} type="text" bind:value={name} />
+					</Field>
+					<div class="actions">
+						<Button
+							onclick={() => {
+								name = activeUser.name;
+								isEditingName = false;
+							}}
+						>
+							Cancel
+						</Button>
+						<Button
+							type="submit"
+							variant="primary"
+							disabled={!name || name.trim() === '' || name.trim() === activeUser.name.trim()}
+						>
+							Save
+						</Button>
+					</div>
+				</form>
+			{/snippet}
+		</ProfileField>
 	{/if}
 </div>
+
+<style lang="postcss">
+	@reference 'src/app.css';
+
+	.profile-info {
+		@apply flex flex-col gap-4;
+	}
+	.loading {
+		@apply h-16 w-full rounded-container;
+	}
+	.who {
+		@apply flex items-center gap-4;
+	}
+	.picture {
+		@apply relative block size-20 cursor-pointer;
+	}
+	.picture :global(.photo) {
+		--fill: var(--color-secondary);
+		@apply edge-flat relative grid size-20 place-items-center overflow-hidden rounded-full bg-secondary text-3xl font-extrabold text-on-secondary;
+	}
+	.picture :global(.fit) {
+		@apply size-full object-cover;
+	}
+	.picture :global(.initials) {
+		@apply grid size-full place-items-center;
+	}
+	.busy {
+		@apply absolute inset-0 grid place-items-center rounded-full bg-foreground/70;
+	}
+	.pencil {
+		--fill: var(--color-foreground);
+		@apply edge-flat absolute -right-1 -bottom-1 grid size-8 place-items-center rounded-full bg-foreground;
+	}
+	.hint {
+		@apply text-sm text-text-muted;
+	}
+	.form {
+		@apply flex flex-col gap-3;
+	}
+	.actions {
+		@apply grid grid-cols-2 gap-2;
+	}
+</style>

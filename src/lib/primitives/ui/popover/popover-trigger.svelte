@@ -1,17 +1,8 @@
 <script lang="ts">
-	import { cn } from '../../utils.js';
-	import { Popover as PopoverPrimitive } from '@ark-ui/svelte/popover';
+	import { Popover } from 'bits-ui';
+	import type { ComponentProps } from 'svelte';
 
-	let {
-		ref = $bindable(null),
-		class: className,
-		...restProps
-	}: PopoverPrimitive.TriggerProps = $props();
+	let { ref = $bindable(null), ...restProps }: ComponentProps<typeof Popover.Trigger> = $props();
 </script>
 
-<PopoverPrimitive.Trigger
-	bind:ref
-	data-slot="popover-trigger"
-	class={cn('', className)}
-	{...restProps}
-/>
+<Popover.Trigger bind:ref {...restProps} />

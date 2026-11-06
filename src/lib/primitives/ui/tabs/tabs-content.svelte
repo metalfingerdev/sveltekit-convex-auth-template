@@ -1,22 +1,17 @@
 <script lang="ts">
-	import { Tabs as TabsPrimitive } from '@ark-ui/svelte/tabs';
+	import { Tabs } from 'bits-ui';
+	import type { ComponentProps } from 'svelte';
 	import { cn } from '../../utils.js';
 
-	let {
-		ref = $bindable(null),
-		class: className,
-		...restProps
-	}: TabsPrimitive.ContentProps = $props();
+	let { ref = $bindable(null), class: className, ...restProps }: ComponentProps<typeof Tabs.Content> = $props();
 </script>
 
-<TabsPrimitive.Content
-	bind:ref
-	data-slot="tabs-content"
-	class={cn(
-		'outline-none',
-		'data-[orientation=horizontal]:flex-1',
-		'w-full data-[orientation=vertical]:p-8 data-[orientation=vertical]:pt-6 ',
-		className
-	)}
-	{...restProps}
-/>
+<Tabs.Content bind:ref class={cn('ui-tab-panel', className)} {...restProps} />
+
+<style lang="postcss">
+	@reference 'src/app.css';
+
+	:global(.ui-tab-panel) {
+		@apply w-full outline-none;
+	}
+</style>

@@ -1,26 +1,44 @@
 <script lang="ts">
+	import { DropdownMenu } from 'bits-ui';
+	import type { ComponentProps } from 'svelte';
 	import { cn } from '../../utils.js';
-	import { Menu as MenuPrimitive } from '@ark-ui/svelte';
+
+	// `value` is accepted for compatibility with the old Ark menu and not needed here
 	let {
 		ref = $bindable(null),
 		class: className,
-		inset,
 		variant = 'default',
+		value: _value,
+		children,
 		...restProps
-	}: MenuPrimitive.ItemProps & {
-		inset?: boolean;
+	}: ComponentProps<typeof DropdownMenu.Item> & {
 		variant?: 'default' | 'destructive';
+		value?: string;
 	} = $props();
 </script>
 
-<MenuPrimitive.Item
+<DropdownMenu.Item
 	bind:ref
-	data-slot="menu-item"
-	data-inset={inset}
 	data-variant={variant}
-	class={cn(
-		"data-highlighted:bg-surface-200-800/50 data-highlighted:text-surface-950-50 data-[variant=destructive]:text-error-500 data-[variant=destructive]:data-highlighted:bg-destructive/10 dark:data-[variant=destructive]:data-highlighted:bg-destructive/20 data-[variant=destructive]:data-highlighted:text-destructive data-[variant=destructive]:*:[svg]:!text-destructive [&_svg:not([class*='text-'])]:text-muted-foreground rounded-base relative flex h-8 cursor-pointer items-center gap-3.5 px-4 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 ",
-		className
-	)}
+	class={cn('ui-menu-item', className)}
 	{...restProps}
-/>
+>
+	{@render children?.()}
+</DropdownMenu.Item>
+
+<style lang="postcss">
+	@reference 'src/app.css';
+
+	:global(.ui-menu-item) {
+		@apply flex min-h-10 cursor-pointer items-center gap-2 rounded-base px-2 text-sm font-semibold outline-none select-none;
+	}
+	:global(.ui-menu-item[data-highlighted]) {
+		@apply bg-midground;
+	}
+	:global(.ui-menu-item[data-variant='destructive']) {
+		@apply text-danger;
+	}
+	:global(.ui-menu-item[data-disabled]) {
+		@apply pointer-events-none opacity-50;
+	}
+</style>

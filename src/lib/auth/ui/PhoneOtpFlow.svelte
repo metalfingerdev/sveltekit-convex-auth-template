@@ -8,6 +8,9 @@
 
 	// API
 	import { getAuthContext } from '../context.svelte.js';
+	import Button from '#lib/ui/Button.svelte';
+	import Field from '#lib/ui/Field.svelte';
+	import Spinner from '#lib/ui/Spinner.svelte';
 	const { authClient } = getAuthContext();
 
 	interface PhoneOtpFlowProps {
@@ -148,14 +151,10 @@
 </script>
 
 {#if step === 'phone'}
-	<form onsubmit={handlePhoneSubmit} class="flex flex-col gap-8">
-		<div class="flex flex-col">
-			<label class="label" for="phone">Mobile number</label>
-			<div class="flex gap-2">
-				<span
-					class="input preset-filled-surface-200 text-surface-600-400 w-auto shrink-0 text-sm"
-					aria-hidden="true">+91</span
-				>
+	<form onsubmit={handlePhoneSubmit} class="form">
+		<Field label="Mobile number">
+			<span class="phone">
+				<span class="prefix" aria-hidden="true">+91</span>
 				<input
 					id="phone"
 					name="phone"
@@ -163,84 +162,63 @@
 					inputmode="numeric"
 					autocomplete="tel-national"
 					bind:value={phoneInput}
-					class="input preset-filled-surface-200 min-w-0 flex-1 text-sm"
 					placeholder="Enter 10-digit mobile number"
 					maxlength="16"
 					required
 					disabled={busy}
 				/>
-			</div>
-		</div>
+			</span>
+		</Field>
 
-		<div class="flex flex-col gap-2">
-			<button type="submit" class="btn preset-filled w-full" disabled={busy || !normalized}>
+		<div class="actions">
+			<Button type="submit" variant="primary" large block disabled={busy || !normalized}>
 				{#if sending}
-					<div class="flex items-center gap-2">
-						<div
-							class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
-						></div>
-						Sending...
-					</div>
+					<Spinner /> Sending...
 				{:else}
 					Continue
 				{/if}
-			</button>
+			</Button>
 			{#if onUseEmail}
-				<button type="button" class="btn" onclick={onUseEmail} disabled={busy}>
-					Continue with email instead
-				</button>
+				<Button block onclick={onUseEmail} disabled={busy}>Continue with email instead</Button>
 			{/if}
 		</div>
 	</form>
 {:else if step === 'code'}
-	<form onsubmit={handleCodeSubmit} autocomplete="off" class="flex flex-col gap-8">
-		<div class="flex flex-col gap-5">
-			<p class="text-surface-600-400 text-sm">
-				Enter the 6-digit code sent to <strong class="text-surface-950-50"
-					>{formatPhone(phoneNumber)}</strong
-				>
-			</p>
-			<div class="flex flex-col">
-				<label class="label" for="otp">Verification code</label>
-				<input
-					id="otp"
-					type="text"
-					bind:value={code}
-					class="input preset-filled-surface-200 tracking-[0.4em]"
-					placeholder="••••••"
-					pattern="[0-9]*"
-					inputmode="numeric"
-					maxlength="6"
-					autocomplete="one-time-code"
-					required
-					disabled={submitting}
-				/>
-			</div>
-		</div>
+	<form onsubmit={handleCodeSubmit} autocomplete="off" class="form">
+		<p class="muted">
+			Enter the 6-digit code sent to <strong class="strong">{formatPhone(phoneNumber)}</strong>
+		</p>
+		<Field label="Verification code">
+			<input
+				id="otp"
+				type="text"
+				bind:value={code}
+				class="code"
+				placeholder="••••••"
+				pattern="[0-9]*"
+				inputmode="numeric"
+				maxlength="6"
+				autocomplete="one-time-code"
+				required
+				disabled={submitting}
+			/>
+		</Field>
 
-		<div class="flex flex-col gap-2">
-			<button
+		<div class="actions">
+			<Button
 				type="submit"
-				class="btn preset-filled w-full"
+				variant="primary"
+				large
+				block
 				disabled={submitting || code.trim().length !== 6}
 			>
 				{#if submitting}
-					<div class="flex items-center gap-2">
-						<div
-							class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
-						></div>
-						Verifying...
-					</div>
+					<Spinner /> Verifying...
 				{:else}
 					Verify
 				{/if}
-			</button>
-			<button
-				type="button"
-				class="btn preset-tonal w-full"
-				onclick={() => sendCode(phoneNumber)}
-				disabled={busy || resendIn > 0}
-			>
+			</Button>
+			<Button block onclick={() => sendCode(phoneNumber)} disabled={busy || resendIn > 0}>
 				{#if sending}
 					Sending...
 				{:else if resendIn > 0}
@@ -248,39 +226,60 @@
 				{:else}
 					Resend code
 				{/if}
-			</button>
-			<button type="button" class="btn" onclick={changeNumber} disabled={busy}>
-				Change number
-			</button>
+			</Button>
+			<Button block onclick={changeNumber} disabled={busy}>Change number</Button>
 		</div>
 	</form>
 {:else}
-	<form onsubmit={handleNameSubmit} class="flex flex-col gap-8">
-		<div class="flex flex-col">
-			<label class="label" for="name">Full name</label>
+	<form onsubmit={handleNameSubmit} class="form">
+		<Field label="Full name">
 			<input
 				id="name"
 				type="text"
 				bind:value={name}
-				class="input preset-filled-surface-200"
 				placeholder="Enter your full name"
 				autocomplete="name"
 				required
 				disabled={submitting}
 			/>
-		</div>
+		</Field>
 
-		<button type="submit" class="btn preset-filled w-full" disabled={submitting || !name.trim()}>
+		<Button type="submit" variant="primary" large block disabled={submitting || !name.trim()}>
 			{#if submitting}
-				<div class="flex items-center gap-2">
-					<div
-						class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
-					></div>
-					Saving...
-				</div>
+				<Spinner /> Saving...
 			{:else}
 				Continue
 			{/if}
-		</button>
+		</Button>
 	</form>
 {/if}
+
+<style lang="postcss">
+	@reference 'src/app.css';
+
+	.form {
+		@apply flex flex-col gap-5;
+	}
+	.actions {
+		@apply flex flex-col gap-2;
+	}
+	.muted {
+		@apply text-sm text-text-muted;
+	}
+	.strong {
+		@apply text-text;
+	}
+	.phone {
+		@apply flex gap-2;
+	}
+	.prefix {
+		--fill: var(--color-background);
+		@apply edge-flat flex shrink-0 items-center rounded-base bg-background px-3 text-sm font-bold text-text-muted;
+	}
+	.phone :global(input) {
+		@apply min-w-0 flex-1;
+	}
+	.code {
+		@apply text-center text-2xl tracking-[0.4em];
+	}
+</style>

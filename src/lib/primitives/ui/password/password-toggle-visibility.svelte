@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Toggle } from '../toggle/index.js';
 	import EyeIcon from '@lucide/svelte/icons/eye';
 	import EyeOffIcon from '@lucide/svelte/icons/eye-off';
 	import { usePasswordToggleVisibility } from './password.svelte.js';
@@ -9,24 +8,35 @@
 	let { ref = $bindable(null), class: className }: PasswordToggleVisibilityProps = $props();
 
 	const state = usePasswordToggleVisibility();
+	const hidden = $derived(state.root.opts.hidden.current);
 </script>
 
-<Toggle
-	bind:ref
-	aria-label={state.root.opts.hidden.current ? 'Show password' : 'Hide password'}
-	bind:pressed={state.root.opts.hidden.current}
-	class={cn(
-		'data-[state=off]:text-muted-foreground data-[state=on]:text-muted-foreground hover:data-[state=off]:text-accent-foreground hover:data-[state=on]:text-accent-foreground absolute top-1/2 right-0 size-9 min-w-0 -translate-y-1/2 p-0 hover:!bg-transparent data-[state=on]:bg-transparent',
-		{
-			'right-9 max-w-6': state.root.passwordState.copyMounted
-		},
-		className
-	)}
+<button
+	bind:this={ref}
+	type="button"
+	class={cn('ui-eye', state.root.passwordState.copyMounted && 'with-copy', className)}
+	aria-label={hidden ? 'Show password' : 'Hide password'}
+	aria-pressed={!hidden}
 	tabindex={-1}
+	onclick={() => (state.root.opts.hidden.current = !hidden)}
 >
-	{#if state.root.opts.hidden.current}
+	{#if hidden}
 		<EyeIcon class="size-4" />
 	{:else}
 		<EyeOffIcon class="size-4" />
 	{/if}
-</Toggle>
+</button>
+
+<style lang="postcss">
+	@reference 'src/app.css';
+
+	:global(.ui-eye) {
+		@apply absolute top-1/2 right-0 grid size-9 -translate-y-1/2 place-items-center text-text-muted;
+	}
+	:global(.ui-eye:hover) {
+		@apply text-text;
+	}
+	:global(.ui-eye.with-copy) {
+		@apply right-9;
+	}
+</style>

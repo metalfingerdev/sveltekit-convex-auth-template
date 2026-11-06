@@ -6,15 +6,14 @@
 	import * as Dialog from '../../primitives/ui/dialog/index.js';
 	import * as Select from '../../primitives/ui/select/index.js';
 	import * as Menu from '../../primitives/ui/menu/index.js';
-	import { Toggle } from '@ark-ui/svelte/toggle';
-	import { createListCollection } from '@ark-ui/svelte/select';
+	import { createListCollection } from '../../primitives/ui/select/index.js';
 	import { toast } from 'svelte-sonner';
 	// Icons
 	import EllipsisVerticalIcon from '@lucide/svelte/icons/ellipsis-vertical';
 	import CopyIcon from '@lucide/svelte/icons/copy';
 	import CheckIcon from '@lucide/svelte/icons/check';
 	// Types
-	import { Portal } from '@ark-ui/svelte';
+	import { Portal } from 'bits-ui';
 	import type { ListApiKeysType } from '../../auth/types.js';
 	type ListApiKeysResponse = NonNullable<ListApiKeysType>;
 	type ApiKeyType = ListApiKeysResponse['apiKeys'][number];
@@ -320,7 +319,6 @@
 							onValueChange={(v: { value: string[] }): void => {
 								expirationOption = v.value[0] as typeof expirationOption;
 							}}
-							class="w-56"
 						>
 							<Select.Trigger
 								placeholder="Select expiration"
@@ -402,8 +400,9 @@
 				<p class="text-sm">Copy and store this key now. You won’t be able to see it again.</p>
 				<div class="field-group mt-4 grid-cols-[1fr_auto]">
 					<input class="input" readonly value={newKey} />
-					<Toggle.Root
-						bind:pressed={copied}
+					<button
+						type="button"
+						aria-pressed={copied}
 						onclick={handleCopyClick}
 						class="btn preset-filled-surface-200-800"
 						aria-label="Copy API key"
@@ -413,7 +412,7 @@
 						{:else}
 							<CopyIcon class="size-4" />
 						{/if}
-					</Toggle.Root>
+					</button>
 				</div>
 				<div class="mt-4 flex w-full items-center justify-end gap-2">
 					<Dialog.Close class="btn btn-sm preset-filled-surface-200-800">Close</Dialog.Close>

@@ -1,50 +1,46 @@
 <script lang="ts">
-	import { tv } from 'tailwind-variants';
 	import { usePasswordStrength } from './password.svelte.js';
 	import type { PasswordStrengthProps } from './types.js';
-	import { Progress as ProgressPrimitive } from '@ark-ui/svelte/progress';
 	import { cn } from '../../utils.js';
 	import { PASSWORD_STRENGTH_LABEL } from '../../utils/passwordStrength.js';
 
 	let { class: className }: PasswordStrengthProps = $props();
 
 	const state = usePasswordStrength();
-
 	const score = $derived(state.score);
-
-	const color = tv({
-		base: '',
-		variants: {
-			score: {
-				0: 'bg-error-600-400',
-				1: 'bg-error-600-400',
-				2: 'bg-warning-700-300',
-				3: 'bg-warning-600-400',
-				4: 'bg-success-600-400'
-			}
-		}
-	});
 </script>
 
-<ProgressPrimitive.Root
-	value={score}
-	class={cn('bg-surface-200-800 relative h-1 w-full gap-1 overflow-hidden rounded-full', className)}
-	min={0}
-	max={4}
+<!-- A four-step meter: one bar per step, coloured by how strong the password is -->
+<div
+	class={cn('ui-meter', className)}
+	role="progressbar"
+	aria-label={PASSWORD_STRENGTH_LABEL}
+	aria-valuemin={0}
+	aria-valuemax={4}
+	aria-valuenow={score}
+	aria-valuetext={state.text}
 >
-	<!-- The track is the progressbar: Ark gives it the role and the value attributes -->
-	<ProgressPrimitive.Track
-		class="h-full w-full"
-		aria-label={PASSWORD_STRENGTH_LABEL}
-		aria-valuetext={state.text}
-	>
-		<!-- Ark sets the range's width to the score's share of 4 -->
-		<ProgressPrimitive.Range class={cn('h-full transition-all duration-500', color({ score }))} />
-	</ProgressPrimitive.Track>
-	<!-- This creates the gaps between the bars -->
-	<div class="absolute top-0 left-0 z-10 flex h-1 w-full place-items-center gap-1 px-0.5">
-		{#each Array.from({ length: 4 }).keys() as i (i)}
-			<div class="ring-surface-100-900 h-1 w-1/4 rounded-full ring-3"></div>
-		{/each}
-	</div>
-</ProgressPrimitive.Root>
+	{#each [1, 2, 3, 4] as step (step)}
+		<span class="bar" class:weak={score <= 1} class:fair={score === 2 || score === 3} class:strong={score === 4} class:on={score >= step}></span>
+	{/each}
+</div>
+
+<style lang="postcss">
+	@reference 'src/app.css';
+
+	.ui-meter {
+		@apply flex h-1.5 w-full gap-1;
+	}
+	.bar {
+		@apply h-full flex-1 rounded-full bg-background transition-colors duration-300;
+	}
+	.on.weak {
+		@apply bg-danger;
+	}
+	.on.fair {
+		@apply bg-warning;
+	}
+	.on.strong {
+		@apply bg-success;
+	}
+</style>

@@ -1,37 +1,43 @@
 <script lang="ts">
-	import { Dialog as DialogPrimitive } from '@ark-ui/svelte/dialog';
-	import { Portal as PortalPrimitive, type PortalProps } from '@ark-ui/svelte/portal';
-	import type { Snippet } from 'svelte';
-	import * as Dialog from './index.js';
-	import { cn, type WithoutChildrenOrChild } from '../../utils.js';
+	import { Dialog } from 'bits-ui';
+	import type { ComponentProps } from 'svelte';
+	import { cn } from '../../utils.js';
 
 	let {
 		ref = $bindable(null),
 		class: className,
-		// onInteractOutside,
-		portalProps,
-		positionerProps,
 		children,
 		...restProps
-	}: WithoutChildrenOrChild<DialogPrimitive.ContentProps> & {
-		portalProps?: PortalProps;
-		positionerProps?: DialogPrimitive.PositionerProps;
-		children: Snippet;
-	} = $props();
+	}: ComponentProps<typeof Dialog.Content> = $props();
+
+	// A click on a toast must not count as a click outside, or it would close the dialog
+	const keepOpenForToasts = (event: PointerEvent) => {
+		if (event.target instanceof Element && event.target.closest('[data-sonner-toast]')) {
+			event.preventDefault();
+		}
+	};
 </script>
 
-<PortalPrimitive {...portalProps}>
-	<Dialog.Backdrop />
-	<DialogPrimitive.Positioner {...positionerProps}>
-		<DialogPrimitive.Content
-			bind:ref
-			class={cn(
-				'bg-surface-50-950 dark:bg-surface-100-900 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 rounded-container fixed top-1/2 left-1/2 z-50 flex w-[90%] -translate-x-1/2 -translate-y-1/2 flex-col items-start gap-5 overflow-x-hidden overflow-y-auto p-5 duration-200',
-				className
-			)}
-			{...restProps}
-		>
-			{@render children?.()}
-		</DialogPrimitive.Content>
-	</DialogPrimitive.Positioner>
-</PortalPrimitive>
+<Dialog.Portal>
+	<Dialog.Overlay class="ui-dialog-overlay" />
+	<Dialog.Content
+		bind:ref
+		class={cn('ui-dialog', className)}
+		onInteractOutside={keepOpenForToasts}
+		{...restProps}
+	>
+		{@render children?.()}
+	</Dialog.Content>
+</Dialog.Portal>
+
+<style lang="postcss">
+	@reference 'src/app.css';
+
+	:global(.ui-dialog-overlay) {
+		@apply fixed inset-0 z-50 bg-black/45;
+	}
+	:global(.ui-dialog) {
+		--fill: var(--color-foreground);
+		@apply edge fixed top-1/2 left-1/2 z-50 flex max-h-[90dvh] w-[90%] max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col items-start gap-5 overflow-x-hidden overflow-y-auto rounded-container bg-foreground p-5 text-text;
+	}
+</style>

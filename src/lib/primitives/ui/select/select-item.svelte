@@ -1,23 +1,28 @@
 <script lang="ts">
-	import { Select as SelectPrimitive } from '@ark-ui/svelte/select';
-	import { cn } from '../../utils.js';
+	import { Select } from 'bits-ui';
+	import type { Snippet } from 'svelte';
+	import ItemScope from './select-item-scope.svelte';
+	import type { SelectItem } from './select-root.svelte';
 
-	let {
-		ref = $bindable(null),
-		class: className,
-		children,
-		...restProps
-	}: SelectPrimitive.ItemProps = $props();
+	let { item, children: content }: { item: SelectItem; children?: Snippet } = $props();
 </script>
 
-<SelectPrimitive.Item
-	bind:ref
-	data-slot="select-item"
-	class={cn(
-		"data-[highlighted]:bg-surface-200-800 data-[highlighted]:text-surface-950-50 text-surface-800-200 [&_svg:not([class*='text-'])]:text-muted-foreground rounded-base relative flex w-full cursor-pointer items-center gap-2 py-1.5 pr-8 pl-2 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-		className
-	)}
-	{...restProps}
->
-	{@render children?.()}
-</SelectPrimitive.Item>
+<Select.Item value={item.value} label={item.label} disabled={item.disabled} class="ui-select-item">
+	{#snippet children({ selected }: { selected: boolean })}
+		<ItemScope {selected}>{@render content?.()}</ItemScope>
+	{/snippet}
+</Select.Item>
+
+<style lang="postcss">
+	@reference 'src/app.css';
+
+	:global(.ui-select-item) {
+		@apply flex min-h-10 cursor-pointer items-center justify-between gap-3 rounded-base px-2 text-sm font-semibold outline-none;
+	}
+	:global(.ui-select-item[data-highlighted]) {
+		@apply bg-midground;
+	}
+	:global(.ui-select-item[data-disabled]) {
+		@apply pointer-events-none opacity-50;
+	}
+</style>

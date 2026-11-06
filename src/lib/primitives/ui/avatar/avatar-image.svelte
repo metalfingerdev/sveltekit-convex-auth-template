@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { Avatar as AvatarPrimitive } from '@ark-ui/svelte/avatar';
+	import { Avatar } from 'bits-ui';
+	import type { ComponentProps } from 'svelte';
 	import { cn } from '../../utils.js';
 
-	let { class: className, ...restProps }: AvatarPrimitive.ImageProps = $props();
+	let { class: className, ...restProps }: ComponentProps<typeof Avatar.Image> = $props();
 </script>
 
-<AvatarPrimitive.Image class={cn('aspect-square size-full', className)} {...restProps} />
+<Avatar.Image class={cn('aspect-square size-full', className)} {...restProps} />
