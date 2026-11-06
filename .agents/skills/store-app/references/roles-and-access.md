@@ -96,8 +96,18 @@ ones to add to `isPublic`. `/admin/*` and `/delivery/*` stay private, and each l
 neutral spinner while `myRoles` resolves, then "Access denied" for the wrong role, as
 `src/routes/admin/+page.svelte` does.
 
+**A private page also needs its own client-side redirect.** `hooks.server.ts` only runs when the
+server is asked for the page, so a page without a server `load` is opened by client-side navigation
+(pressing "Checkout" in the app) without ever reaching it, and a signed-out visitor would see a
+broken page. Call `useRequireSignIn()` (`src/lib/auth/requireSignIn.svelte.ts`) in every private
+page; it sends them to `/signin` and back. It is UX only: the Convex functions still refuse a
+signed-out caller.
+
+A delivery partner's phone is shown to the customer only while the order is `out_for_delivery`.
+
 ## Tests worth having
 
 For each guarded function: signed-out is refused, a customer is refused on admin functions, a
 partner can't open another partner's order, and an unverified phone number doesn't make a partner.
-The `convex-verify` skill drives these.
+In Vitest the guards are stand-ins (`src/convex/vitest.setup.ts`, extend it for a new guard); the
+pages and the real guards are checked by the Playwright suite (`tests/e2e`, `docs/09-testing.md`).
