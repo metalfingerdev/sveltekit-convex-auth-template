@@ -30,7 +30,7 @@
 
   .choice {
     --fill: var(--color-foreground);
-    @apply edge-flat relative flex min-h-11 cursor-pointer items-start gap-3 rounded-container bg-foreground p-3;
+    @apply edge-flat relative flex min-h-11 cursor-pointer items-start gap-3 rounded-xl bg-foreground p-3;
   }
   .on {
     --fill: var(--color-primary);

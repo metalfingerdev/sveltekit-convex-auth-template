@@ -71,12 +71,12 @@
 </script>
 
 <Menu.Root>
-	<Menu.Trigger class="btn-icon hover:preset-tonal" aria-label={`Actions for ${user.name}`}>
+	<Menu.Trigger class="button button-icon hover:tone-raised" aria-label={`Actions for ${user.name}`}>
 		<EllipsisVerticalIcon class="size-4" aria-hidden="true" />
 	</Menu.Trigger>
 	<!-- Portaled so the table's scroll container doesn't clip the menu -->
 	<Portal>
-		<Menu.Content class="bg-surface-50-950 min-w-52">
+		<Menu.Content class="bg-foreground min-w-52">
 			<Menu.Item value="copy-id" onclick={copyUserId}>
 				<CopyIcon aria-hidden="true" />
 				Copy user ID

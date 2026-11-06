@@ -17,7 +17,7 @@
 	@reference 'src/app.css';
 
 	:global(.ui-select-item) {
-		@apply flex min-h-10 cursor-pointer items-center justify-between gap-3 rounded-base px-2 text-sm font-semibold outline-none;
+		@apply flex min-h-10 cursor-pointer items-center justify-between gap-3 rounded-lg px-2 text-sm font-semibold outline-none;
 	}
 	:global(.ui-select-item[data-highlighted]) {
 		@apply bg-midground;

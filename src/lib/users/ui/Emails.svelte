@@ -157,7 +157,7 @@
 	@reference 'src/app.css';
 
 	.loading {
-		@apply h-16 w-full rounded-container;
+		@apply h-16 w-full rounded-xl;
 	}
 	.muted {
 		@apply text-sm text-text-muted;

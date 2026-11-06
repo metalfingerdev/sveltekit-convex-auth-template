@@ -71,19 +71,19 @@
 
 <Tabs.Root value="members">
 	<div
-		class="border-surface-300-700 flex w-full flex-row justify-between border-b pb-6 align-middle"
+		class="border-border-muted flex w-full flex-row justify-between border-b pb-6 align-middle"
 	>
 		<Tabs.List class="flex-1 md:flex-initial">
 			<Tabs.Trigger value="members" class="flex-1 gap-2 md:flex-initial">
 				Members
-				<span class="badge preset-filled-surface-300-700 size-6 rounded-full">
+				<span class="tag tone-sunken size-6 rounded-full">
 					{members && `${members.length}`}
 				</span>
 			</Tabs.Trigger>
 			{#if isOwnerOrAdmin}
 				<Tabs.Trigger value="invitations" class="flex-1 gap-2 md:flex-initial">
 					Invitations
-					<span class="badge preset-filled-surface-300-700 size-6 rounded-full">
+					<span class="tag tone-sunken size-6 rounded-full">
 						{invitationList && `${invitationList.filter((i) => i.status === 'pending').length}`}
 					</span>
 				</Tabs.Trigger>
@@ -92,7 +92,7 @@
 		{#if isOwnerOrAdmin}
 			<button
 				type="button"
-				class="btn preset-filled-primary-500 hidden h-10 items-center gap-2 text-sm md:flex"
+				class="button tone-primary hidden h-10 items-center gap-2 text-sm md:flex"
 				onclick={() => (inviteMembersDialogOpen = true)}
 			>
 				<PlusIcon class="size-5" />
@@ -109,7 +109,7 @@
 			</Dialog.Root>
 			<Drawer.Root bind:open={inviteMembersDrawerOpen}>
 				<Drawer.Trigger
-					class="btn preset-filled-primary-500 absolute right-4 bottom-4 z-10 h-10 text-sm md:hidden"
+					class="button tone-primary absolute right-4 bottom-4 z-10 h-10 text-sm md:hidden"
 				>
 					<PlusIcon class="size-5" /> Invite members
 				</Drawer.Trigger>

@@ -221,7 +221,7 @@
 	@reference 'src/app.css';
 
 	.loading {
-		@apply h-16 w-full rounded-container;
+		@apply h-16 w-full rounded-xl;
 	}
 	.muted {
 		@apply text-sm text-text-muted;
@@ -237,7 +237,7 @@
 	}
 	.prefix {
 		--fill: var(--color-foreground);
-		@apply edge-flat grid min-h-11 shrink-0 place-items-center rounded-base bg-foreground px-3 text-text-muted;
+		@apply edge-flat grid min-h-11 shrink-0 place-items-center rounded-lg bg-foreground px-3 text-text-muted;
 	}
 	.code {
 		@apply tracking-[0.4em];

@@ -79,7 +79,7 @@
 	</Avatar.Root>
 	<span class="flex min-w-0 flex-1 flex-col text-left">
 		<span class="truncate text-sm">{user.name}</span>
-		<span class="text-surface-600-400 truncate text-xs">{detail}</span>
+		<span class="text-text-muted truncate text-xs">{detail}</span>
 	</span>
 {/snippet}
 
@@ -87,7 +87,7 @@
 	<button
 		{id}
 		type="button"
-		class="input flex min-h-12 w-full cursor-pointer items-center gap-3 py-2 text-left"
+		class="control flex min-h-12 w-full cursor-pointer items-center gap-3 py-2 text-left"
 		aria-expanded={expanded}
 		aria-controls={listId}
 		onclick={toggle}
@@ -95,7 +95,7 @@
 		{#if value}
 			{@render userLabel(value)}
 		{:else}
-			<span class="text-surface-600-400 flex-1 text-sm">Select a user...</span>
+			<span class="text-text-muted flex-1 text-sm">Select a user...</span>
 		{/if}
 		<ChevronDownIcon
 			class="size-4 shrink-0 opacity-60 transition-transform {expanded ? 'rotate-180' : ''}"
@@ -105,16 +105,16 @@
 	{#if expanded}
 		<div
 			id={listId}
-			class="border-surface-300-700 rounded-container flex flex-col gap-1 border p-1"
+			class="border-border-muted rounded-xl flex flex-col gap-1 border p-1"
 		>
 			<div class="relative">
 				<SearchIcon
-					class="text-surface-400-600 pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2"
+					class="text-border pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2"
 					aria-hidden="true"
 				/>
 				<input
 					type="search"
-					class="input pl-9 text-sm"
+					class="control pl-9 text-sm"
 					placeholder="Search by name or email..."
 					aria-label="Search users by name or email"
 					bind:value={searchInput}
@@ -127,14 +127,14 @@
 			</div>
 			<div class="flex max-h-56 flex-col overflow-y-auto">
 				{#if results.error}
-					<p class="text-error-600-400 p-3 text-sm">{results.error.message}</p>
+					<p class="text-danger p-3 text-sm">{results.error.message}</p>
 				{:else if !results.data}
-					<p class="text-surface-600-400 flex items-center gap-2 p-3 text-sm" role="status">
+					<p class="text-text-muted flex items-center gap-2 p-3 text-sm" role="status">
 						<Loader2Icon class="size-4 animate-spin" aria-hidden="true" />
 						Loading users...
 					</p>
 				{:else if users.length === 0}
-					<p class="text-surface-600-400 p-3 text-sm">
+					<p class="text-text-muted p-3 text-sm">
 						{search ? `No users match "${search}".` : 'Search by name or email to find a user.'}
 					</p>
 				{:else}
@@ -142,7 +142,7 @@
 						{@const reason = unavailableReason?.(user)}
 						<button
 							type="button"
-							class="hover:bg-surface-200-800 focus-visible:bg-surface-200-800 rounded-base flex items-center gap-3 p-2 outline-hidden disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
+							class="hover:bg-background focus-visible:bg-background rounded-lg flex items-center gap-3 p-2 outline-hidden disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
 							class:opacity-60={results.isStale}
 							aria-pressed={value?.id === user.id}
 							disabled={Boolean(reason)}

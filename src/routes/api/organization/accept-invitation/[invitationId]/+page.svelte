@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Button from '#lib/ui/Button.svelte';
+	import Card from '#lib/ui/Card.svelte';
 	// Svelte
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
@@ -56,7 +58,8 @@
 </script>
 
 <div class="flex min-h-dvh items-center justify-center p-6">
-	<div class="card w-full max-w-md p-8 text-center">
+	<div class="w-full max-w-md text-center">
+		<Card>
 		{#if isLoading}
 			<div class="flex flex-col items-center gap-4">
 				<Loader2Icon class="size-10 animate-spin" />
@@ -74,15 +77,16 @@
 				<TriangleAlertIcon class="size-10" />
 				<h1 class="text-lg font-semibold">Couldn't accept invitation</h1>
 				<p class="text-sm opacity-80">{error}</p>
-				<a class="btn preset-tonal hover:preset-filled" href={resolve('/')}>Go to Home</a>
+				<Button href={resolve('/')}>Go to Home</Button>
 			</div>
 		{:else if !invitationId}
 			<div class="flex flex-col items-center gap-4">
 				<TriangleAlertIcon class="size-10" />
 				<h1 class="text-lg font-semibold">Invalid invite link</h1>
 				<p class="text-sm opacity-60">Please use a valid invite link.</p>
-				<a class="btn preset-tonal hover:preset-filled" href={resolve('/')}>Go to Home</a>
+				<Button href={resolve('/')}>Go to Home</Button>
 			</div>
 		{/if}
+		</Card>
 	</div>
 </div>

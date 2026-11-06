@@ -12,7 +12,7 @@
 	@reference 'src/app.css';
 
 	:global(.ui-tab) {
-		@apply inline-flex min-h-11 items-center justify-center gap-2 rounded-base px-3 font-bold whitespace-nowrap text-text-muted;
+		@apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-3 font-bold whitespace-nowrap text-text-muted;
 	}
 	:global(.ui-tab:hover) {
 		@apply bg-foreground text-text;

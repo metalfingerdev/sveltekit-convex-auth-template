@@ -98,22 +98,22 @@
 	<!-- Inputs -->
 	<div class="flex flex-col gap-5">
 		<div class="flex flex-col">
-			<label class="label" for="email">Email</label>
+			<label class="field-label" for="email">Email</label>
 			<input
 				type="email"
 				value={email}
 				disabled
-				class="input preset-filled-surface-200 cursor-not-allowed opacity-60"
+				class="control tone-sunken cursor-not-allowed opacity-60"
 			/>
 		</div>
 
 		{#if mode === 'register'}
 			<div class="flex flex-col">
-				<label class="label" for="name">Full Name</label>
+				<label class="field-label" for="name">Full Name</label>
 				<input
 					type="text"
 					bind:value={name}
-					class="input preset-filled-surface-200"
+					class="control tone-sunken"
 					placeholder="Enter your full name"
 					autocomplete="name"
 					required
@@ -123,11 +123,11 @@
 		{/if}
 
 		<div class="flex flex-col">
-			<label class="label" for="otp">Verification Code</label>
+			<label class="field-label" for="otp">Verification Code</label>
 			<input
 				type="text"
 				bind:value={otp}
-				class="input preset-filled-surface-200"
+				class="control tone-sunken"
 				placeholder="Enter verification code"
 				pattern="[0-9]*"
 				inputmode="numeric"
@@ -143,7 +143,7 @@
 	<div class="flex flex-col gap-2">
 		<button
 			type="submit"
-			class="btn preset-filled w-full"
+			class="button tone-primary w-full"
 			disabled={submitting || !otp.trim() || (mode === 'register' && !name.trim())}
 		>
 			{#if submitting}
@@ -158,7 +158,7 @@
 			{/if}
 		</button>
 
-		<button type="button" class="btn" onclick={onBack} disabled={submitting}>
+		<button type="button" class="button" onclick={onBack} disabled={submitting}>
 			Use a different email
 		</button>
 	</div>

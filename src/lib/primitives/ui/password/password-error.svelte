@@ -43,7 +43,7 @@
 {#if message}
 	<span
 		id={id || undefined}
-		class={cn('text-error-600-400 pb-1 text-xs', className)}
+		class={cn('text-danger pb-1 text-xs', className)}
 		aria-live="polite"
 		role="status"
 	>

@@ -22,6 +22,6 @@
 
 	:global(.ui-menu) {
 		--fill: var(--color-foreground);
-		@apply edge z-50 min-w-32 overflow-x-hidden overflow-y-auto rounded-container bg-foreground p-1 text-text outline-none;
+		@apply edge z-50 min-w-32 overflow-x-hidden overflow-y-auto rounded-xl bg-foreground p-1 text-text outline-none;
 	}
 </style>

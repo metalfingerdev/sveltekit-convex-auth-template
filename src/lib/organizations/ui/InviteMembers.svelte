@@ -138,7 +138,7 @@
 	<div class="flex flex-col gap-4">
 		<div class="flex flex-col">
 			<label>
-				<span class="label">Role</span>
+				<span class="field-label">Role</span>
 				<Select.Root {collection} bind:value={selectedRole}>
 					<Select.Trigger class="w-full" placeholder="Select a role" />
 					<Select.Content>
@@ -154,14 +154,14 @@
 		</div>
 		<div class="flex flex-col gap-2">
 			<label>
-				<span class="label">Email(s)</span>
+				<span class="field-label">Email(s)</span>
 				<textarea
 					bind:value={emailInput}
 					placeholder="example@email.com, example2@email.com"
-					class="textarea min-h-24 grow"
+					class="control min-h-24 grow"
 					required></textarea>
 			</label>
-			<p class="text-surface-600-400 px-1 text-xs">
+			<p class="text-text-muted px-1 text-xs">
 				You can invite multiple people by separating email addresses with commas, semicolons, or
 				spaces.
 			</p>
@@ -169,14 +169,14 @@
 		<div class="flex justify-end gap-2 pt-6 md:flex-row">
 			<button
 				type="submit"
-				class="btn preset-filled-primary-500"
+				class="button tone-primary"
 				disabled={isProcessing || !authConstants.sendEmails}
 			>
 				{isProcessing ? 'Sending...' : 'Send Invitations'}
 			</button>
 		</div>
 		{#if !authConstants.sendEmails}
-			<div class="text-error-600-400 px-1 text-xs">
+			<div class="text-danger px-1 text-xs">
 				Sending Emails is not enabled. Please enable to send invitations.
 			</div>
 		{/if}

@@ -24,6 +24,6 @@
 
 	:global(.ui-select-content) {
 		--fill: var(--color-foreground);
-		@apply edge z-50 max-h-72 min-w-(--bits-select-anchor-width) overflow-y-auto rounded-container bg-foreground p-1 text-text;
+		@apply edge z-50 max-h-72 min-w-(--bits-select-anchor-width) overflow-y-auto rounded-xl bg-foreground p-1 text-text;
 	}
 </style>

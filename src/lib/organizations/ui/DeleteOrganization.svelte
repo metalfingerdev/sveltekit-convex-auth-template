@@ -107,7 +107,7 @@
 {#if isOwner && activeOrganization}
 	<Dialog.Root bind:open={dialogOpen}>
 		<Dialog.Trigger
-			class="btn btn-sm preset-faded-surface-50-950 text-surface-600-400 hover:bg-error-300-700 hover:text-error-950-50 w-fit justify-between gap-1 text-sm"
+			class="button button-sm tone-raised text-text-muted hover:bg-danger-tint hover:text-text w-fit justify-between gap-1 text-sm"
 			>Delete organization</Dialog.Trigger
 		>
 
@@ -117,22 +117,22 @@
 			</Dialog.Header>
 
 			<article>
-				<div class="text-surface-700-300 space-y-3 text-sm">
+				<div class="text-text-muted space-y-3 text-sm">
 					<p>Are you sure you want to delete this organization?</p>
 					<div
-						class="bg-surface-200-800 border-surface-200-800 rounded-container border p-3 text-center"
+						class="bg-background border-background rounded-xl border p-3 text-center"
 					>
-						<span class="text-surface-800-200 font-semibold">{activeOrganization.name}</span>
+						<span class="text-text font-semibold">{activeOrganization.name}</span>
 					</div>
 					<p>All organization data will be permanently deleted and cannot be recovered.</p>
 				</div>
 			</article>
 
 			<Dialog.Footer class="w-full">
-				<Dialog.Close class="btn preset-tonal" disabled={isDeleting}>Cancel</Dialog.Close>
+				<Dialog.Close class="button tone-raised" disabled={isDeleting}>Cancel</Dialog.Close>
 				<button
 					type="button"
-					class="btn preset-filled-error-500"
+					class="button tone-danger"
 					onclick={handleConfirm}
 					disabled={isDeleting}
 					aria-busy={isDeleting}

@@ -42,10 +42,10 @@
 		box-shadow: none;
 	}
 	:global(.ui-drawer[data-side='bottom']) {
-		@apply inset-x-0 bottom-0 max-h-[85dvh] rounded-t-container;
+		@apply inset-x-0 bottom-0 max-h-[85dvh] rounded-t-xl;
 	}
 	:global(.ui-drawer[data-side='top']) {
-		@apply inset-x-0 top-0 max-h-[85dvh] rounded-b-container;
+		@apply inset-x-0 top-0 max-h-[85dvh] rounded-b-xl;
 	}
 	:global(.ui-drawer[data-side='right']) {
 		@apply inset-y-0 right-0 w-3/4 sm:max-w-sm;

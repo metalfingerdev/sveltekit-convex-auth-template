@@ -26,7 +26,7 @@
 
 	:global(.ui-select-trigger) {
 		--fill: var(--color-foreground);
-		@apply edge-flat flex min-h-9 w-fit items-center justify-between gap-2 rounded-base bg-foreground px-3 text-sm whitespace-nowrap text-text select-none;
+		@apply edge-flat flex min-h-9 w-fit items-center justify-between gap-2 rounded-lg bg-foreground px-3 text-sm whitespace-nowrap text-text select-none;
 	}
 	:global(.ui-select-trigger:disabled) {
 		@apply cursor-not-allowed opacity-50;

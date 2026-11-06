@@ -15,7 +15,7 @@
 	@reference 'src/app.css';
 
 	:global(.ui-dialog-x) {
-		@apply absolute top-3 right-3 grid size-11 place-items-center rounded-base;
+		@apply absolute top-3 right-3 grid size-11 place-items-center rounded-lg;
 	}
 	:global(.ui-dialog-x:hover) {
 		@apply bg-midground;

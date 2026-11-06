@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Button from '#lib/ui/Button.svelte';
 	// SvelteKit
 	import { resolve } from '$app/paths';
 	import { gotoApp } from '#lib/primitives/utils/navigation.js';
@@ -45,14 +46,14 @@
 </svelte:head>
 
 {#if adminResponse.error}
-	<div class="text-error-600-400 mx-auto max-w-md p-6 text-center text-sm">
+	<div class="text-danger mx-auto max-w-md p-6 text-center text-sm">
 		{adminResponse.error.message}
 	</div>
 {:else if auth.isLoading || !auth.isAuthenticated || isAdmin === undefined}
 	<!-- Resolving auth or the admin check → a neutral spinner (no content flash). -->
 	<div class="flex min-h-[60vh] w-full items-center justify-center p-6">
 		<div
-			class="border-surface-300-700 size-6 animate-spin rounded-full border-2 border-t-transparent"
+			class="border-border-muted size-6 animate-spin rounded-full border-2 border-t-transparent"
 			role="status"
 			aria-label="Loading"
 		></div>
@@ -74,14 +75,14 @@
 	>
 		<ShieldAlertIcon class="size-10 opacity-60" aria-hidden="true" />
 		<div>
-			<h1 class="h4">Access denied</h1>
-			<p class="text-surface-600-400 mt-1 text-sm">You don't have permission to view this page.</p>
+			<h1 class="text-lg font-extrabold">Access denied</h1>
+			<p class="text-text-muted mt-1 text-sm">You don't have permission to view this page.</p>
 		</div>
-		<a href={resolve('/')} class="btn preset-tonal">Back to home</a>
+		<Button href={resolve('/')}>Back to home</Button>
 	</div>
 {:else}
 	<div class="mx-auto w-full max-w-5xl p-4 sm:p-6">
-		<h1 class="h3 mb-4">Admin</h1>
+		<h1 class="mb-4 text-2xl font-extrabold">Admin</h1>
 		<AdminDashboard />
 	</div>
 {/if}

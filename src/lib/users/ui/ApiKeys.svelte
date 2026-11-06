@@ -232,12 +232,12 @@
 </script>
 
 <div class="flex w-full flex-col gap-3 pb-6">
-	<span class="text-surface-600-400 text-xs">API Keys</span>
+	<span class="text-text-muted text-xs">API Keys</span>
 	<!-- List api keys with name, creation data, expiry data -->
 	{#if apiKeysData}
 		{#if apiKeys.length > 0}
-			<div class="table-wrap">
-				<table class="table caption-bottom">
+			<div class="overflow-x-auto">
+				<table class="data-table caption-bottom">
 					<thead>
 						<tr>
 							<th>Name</th>
@@ -258,11 +258,11 @@
 								>
 								<td class="text-right">
 									<Menu.Root>
-										<Menu.Trigger class="btn-icon hover:preset-tonal">
+										<Menu.Trigger class="button button-icon hover:tone-raised">
 											<EllipsisVerticalIcon class="size-4" />
 										</Menu.Trigger>
 										<Portal>
-											<Menu.Content class="bg-surface-50-950">
+											<Menu.Content class="bg-foreground">
 												<Menu.Item value="update" onclick={() => openUpdate(apiKey)}
 													>Update</Menu.Item
 												>
@@ -287,7 +287,7 @@
 		<!-- Create / Update dialog -->
 		<Dialog.Root bind:open={dialogOpen}>
 			<div>
-				<Dialog.Trigger class="btn btn-sm preset-filled-surface-200-800" onclick={openCreate}
+				<Dialog.Trigger class="button button-sm tone-sunken" onclick={openCreate}
 					>Create API Key</Dialog.Trigger
 				>
 			</div>
@@ -305,7 +305,7 @@
 							type="text"
 							bind:value={name}
 							placeholder="Enter API key name"
-							class="input"
+							class="control"
 							disabled={isSubmitting}
 						/>
 					</div>
@@ -343,7 +343,7 @@
 								id="custom-date"
 								type="date"
 								bind:value={customDate}
-								class="input"
+								class="control"
 								disabled={isSubmitting}
 							/>
 						</div>
@@ -351,10 +351,10 @@
 				</div>
 
 				<div class="mt-6 flex w-full items-center justify-end gap-2">
-					<Dialog.Close class="btn preset-filled-surface-200-800">Cancel</Dialog.Close>
+					<Dialog.Close class="button tone-sunken">Cancel</Dialog.Close>
 					<button
 						onclick={handleSubmit}
-						class="btn preset-filled-primary-500"
+						class="button tone-primary"
 						disabled={isSubmitting}
 					>
 						{#if isSubmitting}
@@ -378,9 +378,9 @@
 					Are you sure you want to delete '{toDeleteName}'? This action cannot be undone.
 				</p>
 				<div class="mt-4 flex w-full items-center justify-end gap-2">
-					<Dialog.Close class="btn btn-sm preset-filled-surface-200-800">Cancel</Dialog.Close>
+					<Dialog.Close class="button button-sm tone-sunken">Cancel</Dialog.Close>
 					<button
-						class="btn btn-sm preset-filled-error-500"
+						class="button button-sm tone-danger"
 						onclick={handleConfirmDelete}
 						disabled={isDeleting}
 					>
@@ -399,12 +399,12 @@
 				</Dialog.Header>
 				<p class="text-sm">Copy and store this key now. You won’t be able to see it again.</p>
 				<div class="field-group mt-4 grid-cols-[1fr_auto]">
-					<input class="input" readonly value={newKey} />
+					<input class="control" readonly value={newKey} />
 					<button
 						type="button"
 						aria-pressed={copied}
 						onclick={handleCopyClick}
-						class="btn preset-filled-surface-200-800"
+						class="button tone-sunken"
 						aria-label="Copy API key"
 					>
 						{#if copied}
@@ -415,7 +415,7 @@
 					</button>
 				</div>
 				<div class="mt-4 flex w-full items-center justify-end gap-2">
-					<Dialog.Close class="btn btn-sm preset-filled-surface-200-800">Close</Dialog.Close>
+					<Dialog.Close class="button button-sm tone-sunken">Close</Dialog.Close>
 				</div>
 				<Dialog.CloseX />
 			</Dialog.Content>

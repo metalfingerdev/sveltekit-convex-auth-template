@@ -73,21 +73,21 @@
 		{#if verifyLoading}
 			<p class="opacity-80">Verifying your code…</p>
 		{:else if verifyError}
-			<div class="rounded-container bg-error-50-950 text-error-contrast-50-950 mb-4 p-3">
+			<div class="rounded-xl bg-danger-tint text-text mb-4 p-3">
 				<p>{verifyError}</p>
 			</div>
 			<p class="text-sm opacity-80">
 				Check that you opened this page from the device and that the URL contains a valid code.
 			</p>
 		{:else if actionDone === 'approved'}
-			<div class="rounded-container text-success-contrast-50-950 bg-success-50-950 mb-4 p-3">
+			<div class="rounded-xl text-text bg-success-tint mb-4 p-3">
 				<p>Success! You approved the request.</p>
 			</div>
 			<p class="opacity-80">
 				You can return to the device now. The device should connect automatically.
 			</p>
 		{:else if actionDone === 'denied'}
-			<div class="rounded-container text-warning-contrast-50-950 bg-warning-50-950 mb-4 p-3">
+			<div class="rounded-xl text-text bg-secondary-tint mb-4 p-3">
 				<p>Request denied.</p>
 			</div>
 			<p class="opacity-80">You can close this window.</p>
@@ -95,21 +95,21 @@
 			<p class="mb-6 opacity-80">Do you want to sign in on your device?</p>
 
 			{#if actionError}
-				<div class="rounded-container bg-error-50-950 text-error-contrast-50-950 mb-4 p-3">
+				<div class="rounded-xl bg-danger-tint text-text mb-4 p-3">
 					<p>{actionError}</p>
 				</div>
 			{/if}
 
 			<div class="flex justify-end gap-3">
 				<button
-					class="btn preset-filled-surface-500"
+					class="button tone-sunken"
 					onclick={handleDeny}
 					disabled={!!actionLoading}
 				>
 					{actionLoading === 'deny' ? 'Denying…' : 'Deny'}
 				</button>
 				<button
-					class="btn preset-filled-primary-500"
+					class="button tone-primary"
 					onclick={handleApprove}
 					disabled={!!actionLoading}
 				>

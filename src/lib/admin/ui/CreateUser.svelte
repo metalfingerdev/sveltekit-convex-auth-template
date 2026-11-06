@@ -57,28 +57,28 @@
 </script>
 
 <Dialog.Root bind:open onOpenChange={(details) => details.open && reset()}>
-	<Dialog.Trigger class="btn preset-filled-primary-500 shrink-0 gap-2" aria-label="New user">
+	<Dialog.Trigger class="button tone-primary shrink-0 gap-2" aria-label="New user">
 		<PlusIcon class="size-4" aria-hidden="true" />
 		<span class="hidden sm:inline">New user</span>
 	</Dialog.Trigger>
 	<Dialog.Content class="md:max-w-108">
 		<Dialog.Header class="pr-8">
 			<Dialog.Title>Create user</Dialog.Title>
-			<Dialog.Description class="text-surface-700-300">
+			<Dialog.Description class="text-text-muted">
 				The user can sign in with this email and password right away.
 			</Dialog.Description>
 		</Dialog.Header>
 		<form id="admin-create-user" class="flex w-full flex-col gap-3" onsubmit={handleSubmit}>
-			<label class="label">
-				<span class="label-text">Name</span>
-				<input type="text" class="input" bind:value={name} autocomplete="off" required />
+			<label class="field-label">
+				<span class="field-caption">Name</span>
+				<input type="text" class="control" bind:value={name} autocomplete="off" required />
 			</label>
-			<label class="label">
-				<span class="label-text">Email</span>
-				<input type="email" class="input" bind:value={email} autocomplete="off" required />
+			<label class="field-label">
+				<span class="field-caption">Email</span>
+				<input type="email" class="control" bind:value={email} autocomplete="off" required />
 			</label>
-			<label class="label">
-				<span class="label-text">Password</span>
+			<label class="field-label">
+				<span class="field-caption">Password</span>
 				<Password.Root minScore={0}>
 					<Password.Input bind:value={password} autocomplete="new-password" minlength={8} required>
 						<Password.ToggleVisibility />
@@ -86,31 +86,31 @@
 				</Password.Root>
 			</label>
 			{#if organizationsEnabled}
-				<div class="border-surface-300-700 mt-2 flex flex-col gap-3 border-t pt-4">
-					<div class="label">
+				<div class="border-border-muted mt-2 flex flex-col gap-3 border-t pt-4">
+					<div class="field-label">
 						<div class="flex items-center justify-between">
-							<label class="label-text" for="admin-create-user-organization">
+							<label class="field-caption" for="admin-create-user-organization">
 								Add to organization
 							</label>
 							{#if organization}
 								<button
 									type="button"
-									class="btn btn-sm hover:preset-tonal gap-1 px-2 text-xs"
+									class="button button-sm hover:tone-raised gap-1 px-2 text-xs"
 									onclick={() => (organization = null)}
 								>
 									<XIcon class="size-3" aria-hidden="true" />
 									Clear
 								</button>
 							{:else}
-								<span class="badge preset-tonal text-xs">Optional</span>
+								<span class="tag tone-raised text-xs">Optional</span>
 							{/if}
 						</div>
 						<OrganizationSelect id="admin-create-user-organization" bind:value={organization} />
 					</div>
 					{#if organization}
-						<label class="label">
-							<span class="label-text">Role in {organization.name}</span>
-							<select class="select" bind:value={organizationRole}>
+						<label class="field-label">
+							<span class="field-caption">Role in {organization.name}</span>
+							<select class="control" bind:value={organizationRole}>
 								<option value="member">Member</option>
 								<option value="admin">Admin</option>
 							</select>
@@ -120,11 +120,11 @@
 			{/if}
 		</form>
 		<Dialog.Footer>
-			<Dialog.Close class="btn preset-tonal" disabled={submitting}>Cancel</Dialog.Close>
+			<Dialog.Close class="button tone-raised" disabled={submitting}>Cancel</Dialog.Close>
 			<button
 				type="submit"
 				form="admin-create-user"
-				class="btn preset-filled-primary-500"
+				class="button tone-primary"
 				disabled={submitting}
 				aria-busy={submitting}
 			>

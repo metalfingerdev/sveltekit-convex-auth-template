@@ -58,7 +58,7 @@ src/
 ├── hooks.server.ts            # Route protection + Convex token for SSR
 ├── hooks.ts                   # initConvex(PUBLIC_CONVEX_URL)
 ├── env.ts                     # Typed public env vars
-└── themes/                    # palette.css (the colours), compat.css (old Skeleton class names)
+└── themes/palette.css         # The colours; shared utilities are in src/app.css
 ```
 
 ## Import aliases

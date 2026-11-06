@@ -73,21 +73,21 @@
 
 <form onsubmit={handleSubmit} autocomplete="off" class="flex flex-col gap-4">
 	<div class="flex flex-col gap-2">
-		<label class="label" for="email">Email</label>
+		<label class="field-label" for="email">Email</label>
 		<input
 			type="email"
 			value={email}
 			disabled
-			class="input preset-filled-surface-200 cursor-not-allowed opacity-60"
+			class="control tone-sunken cursor-not-allowed opacity-60"
 		/>
 	</div>
 
 	<div class="flex flex-col">
-		<label class="label" for="name">Full Name</label>
+		<label class="field-label" for="name">Full Name</label>
 		<input
 			type="text"
 			bind:value={name}
-			class="input preset-filled-surface-200"
+			class="control tone-sunken"
 			placeholder="Enter your full name"
 			autocomplete="name"
 			required
@@ -95,7 +95,7 @@
 		/>
 	</div>
 
-	<button type="submit" class="btn preset-filled w-full" disabled={submitting || !name.trim()}>
+	<button type="submit" class="button tone-primary w-full" disabled={submitting || !name.trim()}>
 		{#if submitting}
 			<div class="flex items-center gap-2">
 				<div
@@ -108,7 +108,7 @@
 		{/if}
 	</button>
 
-	<button type="button" class="btn" onclick={onBack} disabled={submitting}>
+	<button type="button" class="button" onclick={onBack} disabled={submitting}>
 		Use a different email
 	</button>
 </form>

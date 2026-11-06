@@ -209,20 +209,20 @@
 <!-- Show loading state -->
 {#if isLoading}
 	<div class="mx-auto w-full max-w-md animate-pulse">
-		<div class="placeholder mb-4 h-8 w-full"></div>
-		<div class="placeholder mb-4 h-40 w-full"></div>
-		<div class="placeholder mb-2 h-10 w-full"></div>
-		<div class="placeholder h-10 w-full"></div>
+		<div class="bone mb-4 h-8 w-full"></div>
+		<div class="bone mb-4 h-40 w-full"></div>
+		<div class="bone mb-2 h-10 w-full"></div>
+		<div class="bone h-10 w-full"></div>
 	</div>
 
 	<!-- Show message for unauthenticated users -->
 {:else if !isAuthenticated}
 	<div
-		class="border-surface-200-800 rounded-container mx-auto w-full max-w-md border p-6 text-center"
+		class="border-background rounded-xl mx-auto w-full max-w-md border p-6 text-center"
 	>
-		<LogInIcon class="text-surface-400-600 mx-auto mb-4 size-10" />
+		<LogInIcon class="text-border mx-auto mb-4 size-10" />
 		<h2 class="mb-2 text-xl font-semibold">Authentication Required</h2>
-		<p class="text-surface-600-400 mb-4">Please sign in to create an organization</p>
+		<p class="text-text-muted mb-4">Please sign in to create an organization</p>
 	</div>
 
 	<!-- Show the form for authenticated users -->
@@ -232,18 +232,18 @@
 			<ImageCropper.Root bind:src={cropSrc} accept="image/*" onCropped={handleCropped}>
 				<ImageCropper.UploadTrigger>
 					<div
-						class="rounded-container relative size-20 cursor-pointer transition-all duration-200"
+						class="rounded-xl relative size-20 cursor-pointer transition-all duration-200"
 					>
-						<Avatar.Root class="rounded-container size-20">
+						<Avatar.Root class="rounded-xl size-20">
 							<Avatar.Image src={logo} alt={name.length > 0 ? name : 'My Organization'} />
 							<Avatar.Fallback
-								class="bg-surface-300-700 hover:bg-surface-400-600/80 rounded-container duration-150 ease-in-out"
+								class="bg-border-muted hover:bg-border/80 rounded-xl duration-150 ease-in-out"
 							>
-								<Building2Icon class="text-surface-700-300 size-10" />
+								<Building2Icon class="text-text-muted size-10" />
 							</Avatar.Fallback>
 						</Avatar.Root>
 						<div
-							class="badge-icon preset-filled-surface-300-700 ring-surface-50-950 absolute -right-1.5 -bottom-1.5 size-3 rounded-full ring-4"
+							class="tag tone-sunken ring-foreground absolute -right-1.5 -bottom-1.5 size-3 rounded-full ring-4"
 						>
 							<PencilIcon class="size-4" />
 						</div>
@@ -261,26 +261,26 @@
 
 		<div class="flex flex-col gap-5">
 			<div>
-				<label for="name" class="label">Name</label>
+				<label for="name" class="field-label">Name</label>
 				<input
 					type="text"
 					id="name"
 					value={name}
 					oninput={handleNameInput}
 					required
-					class="input w-full"
+					class="control w-full"
 					placeholder="My Organization..."
 				/>
 			</div>
 			<div>
-				<label for="slug" class="label">Slug URL</label>
+				<label for="slug" class="field-label">Slug URL</label>
 				<input
 					type="text"
 					id="slug"
 					value={slug}
 					oninput={(e) => (slug = (e.target as HTMLInputElement).value)}
 					required
-					class="input w-full"
+					class="control w-full"
 					placeholder="my-organization"
 				/>
 			</div>
@@ -289,7 +289,7 @@
 		<div class="flex justify-end gap-2 pt-6 md:flex-row">
 			<button
 				type="submit"
-				class="btn preset-filled-primary-500"
+				class="button tone-primary"
 				disabled={isCreating}
 				aria-busy={isCreating}
 			>
@@ -306,6 +306,6 @@
 
 <style>
 	:global(.svelte-easy-crop-area) {
-		border-radius: var(--radius-container);
+		border-radius: var(--radius-xl);
 	}
 </style>

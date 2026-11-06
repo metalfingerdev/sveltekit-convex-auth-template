@@ -38,6 +38,6 @@
 	}
 	:global(.ui-dialog) {
 		--fill: var(--color-foreground);
-		@apply edge fixed top-1/2 left-1/2 z-50 flex max-h-[90dvh] w-[90%] max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col items-start gap-5 overflow-x-hidden overflow-y-auto rounded-container bg-foreground p-5 text-text;
+		@apply edge fixed top-1/2 left-1/2 z-50 flex max-h-[90dvh] w-[90%] max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col items-start gap-5 overflow-x-hidden overflow-y-auto rounded-xl bg-foreground p-5 text-text;
 	}
 </style>

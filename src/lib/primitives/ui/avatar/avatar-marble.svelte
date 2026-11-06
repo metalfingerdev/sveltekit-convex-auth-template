@@ -31,9 +31,9 @@
 		size = 80,
 		name = '',
 		colors = [
-			'var(--color-primary-900)',
-			'var(--color-secondary-200)',
-			'var(--color-tertiary-200)'
+			'var(--color-primary)',
+			'var(--color-secondary)',
+			'var(--color-info)'
 		],
 		class: className = ''
 	}: Props = $props();
