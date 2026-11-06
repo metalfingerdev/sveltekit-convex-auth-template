@@ -10,10 +10,9 @@
 
   // UI Components
   // Primitives
-  import * as Select from "../../primitives/ui/select/index.js";
-  import { createListCollection } from "@ark-ui/svelte/select";
-  import * as Dialog from "../../primitives/ui/dialog/index.js";
-  import * as Drawer from "../../primitives/ui/drawer/index.js";
+  import Modal from "#lib/ui/Modal.svelte";
+  import Button from "#lib/ui/Button.svelte";
+  import Field from "#lib/ui/Field.svelte";
   import * as Password from "../../primitives/ui/password/index.js";
   import { toast } from "svelte-sonner";
 
@@ -87,9 +86,8 @@
   let isLinking = $state(false);
   let unlinkingAccountId = $state<string | null>(null);
 
-  // State for password dialog/drawer
+  // State for the set-password dialog
   let isPasswordDialogOpen = $state(false);
-  let isPasswordDrawerOpen = $state(false);
   let password = $state("");
   let isSettingPassword = $state(false);
 
@@ -174,15 +172,6 @@
     return providerIconMap[provider] ?? LockIcon;
   };
 
-  // Providers select collection (derived from available providers)
-  const providersCollection = $derived(
-    createListCollection({
-      items: availableProviders.map((provider) => ({
-        label: getProviderLabel(provider),
-        value: provider,
-      })),
-    }),
-  );
 
   const getProviderLabel = (provider: string) => {
     switch (provider) {
@@ -235,9 +224,8 @@
       toast.success(success);
     }
 
-    // Sanitize current URL in-place: keep dialog, remove success/error
+    // Sanitize current URL in-place: remove success/error
     const url = new URL(page.url.href);
-    url.searchParams.set("dialog", "user-profile");
     url.searchParams.delete("success");
     url.searchParams.delete("error");
     void gotoApp(url, {
@@ -255,18 +243,12 @@
     if (provider === "password") {
       // For credential, open dialog/drawer for input
       password = "";
-      if (isMobile) {
-        isPasswordDrawerOpen = true;
-      } else {
-        isPasswordDialogOpen = true;
-      }
+      isPasswordDialogOpen = true;
       isLinking = false; // Reset linking state, will be set again in handlePasswordSubmit
       return;
     } else {
       // For social providers
       const baseUrl = new URL(page.url.href);
-      // Ensure callback keeps the dialog open on return
-      baseUrl.searchParams.set("dialog", "user-profile");
       // Success URL carries a friendly message
       const successMsg = `${getProviderLabel(provider)} account linked successfully`;
       const successUrl = new URL(baseUrl);
@@ -274,19 +256,6 @@
       // Error URL must NOT contain success param
       const errorUrl = new URL(baseUrl);
       errorUrl.searchParams.delete("success");
-
-      // Pre-purge the current open-dialog entry from history without triggering navigation
-      // This removes entry #2 (/?dialog=user-profile) so Back from callback goes to '/'
-      try {
-        if (typeof window !== "undefined") {
-          const preUrl = new URL(window.location.href);
-          preUrl.searchParams.delete("dialog");
-          const cleaned = `${preUrl.pathname}${preUrl.search}${preUrl.hash}`;
-          window.history.replaceState(window.history.state, "", cleaned);
-        }
-      } catch {
-        // no-op
-      }
 
       await authClient.linkSocial({
         provider,
@@ -313,7 +282,6 @@
       const success = await setPassword(password);
       if (success) {
         isPasswordDialogOpen = false;
-        isPasswordDrawerOpen = false;
         password = "";
       }
     } catch {
@@ -414,261 +382,181 @@
   };
 </script>
 
-<div class="flex w-full flex-col gap-3 pb-6">
-  <!-- Current Accounts -->
-  <div>
-    <span class="text-surface-600-400 text-xs">Linked Accounts</span>
-    {#if accountList && accountList.length > 0}
-      <div class="flex flex-col gap-3 pt-3">
-        {#each accountList as account (account.id)}
-          {@const ProviderIcon = getProviderIcon(account.providerId)}
-
-          <div
-            class="border-surface-300-700 rounded-container flex w-full flex-col border p-3"
-          >
-            <div class="flex w-full flex-row items-center justify-between">
-              <div class="flex items-center gap-3 pl-1">
-                <ProviderIcon size={16} />
-                <div class="text-sm font-medium">
-                  {getProviderLabel(account.providerId)}
-                </div>
-              </div>
-              <div class="flex items-center">
-                {#if account.providerId === "credential"}
-                  <button
-                    class="btn btn-sm preset-tonal mr-2"
-                    onclick={async () => {
-                      isEditingPasswordInline = true;
-                      currentPassword = "";
-                      newPassword = "";
-                      await tick();
-                      currentPasswordInputEl?.focus();
-                    }}
-                  >
-                    Update
-                  </button>
-                {/if}
-                {#if accountList.length > 1}
-                  <button
-                    class="btn-icon preset-faded-surface-50-950 hover:bg-error-300-700 hover:text-error-950-50"
-                    disabled={unlinkingAccountId === account.id}
-                    onclick={() =>
-                      unlinkAccount(account.accountId, account.providerId)}
-                  >
-                    {#if unlinkingAccountId === account.id}
-                      Unlinking...
-                    {:else}
-                      <Trash2Icon class="size-4" />
-                    {/if}
-                  </button>
-                {/if}
-              </div>
-            </div>
-            {#if account.providerId === "credential"}
-              <div
-                class={[
-                  "grid transition-[grid-template-rows] duration-200 ease-in-out",
-                  isEditingPasswordInline
-                    ? "grid-rows-[1fr]"
-                    : "grid-rows-[0fr]",
-                  "",
-                ]}
-                aria-hidden={!isEditingPasswordInline}
-                inert={!isEditingPasswordInline}
-              >
-                <!-- Pass inputs and actions -->
-                <div class="overflow-hidden">
-                  <form
-                    onsubmit={handleChangePasswordSubmit}
-                    class="flex w-full flex-col gap-3 pt-4"
-                  >
-                    <input
-                      bind:this={currentPasswordInputEl}
-                      type="password"
-                      class="input w-full"
-                      bind:value={currentPassword}
-                      placeholder="Enter your current password"
-                      autocomplete="current-password"
-                      required
-                      disabled={isChangingPassword}
-                    />
-                    <Password.Root>
-                      <Password.Input
-                        bind:value={newPassword}
-                        placeholder="Enter your new password"
-                        autocomplete="new-password"
-                        required
-                        disabled={isChangingPassword}
-                      >
-                        <Password.ToggleVisibility />
-                      </Password.Input>
-                      <Password.Error />
-                      <Password.Strength />
-                    </Password.Root>
-                    <div class="flex gap-1.5">
-                      <button
-                        type="button"
-                        class="btn btn-sm preset-tonal w-full"
-                        onclick={() => {
-                          currentPassword = "";
-                          newPassword = "";
-                          isEditingPasswordInline = false;
-                        }}
-                        disabled={isChangingPassword}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        class="btn btn-sm preset-filled-primary-500 w-full"
-                        disabled={isChangingPassword ||
-                          !currentPassword ||
-                          !newPassword}
-                      >
-                        {isChangingPassword ? "Changing..." : "Change Password"}
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            {/if}
+<section class="accounts">
+  <h2 class="heading">Linked accounts</h2>
+  {#if accountList === undefined || accountList === null}
+    <div class="loading bone"></div>
+  {:else if accountList.length === 0}
+    <p class="muted">No accounts found</p>
+  {:else}
+    <ul class="list">
+      {#each accountList as account (account.id)}
+        {@const ProviderIcon = getProviderIcon(account.providerId)}
+        <li class="row">
+          <div class="line">
+            <span class="name">
+              <ProviderIcon size={16} />
+              {getProviderLabel(account.providerId)}
+            </span>
+            <span class="buttons">
+              {#if account.providerId === "credential"}
+                <Button
+                  onclick={async () => {
+                    isEditingPasswordInline = true;
+                    currentPassword = "";
+                    newPassword = "";
+                    await tick();
+                    currentPasswordInputEl?.focus();
+                  }}
+                >
+                  Update
+                </Button>
+              {/if}
+              {#if accountList.length > 1}
+                <Button
+                  icon
+                  aria-label="Unlink {getProviderLabel(account.providerId)}"
+                  disabled={unlinkingAccountId === account.id}
+                  onclick={() =>
+                    unlinkAccount(account.accountId, account.providerId)}
+                >
+                  <Trash2Icon class="size-4" />
+                </Button>
+              {/if}
+            </span>
           </div>
+          {#if account.providerId === "credential" && isEditingPasswordInline}
+            <form onsubmit={handleChangePasswordSubmit} class="form">
+              <Field label="Current password" hideLabel>
+                <input
+                  bind:this={currentPasswordInputEl}
+                  type="password"
+                  bind:value={currentPassword}
+                  placeholder="Enter your current password"
+                  autocomplete="current-password"
+                  required
+                  disabled={isChangingPassword}
+                />
+              </Field>
+              <Password.Root>
+                <Password.Input
+                  bind:value={newPassword}
+                  placeholder="Enter your new password"
+                  autocomplete="new-password"
+                  required
+                  disabled={isChangingPassword}
+                >
+                  <Password.ToggleVisibility />
+                </Password.Input>
+                <Password.Error />
+                <Password.Strength />
+              </Password.Root>
+              <div class="actions">
+                <Button
+                  onclick={() => {
+                    currentPassword = "";
+                    newPassword = "";
+                    isEditingPasswordInline = false;
+                  }}
+                  disabled={isChangingPassword}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  disabled={isChangingPassword ||
+                    !currentPassword ||
+                    !newPassword}
+                >
+                  {isChangingPassword ? "Changing..." : "Change password"}
+                </Button>
+              </div>
+            </form>
+          {/if}
+        </li>
+      {/each}
+    </ul>
+  {/if}
+
+  {#if availableProviders.length > 0}
+    <div class="link">
+      <p class="muted">Link a new account</p>
+      <div class="buttons">
+        {#each availableProviders as provider (provider)}
+          {@const ProviderIcon = getProviderIcon(provider)}
+          <Button onclick={() => linkAccount(provider)} disabled={isLinking}>
+            <ProviderIcon size={16} />
+            {getProviderLabel(provider)}
+          </Button>
         {/each}
       </div>
-    {:else}
-      <div class="text-surface-600-400 mt-2 text-sm">No accounts found</div>
-    {/if}
-  </div>
-
-  <!-- Link New Account -->
-  {#if availableProviders.length > 0}
-    <div>
-      <Select.Root
-        collection={providersCollection}
-        onSelect={(e) => linkAccount(e.value)}
-      >
-        <Select.Trigger class="w-full" placeholder="Link new account" />
-        <Select.Content>
-          {#each providersCollection.items as item (item.value)}
-            {@const ProviderIcon = getProviderIcon(item.value)}
-            <Select.Item {item}>
-              <ProviderIcon size={16} />
-              <Select.ItemText>{item.label}</Select.ItemText>
-            </Select.Item>
-          {/each}
-        </Select.Content>
-      </Select.Root>
-      {#if isLinking}
-        <p class="text-surface-600-400 mt-2 text-sm">Linking account...</p>
-      {/if}
+      {#if isLinking}<p class="muted">Linking account...</p>{/if}
     </div>
   {/if}
-</div>
+</section>
 
-<!-- Password Dialog - Desktop -->
-<Dialog.Root bind:open={isPasswordDialogOpen}>
-  <Dialog.Content class="w-full max-w-md">
-    <div
-      class="flex max-h-dvh w-full flex-col gap-4 overflow-auto overscroll-contain"
-      onfocusin={(e) => {
-        const el = e.target as HTMLElement | null;
-        if (!el) return;
-        if (!isEditableElement(el)) return;
-        scheduleScrollIntoView(el);
-      }}
-    >
-      <Dialog.Header>
-        <Dialog.Title>Set Password</Dialog.Title>
-      </Dialog.Header>
-      <form onsubmit={handlePasswordSubmit} class="w-full">
-        <div class="flex flex-col">
-          <label class="flex flex-col gap-2">
-            <span class="text-sm font-medium">Password</span>
-            <Password.Root>
-              <Password.Input
-                bind:value={password}
-                placeholder="Enter your password"
-                required
-              >
-                <Password.ToggleVisibility />
-              </Password.Input>
-              <Password.Error />
-              <Password.Strength />
-            </Password.Root>
-          </label>
-          <Dialog.Footer>
-            <Dialog.Close class="btn preset-tonal w-full md:w-fit"
-              >Cancel</Dialog.Close
-            >
-            <button
-              type="submit"
-              class="btn preset-filled-primary-500 w-full md:w-fit"
-              disabled={isSettingPassword}
-            >
-              {#if isSettingPassword}
-                Setting...
-              {:else}
-                Set Password
-              {/if}
-            </button>
-          </Dialog.Footer>
-        </div>
-      </form>
-      <Dialog.CloseX />
+<Modal bind:open={isPasswordDialogOpen} title="Set password" closeLabel="Close">
+  <form onsubmit={handlePasswordSubmit} class="form">
+    <h2 class="heading">Set password</h2>
+    <Password.Root>
+      <Password.Input
+        bind:value={password}
+        placeholder="Enter your password"
+        required
+      >
+        <Password.ToggleVisibility />
+      </Password.Input>
+      <Password.Error />
+      <Password.Strength />
+    </Password.Root>
+    <div class="actions">
+      <Button onclick={() => (isPasswordDialogOpen = false)}>Cancel</Button>
+      <Button type="submit" variant="primary" disabled={isSettingPassword}>
+        {isSettingPassword ? "Setting..." : "Set password"}
+      </Button>
     </div>
-  </Dialog.Content>
-</Dialog.Root>
+  </form>
+</Modal>
 
-<!-- Password Drawer - Mobile -->
-<Drawer.Root bind:open={isPasswordDrawerOpen}>
-  <Drawer.Content>
-    <div
-      class="max-h-dvh overflow-auto overscroll-contain"
-      onfocusin={(e) => {
-        const el = e.target as HTMLElement | null;
-        if (!el) return;
-        if (!isEditableElement(el)) return;
-        scheduleScrollIntoView(el);
-      }}
-    >
-      <Drawer.Header>
-        <Drawer.Title>Set Password</Drawer.Title>
-      </Drawer.Header>
-      <form onsubmit={handlePasswordSubmit} class="w-full">
-        <div class="flex flex-col gap-4">
-          <label class="flex flex-col gap-2">
-            <span class="text-sm font-medium">Password</span>
-            <Password.Root>
-              <Password.Input
-                bind:value={password}
-                placeholder="Enter your password"
-                required
-              >
-                <Password.ToggleVisibility />
-              </Password.Input>
-              <Password.Error />
-              <Password.Strength />
-            </Password.Root>
-          </label>
-          <Drawer.Footer>
-            <Drawer.Close class="btn preset-tonal w-full md:w-fit"
-              >Cancel</Drawer.Close
-            >
-            <button
-              type="submit"
-              class="btn preset-filled-primary-500 w-full md:w-fit"
-              disabled={isSettingPassword}
-            >
-              {#if isSettingPassword}
-                Setting...
-              {:else}
-                Set Password
-              {/if}
-            </button>
-          </Drawer.Footer>
-        </div>
-      </form>
-      <Drawer.CloseX />
-    </div>
-  </Drawer.Content>
-</Drawer.Root>
+<style lang="postcss">
+  @reference 'src/app.css';
+
+  .accounts {
+    @apply flex flex-col gap-3;
+  }
+  .heading {
+    @apply text-lg font-extrabold;
+  }
+  .muted {
+    @apply text-sm text-text-muted;
+  }
+  .loading {
+    @apply h-14 w-full rounded-container;
+  }
+  .list {
+    @apply flex flex-col gap-2;
+  }
+  .row {
+    --fill: var(--color-midground);
+    @apply edge-flat flex flex-col gap-3 rounded-container bg-midground p-3;
+  }
+  .line {
+    @apply flex items-center justify-between gap-2;
+  }
+  .name {
+    @apply flex items-center gap-3 text-sm font-semibold;
+  }
+  .buttons {
+    @apply flex flex-wrap items-center gap-2;
+  }
+  .form {
+    @apply flex flex-col gap-3;
+  }
+  .actions {
+    @apply grid grid-cols-2 gap-2;
+  }
+  .link {
+    @apply flex flex-col gap-2;
+  }
+</style>

@@ -8,7 +8,7 @@
 	import * as Dialog from '../../primitives/ui/dialog/index.js';
 	import { toast } from 'svelte-sonner';
 	import * as Select from '../../primitives/ui/select/index.js';
-	import { createListCollection } from '@ark-ui/svelte/select';
+	import { createListCollection } from '../../primitives/ui/select/index.js';
 	// Icons
 	import Loader2Icon from '@lucide/svelte/icons/loader-2';
 

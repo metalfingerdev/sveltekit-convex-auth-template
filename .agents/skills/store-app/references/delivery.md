@@ -41,7 +41,8 @@ What is special to partners, in the order they need it:
 
 - **Amount to collect**, large: "Collect ₹X cash" / "Collect ₹X by UPI" / "Already paid".
 - **Customer**: first name and a **tap-to-call** button (`tel:`).
-- **Address**: hostel/house line, area, **landmark**, and a **Maps** button. With coordinates use
+- **Address**: hostel/house line, area, **landmark**, and a **Maps** button (where the store uses pins, also a small fixed satellite view of the pin that follows
+  it if the customer moves it, noting when; an order without a pin says so: call first). With coordinates use
   `https://www.google.com/maps/dir/?api=1&destination=<lat>,<lng>`; without, search the address
   text. Urlencode everything.
 - **Customer's note** (for example "Call at the gate").
@@ -67,9 +68,18 @@ customer reads out; the mutation compares against `orders.deliveryCode`. Never r
 the partner. Limit wrong attempts with `@convex-dev/rate-limiter` (for example 5 per order per 10
 minutes), or four digits can be guessed in a few taps.
 
-On success the mutation sets `deliveredAt`, `paymentStatus: 'paid'`, `cashCollectedPaise` (the order
-total for cash; for UPI, still the total, recorded with the method so the admin can reconcile) and
-assigns the invoice number (`admin.md`).
+A wrong code is returned as a result (`{ ok: false, reason: 'WRONG_CODE' }`), not thrown: a thrown
+error rolls back the rate limiter's counter and the limit would never trip.
+
+**UPI is never the partner's word.** While an order is unpaid, "Delivered" needs the partner to
+confirm they collected the cash (`paidWith: 'cash'`, which sets `cashCollectedPaise`, what they owe
+the store). A customer paying by UPI scans the gateway's QR fixed to the order total; only the
+gateway's signed webhook, or a status check against it, marks the order paid, and the partner's
+screen shows "Paid by UPI" live. Claiming UPI on an unpaid order is refused (`UPI_NOT_CONFIRMED`).
+See `payments.md`.
+
+On success the mutation sets `deliveredAt`, `paymentStatus: 'paid'` and, for cash,
+`cashCollectedPaise`, and assigns the invoice number (`admin.md`).
 
 ## Resilience
 

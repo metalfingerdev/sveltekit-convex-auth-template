@@ -1,4 +1,3 @@
-import type { Progress as ProgressPrimitive, Toggle as TogglePrimitive } from '@ark-ui/svelte';
 import type { HTMLAttributes, HTMLInputAttributes } from 'svelte/elements';
 import type { CopyButtonProps } from '../copy-button/types.js';
 import type { ZxcvbnResult } from '@zxcvbn-ts/core';
@@ -30,10 +29,10 @@ export type PasswordInputProps = Omit<
 > &
 	PasswordInputPropsWithoutHTML;
 
-export type PasswordToggleVisibilityProps = Omit<
-	TogglePrimitive.RootProps,
-	'children' | 'pressed' | 'aria-label' | 'tabindex'
->;
+export type PasswordToggleVisibilityProps = {
+	ref?: HTMLButtonElement | null;
+	class?: string;
+};
 
 export type PasswordCopyButtonProps = Omit<CopyButtonProps, 'children' | 'text'>;
 
@@ -41,5 +40,4 @@ export type PasswordStrengthPropsWithoutHTML = {
 	strength?: ZxcvbnResult;
 };
 
-export type PasswordStrengthProps = PasswordStrengthPropsWithoutHTML &
-	WithoutChildren<ProgressPrimitive.RootProps>;
+export type PasswordStrengthProps = PasswordStrengthPropsWithoutHTML & { class?: string };

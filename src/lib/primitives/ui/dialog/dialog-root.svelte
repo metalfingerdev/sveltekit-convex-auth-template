@@ -1,60 +1,22 @@
-<script module lang="ts">
-	let dialogIdCounter = 0;
-
-	function nextDialogId() {
-		dialogIdCounter += 1;
-		return `dialog-${dialogIdCounter}`;
-	}
-</script>
-
 <script lang="ts">
-	import { Dialog as DialogPrimitive } from '@ark-ui/svelte/dialog';
+	import { Dialog } from 'bits-ui';
+	import type { Snippet } from 'svelte';
 
-	const fallbackId = nextDialogId();
-
+	// Same props as the old Ark-based dialog: `onOpenChange` gets `{ open }`, and `lazyMount` and
+	// `unmountOnExit` are accepted but not needed (Bits only mounts the content while it is open).
 	let {
 		open = $bindable(false),
-		ids,
-		onInteractOutside,
-		...restProps
-	}: DialogPrimitive.RootProps = $props();
-
-	const resolvedIds = $derived({
-		...ids,
-		backdrop:
-			typeof ids?.backdrop === 'string' && ids.backdrop.length > 0
-				? ids.backdrop
-				: `${fallbackId}-backdrop`,
-		positioner:
-			typeof ids?.positioner === 'string' && ids.positioner.length > 0
-				? ids.positioner
-				: `${fallbackId}-positioner`,
-		content:
-			typeof ids?.content === 'string' && ids.content.length > 0
-				? ids.content
-				: `${fallbackId}-content`
-	});
-
-	function handleInteractOutside(
-		event: Parameters<NonNullable<DialogPrimitive.RootProps['onInteractOutside']>>[0]
-	) {
-		const originalEvent = event.detail?.originalEvent || event.detail;
-
-		if (originalEvent instanceof Event && originalEvent.target instanceof Element) {
-			const sonnerElement = originalEvent.target.closest('[data-sonner-toast]');
-			if (sonnerElement) {
-				event.preventDefault();
-				return;
-			}
-		}
-
-		onInteractOutside?.(event);
-	}
+		onOpenChange,
+		children
+	}: {
+		open?: boolean;
+		onOpenChange?: (details: { open: boolean }) => void;
+		lazyMount?: boolean;
+		unmountOnExit?: boolean;
+		children?: Snippet;
+	} = $props();
 </script>
 
-<DialogPrimitive.Root
-	bind:open
-	ids={resolvedIds}
-	onInteractOutside={handleInteractOutside}
-	{...restProps}
-/>
+<Dialog.Root bind:open onOpenChange={(next) => onOpenChange?.({ open: next })}>
+	{@render children?.()}
+</Dialog.Root>

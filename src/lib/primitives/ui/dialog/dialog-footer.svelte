@@ -10,12 +10,14 @@
 	}: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
 </script>
 
-<div
-	bind:this={ref}
-	data-scope="dialog"
-	data-part="footer"
-	class={cn('flex justify-end gap-2 pt-6 md:flex-row', className)}
-	{...restProps}
->
+<div bind:this={ref} class={cn('ui-dialog-footer', className)} {...restProps}>
 	{@render children?.()}
 </div>
+
+<style lang="postcss">
+	@reference 'src/app.css';
+
+	:global(.ui-dialog-footer) {
+		@apply flex justify-end gap-2 pt-4;
+	}
+</style>

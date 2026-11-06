@@ -32,6 +32,9 @@ jobs:
       - name: Type-check Convex functions
         run: npx tsc -p src/convex --noEmit
 
+      - name: Unit tests
+        run: pnpm test
+
       # The build only needs these to exist; nothing here talks to a real deployment
       - name: Build
         run: pnpm build

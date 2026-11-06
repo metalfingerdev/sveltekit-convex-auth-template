@@ -19,7 +19,15 @@ checkout, phone-first, and the guest cart follows them.
 | `/account/addresses` | signed in | saved addresses |
 
 Add the public ones to `isPublic` in `src/hooks.server.ts`, with the same pattern syntax it uses
-(`'/c/{*rest}'`, `'/p/{*rest}'`). Everything else stays private by default. Replace the
+(`'/c/{*rest}'`, `'/p/{*rest}'`). Everything else stays private by default. Keep the
+patterns in `src/lib/store/publicRoutes.ts` (unit-tested) and spread them into `hooks.server.ts`;
+`/cart` is public too, since a guest has a cart.
+
+**Don't put the storefront pages in a route group** such as `(shop)`. A group renames route IDs
+(`/` becomes `/(shop)`), and `resolve('/')` is used all over the app, so every one of those breaks.
+Share a `ShopPage.svelte` (open/closed strip, search box) instead. Catalogue queries return
+`stockLeft` only while `lowStock` is true, so "Only N left" works without exposing the real stock
+otherwise. Replace the
 placeholder `src/routes/+page.svelte`, and the "Svelte" wordmark in `src/routes/+layout.svelte`,
 with the store's name from `store-profile.md`.
 
@@ -71,13 +79,18 @@ export class Cart {
 - **Guest**: lines in `localStorage` under a versioned key (`store.cart.v1`), every read and write in
   `try/catch` since storage can be blocked. Prices are *not* stored; look them up live so a stale
   cart never shows a stale price.
-- **Signed in**: lines in `cartItems` through mutations in `src/convex/store/cart.ts`. The UI updates
-  optimistically (`convex-svelte` optimistic updates) and rolls back on error.
+- **Signed in**: lines in `cartItems` through mutations in `src/convex/store/cart.ts`. Start with
+  the live query and no optimistic updates (a joined cart query makes them fiddly); add them only if
+  the delay shows on a slow connection.
 - **Merge on sign-in**: when `useAuth().isAuthenticated` turns true and the guest cart isn't empty,
-  call `mergeGuestCart({ lines })` once, then clear local storage. The mutation sums quantities for
-  products in both carts and clamps each to `min(stock, maxPerOrder)`. It must be idempotent: a
-  repeated call with the same lines must not double the quantities. Clear storage only after
-  success.
+  call `mergeGuestCart({ lines })` once, then clear local storage. The mutation takes the **larger**
+  quantity for products in both carts and clamps each to `min(stock, maxPerOrder)`. It must be
+  idempotent: a repeated call with the same lines must not double the quantities. Why max, not sum:
+  a lost response or a second tab makes the call run again, and a sum would double the quantities;
+  max can't. Clear storage only after success.
+- **Guest lines for products that vanish**: count them only until their details load, then ignore
+  them. Query the guest's products with `keepPreviousData`, or the cart page flashes to its loading
+  state on every tap.
 - **Clamping**: the stepper stops at `min(stock, maxPerOrder)` and says why ("Only 3 available").
   The server clamps again.
 
@@ -120,11 +133,25 @@ One page, four blocks, a single primary button:
 
 1. **Address**: pick a saved one or add one. The form adapts to `kind` (house: house/street +
    landmark; hostel: hostel/PG name, block, room; shop). `area` is a select from
-   `storeSettings.deliveryAreas`; an address outside them can't be saved ("We don't deliver there
-   yet"). Phone is required and defaults to the signed-in number.
+   `storeSettings.deliveryAreas`; coverage is the named areas, not the pin, and an address outside
+   them can't be saved ("We don't deliver there yet"). Phone is required and defaults to the
+   signed-in number. **Whether a map pin is required is a store decision** (`store-profile.md`,
+   Maps). When it is: the form opens with the pin picker in satellite view, starting at the
+   customer's location, when a Maps key is set, and otherwise offers "Use my current location" and a
+   link to check the pin on Google Maps; the server refuses a missing pin (`PIN_REQUIRED`) or one
+   outside India (which also catches the 0,0 a failing phone reports); never block an order on the
+   map loading; store only the customer's confirmed pin and their own edited text, not the
+   geocoder's raw results (check Google's caching terms); accept the optional "Google Maps link" only
+   for https Google Maps hosts, because the rider taps it (`isAllowedMapsUrl`); an older address
+   without a pin gets "Add the pin" at checkout and `placeOrder` refuses it. From an open order the
+   customer can "Send my current location" (`updateOrderPin`), which moves the order's pin and shows
+   the rider when it moved.
 2. **Delivery**: "As soon as possible (~N min)" or a slot list generated from the store's hours.
-3. **Payment**: cash on delivery or UPI on delivery (the partner shows the store's UPI QR/VPA, or
-   the customer pays by UPI app at the door). Online payment is a later step.
+3. **Payment**: cash on delivery, UPI on delivery (a gateway QR fixed to the order total, shown by
+   the rider or on the customer's order page), or pay online now through the payment gateway
+   (`payments.md`). An online order waits as `awaiting_payment` until the gateway's signed webhook
+   or a server-side status check confirms it, and is cancelled with its stock released if not paid
+   within the payment window (a named constant).
 4. **Summary**: lines, the `priceCart` breakdown, the minimum-order check.
 
 **`placeOrder`** (`src/convex/store/orders.ts`, `requireCustomer`) takes the address id, slot,
@@ -142,13 +169,29 @@ transaction it:
 8. calls `adjustStock` for each line (reason `sold`)
 9. clears the user's `cartItems`
 
-Failures throw `ConvexError({ code, ... })` with one of `STORE_CLOSED`, `BELOW_MINIMUM`,
-`OUT_OF_AREA`, `OUT_OF_STOCK` (with the product id) or `PRICE_CHANGED`. The page turns each into a
+Failures throw `ConvexError({ code, ... })` with one of `STORE_CLOSED`, `STORE_NOT_SET_UP`,
+`BELOW_MINIMUM` (`minOrderPaise`), `OUT_OF_AREA`, `PIN_REQUIRED` (when pins are required),
+`INVALID_SLOT`, `EMPTY_CART`, `TOO_MANY_OPEN_ORDERS`, `CART_CHANGED` or `PRICE_CHANGED`
+(`totalPaise`, the new total). The page turns each into a
 "Review your cart" state that shows exactly what changed and lets the customer accept and retry;
 never a bare error toast. Compare the total the customer saw (sent as `expectedTotalPaise`) with
 the recomputed one, and throw `PRICE_CHANGED` if they differ.
 
+`CART_CHANGED` carries `problems: [{ productId, reason, available }]` for **every** line that can't
+be ordered as it is (`reason` is `unavailable`, `out_of_stock` or `over_limit`; `available` is the
+most that can be ordered now), so the customer fixes the whole cart in one pass instead of
+discovering problems one retry at a time. Read the cart from `cartItems` on the server, never from
+the request, and run every check before the first write, so a refusal leaves nothing behind. Stock
+changes in one place (`model/store/stock.ts`, `adjustStock`) and status in one place
+(`model/store/orderStatus.ts`, `transitionOrder`).
+
 ## Orders and tracking
+
+Checkout refuses nothing silently: a `describeCheckoutError` helper (`src/lib/store/checkoutErrors.ts`)
+turns every `placeOrder` refusal into plain words and a next step, and an error it doesn't know gets
+a calm "try again", never a raw message. Disable "Place order" for what the page can already see
+(closed, no address, area no longer served, bad slot, below minimum), but the server stays the
+authority.
 
 - `/orders` is a paginated query (`paginationOptsValidator`) on `by_userId`, newest first.
 - `/orders/[id]` uses `useQuery`, so the status updates live without polling. Show the

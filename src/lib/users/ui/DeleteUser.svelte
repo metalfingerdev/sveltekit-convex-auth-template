@@ -1,10 +1,8 @@
 <script lang="ts">
 	// Primitives
-	import * as Dialog from '../../primitives/ui/dialog/index.js';
+	import ConfirmDialog from '#lib/ui/ConfirmDialog.svelte';
+	import Button from '#lib/ui/Button.svelte';
 	import { toast } from 'svelte-sonner';
-	// Icons
-	import Loader2Icon from '@lucide/svelte/icons/loader-2';
-
 	// API
 	import { useConvexClient } from 'convex-svelte';
 	import { ConvexError } from 'convex/values';
@@ -13,7 +11,7 @@
 	const client = useConvexClient();
 
 	// Utils
-	import { requestCloseUserProfile } from '../utils/userProfile.js';
+	import { refreshAll } from '$app/navigation';
 
 	// State
 	let deleteDialogOpen: boolean = $state(false);
@@ -48,43 +46,22 @@
 			return;
 		}
 
-		// Request closing the profile dialog (handled by UserProfileHost)
-		requestCloseUserProfile();
-
-		toast.success('User deleted successfully');
-		deleteDialogOpen = false;
+		toast.success('Account deleted');
 		isDeleting = false;
+		// Runs the server hooks again, which send a signed-out visitor away from this page
+		refreshAll();
 	}
 </script>
 
-<Dialog.Root bind:open={deleteDialogOpen}>
-	<Dialog.Trigger
-		class="preset-faded-surface-50-950 btn rounded-base btn-sm text-surface-600-400 hover:bg-error-300-700 hover:text-error-950-50 justify-between gap-1 text-sm"
-		>Delete account</Dialog.Trigger
-	>
-	<Dialog.Content class="md:max-w-108">
-		<Dialog.Header>
-			<Dialog.Title>Delete your account</Dialog.Title>
-			<Dialog.Description class="text-surface-700-300">
-				Are you sure you want to delete your account? All of your data will be permanently deleted.
-			</Dialog.Description>
-		</Dialog.Header>
-		<Dialog.Footer class="w-full">
-			<Dialog.Close class="btn preset-tonal" disabled={isDeleting}>Cancel</Dialog.Close>
-			<button
-				type="button"
-				class="btn preset-filled-error-500"
-				onclick={handleConfirm}
-				disabled={isDeleting}
-				aria-busy={isDeleting}
-			>
-				{#if isDeleting}
-					<Loader2Icon class="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
-					Deleting...
-				{:else}
-					Delete
-				{/if}
-			</button>
-		</Dialog.Footer>
-	</Dialog.Content>
-</Dialog.Root>
+<Button onclick={() => (deleteDialogOpen = true)} disabled={isDeleting} aria-busy={isDeleting}>
+	Delete account
+</Button>
+
+<ConfirmDialog
+	bind:open={deleteDialogOpen}
+	title="Delete your account"
+	description="Are you sure you want to delete your account? All of your data will be permanently deleted."
+	confirmLabel="Delete"
+	cancelLabel="Cancel"
+	onconfirm={handleConfirm}
+/>

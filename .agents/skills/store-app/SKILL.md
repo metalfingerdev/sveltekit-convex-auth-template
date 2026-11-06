@@ -24,6 +24,7 @@ because each one prevents a specific, expensive mistake; the references hold the
    and ask the user when it matters (fees, hours, GST).
 3. `references/roles-and-access.md`: who may call what. Read it before writing any function.
 4. Then the side you're building: `references/customer.md`, `admin.md` or `delivery.md`. Open
+   `references/payments.md` for online payment, UPI QR and refunds. Open
    `references/data-model.md` when adding or changing tables.
 
 ## Build order for a store that doesn't exist yet
@@ -62,6 +63,10 @@ everything after it can lean on it.
   heavy libraries, large tap targets, skeletons instead of spinners, and nothing that needs hover.
 - **All UI text lives in `src/lib/store/strings.ts`** so Hindi can be added without touching
   components.
+- **Screens use the app's UI kit** (`src/lib/ui`, colours from `src/themes/palette.css`, AGENTS.md),
+  not another library's classes.
+- **A public repo never holds the store's phone number or UPI id, or any real customer's data.**
+  They are entered through the admin screens.
 - **Use the store's own name, colours, copy and layout.** The mechanics (fast delivery, category
   grid, sticky cart bar, live status) are common to quick commerce; another company's branding,
   logo, palette and screens are not.
@@ -87,6 +92,9 @@ tabs in `src/lib/primitives/ui/`, `createContext` as in `src/lib/auth/context.sv
 ## Finish
 
 - `pnpm check` and `npx tsc -p src/convex --noEmit` pass.
-- If you touched access rules, prove them: the `convex-verify` skill drives each role and checks
-  that the wrong role is refused.
+- If you touched access rules, prove them: a test per role showing the wrong role is refused
+  (Vitest with `convex-test`, through a shared harness such as `src/convex/store/harness.testutils.ts`
+  and guard stand-ins in `src/convex/vitest.setup.ts`), plus a Playwright spec in `tests/e2e` for the
+  pages (`docs/09-testing.md`). Only tests that can fail when the behaviour breaks; none that restate
+  a table, a string or static data.
 - Report what you built, which `TODO (dictate)` values you assumed, and anything you left for later.

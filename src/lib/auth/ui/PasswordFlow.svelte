@@ -7,6 +7,9 @@
 
 	// API
 	import { getAuthContext } from '../context.svelte.js';
+	import Button from '#lib/ui/Button.svelte';
+	import Field from '#lib/ui/Field.svelte';
+	import Spinner from '#lib/ui/Spinner.svelte';
 	const { authClient, authConstants } = getAuthContext();
 
 	interface PasswordFlowProps {
@@ -166,52 +169,40 @@
 	}
 </script>
 
-<form onsubmit={handleSubmit} novalidate autocomplete="off" class="flex flex-col gap-8">
+<form onsubmit={handleSubmit} novalidate autocomplete="off" class="form">
 	<!-- Inputs -->
-	<div class="flex flex-col gap-5">
-		<div class="flex flex-col">
-			<label class="label" for="email">Email</label>
-			<input
-				id="email"
-				type="email"
-				value={email}
-				disabled
-				class="input preset-filled-surface-200 cursor-not-allowed opacity-60"
-			/>
-		</div>
+	<div class="fields">
+		<Field label="Email">
+			<input id="email" type="email" value={email} disabled class="locked" />
+		</Field>
 
 		{#if mode === 'register'}
-			<div class="flex flex-col">
-				<label class="label" for="name">Full Name</label>
-				<input
-					id="name"
-					bind:this={nameInputRef}
-					bind:value={fullName}
-					name="name"
-					type="text"
-					class="input preset-filled-surface-200"
-					placeholder="Enter your full name"
-					autocomplete="name"
-					required
-					disabled={submitting}
-					aria-invalid={nameErrorMessage ? true : undefined}
-					aria-describedby={nameErrorMessage ? 'name-error' : undefined}
-				/>
+			<div>
+				<Field label="Full Name">
+					<input
+						id="name"
+						bind:this={nameInputRef}
+						bind:value={fullName}
+						name="name"
+						type="text"
+						placeholder="Enter your full name"
+						autocomplete="name"
+						required
+						disabled={submitting}
+						aria-invalid={nameErrorMessage ? true : undefined}
+						aria-describedby={nameErrorMessage ? 'name-error' : undefined}
+					/>
+				</Field>
 				{#if nameErrorMessage}
-					<span
-						id="name-error"
-						class="text-error-600-400 pt-1 pb-1 text-xs"
-						aria-live="polite"
-						role="status"
-					>
+					<span id="name-error" class="problem" aria-live="polite" role="status">
 						{nameErrorMessage}
 					</span>
 				{/if}
 			</div>
 		{/if}
 
-		<div class="flex flex-col">
-			<label class="label" for="password">Password</label>
+		<div class="password">
+			<label class="caption" for="password">Password</label>
 			<Password.Root minScore={mode === 'register' ? 3 : 0}>
 				<Password.Input
 					id="password"
@@ -229,37 +220,57 @@
 				<Password.Error />
 			</Password.Root>
 			{#if mode === 'login' && authConstants.sendEmails}
-				<div class="flex flex-row items-center justify-end pt-1">
-					<button
-						type="button"
-						class="anchor mb-1 shrink-0 text-xs"
-						onclick={handleForgotPassword}
-						disabled={submitting || isRequestingReset}
-					>
-						{isRequestingReset ? 'Sending...' : 'Forgot password?'}
-					</button>
-				</div>
+				<button
+					type="button"
+					class="forgot"
+					onclick={handleForgotPassword}
+					disabled={submitting || isRequestingReset}
+				>
+					{isRequestingReset ? 'Sending...' : 'Forgot password?'}
+				</button>
 			{/if}
 		</div>
 	</div>
 
 	<!-- Actions -->
-	<div class="flex flex-col gap-2">
-		<button type="submit" class="btn preset-filled w-full" disabled={submitting}>
+	<div class="actions">
+		<Button type="submit" variant="primary" large block disabled={submitting}>
 			{#if submitting}
-				<div class="flex items-center gap-2">
-					<div
-						class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
-					></div>
-					{mode === 'register' ? 'Creating account...' : 'Signing in...'}
-				</div>
+				<Spinner /> {mode === 'register' ? 'Creating account...' : 'Signing in...'}
 			{:else}
 				{mode === 'register' ? 'Create Account' : 'Sign In'}
 			{/if}
-		</button>
+		</Button>
 
-		<button type="button" class="btn" onclick={onBack} disabled={submitting}>
-			Use a different email
-		</button>
+		<Button block onclick={onBack} disabled={submitting}>Use a different email</Button>
 	</div>
 </form>
+
+<style lang="postcss">
+	@reference 'src/app.css';
+
+	.form {
+		@apply flex flex-col gap-6;
+	}
+	.fields {
+		@apply flex flex-col gap-5;
+	}
+	.actions {
+		@apply flex flex-col gap-2;
+	}
+	.locked {
+		@apply cursor-not-allowed opacity-60;
+	}
+	.password {
+		@apply flex flex-col gap-1;
+	}
+	.caption {
+		@apply text-sm font-bold;
+	}
+	.problem {
+		@apply block pt-1 text-xs font-semibold text-danger;
+	}
+	.forgot {
+		@apply self-end py-2 text-xs font-bold text-primary;
+	}
+</style>

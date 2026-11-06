@@ -2,12 +2,13 @@
 
 A full-stack starter on current versions, with sign-in built for Indian users:
 
-- **SvelteKit 3** + Svelte 5 (runes), Tailwind CSS 4, Skeleton UI 5
+- **SvelteKit 3** + Svelte 5 (runes), Tailwind CSS 4, Bits UI with our own palette (`src/themes/palette.css`)
 - **Convex** backend with **Better Auth** running inside it (`@convex-dev/better-auth` 0.12, Better Auth 1.6)
 - **Phone OTP sign-in** for Indian mobiles (`+91`), delivered by textbee (SMS from an Android phone), WhatsApp or Fast2SMS (DLT), with fallback between channels, rate limits and a delivery log
 - **Email verification** through Resend, with resend button, rate limits and placeholder-email protection for phone-only accounts
 - Email + password, social providers, organizations, admin dashboard and API keys, each behind a flag in `src/convex/auth.constants.ts`
-- **Deploys to Vercel** (Mumbai region) with the Convex backend, plus a GitHub Actions CI check on every pull request
+- **Deploys to Vercel** (Mumbai region) with the Convex backend, plus a GitHub Actions CI check (type-check, unit tests, build) on every pull request
+- **Tests**: Vitest for backend logic, Playwright for pages (against a dev deployment)
 
 ## Quick start
 
@@ -48,5 +49,6 @@ Start at [docs/README.md](./docs/README.md):
 | [06 – Phone sign-in](./docs/06-phone-otp.md) | OTP channels, DLT, WhatsApp, Truecaller plan |
 | [07 – Email verification](./docs/07-email-verification.md) | Resend setup and the verification flow |
 | [08 – Environments and deployment](./docs/08-environments-and-deployment.md) | Vercel + Convex pipeline, CI, staging vs production |
+| [09 – Testing](./docs/09-testing.md) | Vitest and Playwright: what each is for, running the e2e suite |
 
 `MIGRATION_TASKS.md` lists SvelteKit 3 migration items still to review.

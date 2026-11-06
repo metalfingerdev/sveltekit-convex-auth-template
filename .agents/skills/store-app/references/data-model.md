@@ -20,6 +20,7 @@ export const orderStatus = v.union(
 	v.literal('out_for_delivery'),
 	v.literal('delivered'),
 	v.literal('delivery_failed'), // partner couldn't deliver; admin decides what happens next
+	// (and before `placed`: `awaiting_payment`, for an order paid online until the gateway confirms)
 	v.literal('cancelled')
 );
 export const paymentMethod = v.union(v.literal('cod'), v.literal('upi_on_delivery'));
@@ -164,6 +165,12 @@ deliveryPartners: defineTable({
 	phoneNumber: v.string(), // E.164, matched against the user's verified phone
 	isActive: v.boolean()
 }).index('by_phoneNumber', ['phoneNumber']),
+
+// One row per gateway order made to take an online payment at checkout (see payments.md), and one
+// per gateway UPI QR (single use, fixed to the order total). A `creating` state covers the action
+// in flight; only the gateway's signed webhook or a status check marks a row paid.
+// Fields: orderId, amountPaise, status, the gateway's ids, paidAt, error; index by orderId and by
+// each gateway id.
 
 // Exactly one document. Read it with a plain `.first()`.
 storeSettings: defineTable({

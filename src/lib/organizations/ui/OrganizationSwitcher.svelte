@@ -31,7 +31,6 @@
 	import { DIALOG_KEY } from '../utils/organization.constants.js';
 
 	// Types
-	import type { PopoverRootProps } from '@ark-ui/svelte';
 	import type {
 		GetActiveOrganizationType,
 		ListOrganizationsType,
@@ -46,7 +45,7 @@
 		initialData
 	}: {
 		/** Placement of the popover relative to the trigger */
-		popoverPlacement?: NonNullable<PopoverRootProps['positioning']>['placement'];
+		popoverPlacement?: string;
 		initialData?: {
 			activeUser?: GetActiveUserType;
 			organizationList?: ListOrganizationsType;

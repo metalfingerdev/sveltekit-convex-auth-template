@@ -8,7 +8,7 @@ declare global {
 		}
 		// interface PageData {}
 		interface PageState {
-			dialog?: 'user-profile' | 'organization-profile';
+			dialog?: 'organization-profile';
 		}
 		// interface Platform {}
 	}

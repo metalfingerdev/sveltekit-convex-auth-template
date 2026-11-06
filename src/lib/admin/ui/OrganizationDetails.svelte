@@ -9,8 +9,8 @@
 	import * as Menu from '../../primitives/ui/menu/index.js';
 	import * as Select from '../../primitives/ui/select/index.js';
 	import { CopyButton } from '../../primitives/ui/copy-button/index.js';
-	import { Portal } from '@ark-ui/svelte/portal';
-	import { createListCollection } from '@ark-ui/svelte/select';
+	import { Portal } from 'bits-ui';
+	import { createListCollection } from '../../primitives/ui/select/index.js';
 	// Icons
 	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 	import Building2Icon from '@lucide/svelte/icons/building-2';
@@ -393,7 +393,7 @@
 								</div>
 							{/if}
 							<div
-								class="badge-icon preset-filled-surface-300-700 ring-surface-50-950 dark:ring-surface-100-900 absolute -right-1.5 -bottom-1.5 size-3 rounded-full ring-4"
+								class="badge-icon preset-filled-surface-300-700 ring-surface-50-950 absolute -right-1.5 -bottom-1.5 size-3 rounded-full ring-4"
 							>
 								<PencilIcon class="size-4" aria-hidden="true" />
 							</div>

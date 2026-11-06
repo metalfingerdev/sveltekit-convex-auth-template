@@ -2,7 +2,7 @@
 	// Primitives
 	import * as Dialog from '../../primitives/ui/dialog/index.js';
 	import * as Menu from '../../primitives/ui/menu/index.js';
-	import { Portal } from '@ark-ui/svelte/portal';
+	import { Portal } from 'bits-ui';
 	// Icons
 	import Building2Icon from '@lucide/svelte/icons/building-2';
 	import CopyIcon from '@lucide/svelte/icons/copy';

@@ -10,6 +10,11 @@
 	const { api, authClient } = getAuthContext();
 
 	// Icons
+	import ProfileField from './ProfileField.svelte';
+	import Field from '#lib/ui/Field.svelte';
+	import Button from '#lib/ui/Button.svelte';
+	import Spinner from '#lib/ui/Spinner.svelte';
+	import Pill from '#lib/ui/Pill.svelte';
 	import PencilIcon from '@lucide/svelte/icons/pencil';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 
@@ -129,139 +134,115 @@
 	}
 </script>
 
-<div class="flex flex-col gap-6">
-	{#if !activeUser}
-		<div class="placeholder h-16 w-full animate-pulse"></div>
-	{:else}
-		<div
-			class={[
-				'border-surface-300-700 rounded-container relative w-full border px-3.5 py-2 transition-all duration-200 ease-in-out',
-				{
-					'cursor-pointer': !isEditing,
-					'hover:bg-surface-200-800': !isEditing,
-					'hover:border-surface-200-800': !isEditing
-				}
-			]}
-		>
-			<div class="flex items-center justify-between gap-3">
-				<div class="flex w-full flex-col">
-					<span class="text-surface-600-400 text-xs">Mobile Number</span>
-
-					{#if !isEditing}
-						<div class="mt-1 flex items-center gap-2">
-							{#if currentPhone}
-								<span class="truncate text-sm">{formatPhone(currentPhone)}</span>
-								{#if activeUser.phoneNumberVerified}
-									<span class="badge preset-filled-success-100-900 text-xs">Verified</span>
-								{:else}
-									<span class="badge preset-filled-warning-100-900 text-xs">Not verified</span>
-								{/if}
-							{:else}
-								<span class="text-surface-600-400 text-sm">Add a mobile number</span>
-							{/if}
-						</div>
-					{:else if step === 'phone'}
-						<form onsubmit={handlePhoneSubmit} class="mt-1 flex flex-col gap-3">
-							<div class="flex gap-2">
-								<span class="input text-surface-600-400 w-auto shrink-0 text-sm" aria-hidden="true"
-									>+91</span
-								>
-								<input
-									bind:this={phoneInputEl}
-									type="tel"
-									inputmode="numeric"
-									autocomplete="tel-national"
-									class="input min-w-0 flex-1"
-									bind:value={phoneInput}
-									placeholder="10-digit mobile number"
-									maxlength="16"
-									required
-									disabled={isSubmitting}
-								/>
-							</div>
-							<div class="mb-1 flex gap-1.5">
-								<button
-									type="button"
-									class="btn btn-sm preset-tonal w-full"
-									onclick={cancel}
-									disabled={isSubmitting}
-								>
-									Cancel
-								</button>
-								<button
-									type="submit"
-									class="btn btn-sm preset-filled-primary-500 w-full"
-									disabled={isSubmitting || !normalized}
-								>
-									{isSubmitting ? 'Sending...' : 'Send code'}
-								</button>
-							</div>
-						</form>
-					{:else}
-						<form onsubmit={handleCodeSubmit} autocomplete="off" class="mt-1 flex flex-col gap-3">
-							<p class="text-surface-600-400 text-xs">
-								Enter the code sent to {formatPhone(pendingPhone)}
-							</p>
+{#if !activeUser}
+	<div class="loading bone"></div>
+{:else}
+	<ProfileField
+		label="Mobile number"
+		editing={isEditing}
+		editLabel={currentPhone ? 'Change mobile number' : 'Add mobile number'}
+		onedit={startEditing}
+	>
+		{#snippet icon()}
+			{#if currentPhone}<PencilIcon class="size-4" />{:else}<PlusIcon class="size-4" />{/if}
+		{/snippet}
+		{#snippet view()}
+			{#if currentPhone}
+				<span class="truncate">{formatPhone(currentPhone)}</span>
+				{#if activeUser.phoneNumberVerified}
+					<Pill tone="ok">Verified</Pill>
+				{:else}
+					<Pill tone="warn">Not verified</Pill>
+				{/if}
+			{:else}
+				<span class="muted">Add a mobile number</span>
+			{/if}
+		{/snippet}
+		{#snippet edit()}
+			{#if step === 'phone'}
+				<form onsubmit={handlePhoneSubmit} class="form">
+					<div class="number">
+						<span class="prefix" aria-hidden="true">+91</span>
+						<Field label="Mobile number" hideLabel>
 							<input
-								bind:this={codeInputEl}
-								type="text"
-								class="input w-full tracking-[0.4em]"
-								bind:value={code}
-								placeholder="••••••"
-								pattern="[0-9]*"
+								bind:this={phoneInputEl}
+								type="tel"
 								inputmode="numeric"
-								maxlength="6"
-								autocomplete="one-time-code"
+								autocomplete="tel-national"
+								bind:value={phoneInput}
+								placeholder="10-digit mobile number"
+								maxlength="16"
 								required
 								disabled={isSubmitting}
 							/>
-							<div class="flex gap-1.5">
-								<button
-									type="button"
-									class="btn btn-sm preset-tonal w-full"
-									onclick={cancel}
-									disabled={isSubmitting}
-								>
-									Cancel
-								</button>
-								<button
-									type="submit"
-									class="btn btn-sm preset-filled-primary-500 w-full"
-									disabled={isSubmitting || code.trim().length !== 6}
-								>
-									{isSubmitting ? 'Verifying...' : 'Verify'}
-								</button>
-							</div>
-							<button
-								type="button"
-								class="btn btn-sm mb-1"
-								onclick={() => sendCode(pendingPhone)}
-								disabled={isSubmitting || resendIn > 0}
-							>
-								{resendIn > 0 ? `Resend code in ${resendIn}s` : 'Resend code'}
-							</button>
-						</form>
-					{/if}
-				</div>
-
-				{#if !isEditing}
-					<div class="shrink-0">
-						<span class="btn-icon preset-filled-surface-50-950 pointer-events-none p-2">
-							{#if currentPhone}
-								<PencilIcon class="size-4" />
-							{:else}
-								<PlusIcon class="size-4" />
-							{/if}
-						</span>
+						</Field>
 					</div>
-					<button
-						class="absolute inset-0 h-full w-full"
-						aria-label={currentPhone ? 'Change mobile number' : 'Add mobile number'}
-						type="button"
-						onclick={startEditing}
-					></button>
-				{/if}
-			</div>
-		</div>
-	{/if}
-</div>
+					<div class="actions">
+						<Button onclick={cancel} disabled={isSubmitting}>Cancel</Button>
+						<Button type="submit" variant="primary" disabled={isSubmitting || !normalized}>
+							{isSubmitting ? 'Sending...' : 'Send code'}
+						</Button>
+					</div>
+				</form>
+			{:else}
+				<form onsubmit={handleCodeSubmit} autocomplete="off" class="form">
+					<p class="muted">Enter the code sent to {formatPhone(pendingPhone)}</p>
+					<Field label="Code" hideLabel>
+						<input
+							bind:this={codeInputEl}
+							type="text"
+							class="code"
+							bind:value={code}
+							placeholder="••••••"
+							pattern="[0-9]*"
+							inputmode="numeric"
+							maxlength="6"
+							autocomplete="one-time-code"
+							required
+							disabled={isSubmitting}
+						/>
+					</Field>
+					<div class="actions">
+						<Button onclick={cancel} disabled={isSubmitting}>Cancel</Button>
+						<Button type="submit" variant="primary" disabled={isSubmitting || code.trim().length !== 6}>
+							{isSubmitting ? 'Verifying...' : 'Verify'}
+						</Button>
+					</div>
+					<Button onclick={() => sendCode(pendingPhone)} disabled={isSubmitting || resendIn > 0}>
+						{resendIn > 0 ? `Resend code in ${resendIn}s` : 'Resend code'}
+					</Button>
+				</form>
+			{/if}
+		{/snippet}
+	</ProfileField>
+{/if}
+
+<style lang="postcss">
+	@reference 'src/app.css';
+
+	.loading {
+		@apply h-16 w-full rounded-container;
+	}
+	.muted {
+		@apply text-sm text-text-muted;
+	}
+	.form {
+		@apply flex flex-col gap-3;
+	}
+	.number {
+		@apply flex items-end gap-2;
+	}
+	.number :global(.field) {
+		@apply min-w-0 flex-1;
+	}
+	.prefix {
+		--fill: var(--color-foreground);
+		@apply edge-flat grid min-h-11 shrink-0 place-items-center rounded-base bg-foreground px-3 text-text-muted;
+	}
+	.code {
+		@apply tracking-[0.4em];
+	}
+	.actions {
+		@apply grid grid-cols-2 gap-2;
+	}
+</style>

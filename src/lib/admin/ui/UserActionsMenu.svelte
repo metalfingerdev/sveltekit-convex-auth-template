@@ -3,7 +3,7 @@
 	import { resolve } from '$app/paths';
 	// Primitives
 	import * as Menu from '../../primitives/ui/menu/index.js';
-	import { Portal } from '@ark-ui/svelte/portal';
+	import { Portal } from 'bits-ui';
 	// Icons
 	import EllipsisVerticalIcon from '@lucide/svelte/icons/ellipsis-vertical';
 	import CopyIcon from '@lucide/svelte/icons/copy';

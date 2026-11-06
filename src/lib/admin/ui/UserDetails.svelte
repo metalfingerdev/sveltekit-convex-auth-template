@@ -6,8 +6,8 @@
 	import * as Dialog from '../../primitives/ui/dialog/index.js';
 	import * as Select from '../../primitives/ui/select/index.js';
 	import { CopyButton } from '../../primitives/ui/copy-button/index.js';
-	import { Portal } from '@ark-ui/svelte/portal';
-	import { createListCollection } from '@ark-ui/svelte/select';
+	import { Portal } from 'bits-ui';
+	import { createListCollection } from '../../primitives/ui/select/index.js';
 	// Icons
 	import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 	import Loader2Icon from '@lucide/svelte/icons/loader-2';

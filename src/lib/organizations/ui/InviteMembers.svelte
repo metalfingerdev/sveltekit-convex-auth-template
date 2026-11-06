@@ -4,7 +4,7 @@
 	// Primitives
 	import { toast } from 'svelte-sonner';
 	import * as Select from '../../primitives/ui/select/index.js';
-	import { createListCollection } from '@ark-ui/svelte/select';
+	import { createListCollection } from '../../primitives/ui/select/index.js';
 
 	// API
 	import { useQuery } from 'convex-svelte';

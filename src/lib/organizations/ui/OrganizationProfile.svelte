@@ -293,7 +293,7 @@
 	<!-- Desktop Layout -->
 	<div class="hidden h-full w-full md:flex">
 		<!-- Desktop Navigation -->
-		<div class="bg-surface-50 dark:bg-surface-800 sm:bg-surface-300-700 h-full w-56 p-2">
+		<div class="bg-surface-50 sm:bg-surface-300-700 h-full w-56 p-2">
 			<div class="text-surface-600-400 p-3 pt-2 text-xs font-medium">Organization</div>
 			<Tabs.List class="flex flex-col">
 				{#each visibleTabs as tab (tab.value)}
@@ -340,7 +340,7 @@
 		>
 			<!-- Mobile Navigation (left half) -->
 			<div
-				class="bg-surface-100 dark:bg-surface-900 sm:bg-surface-300-700 relative h-full w-1/2 p-2"
+				class="bg-surface-100 sm:bg-surface-300-700 relative h-full w-1/2 p-2"
 				class:hidden={closingFromContent}
 			>
 				<div class="h5 px-3 pt-3 pb-8">Organization settings</div>
@@ -379,7 +379,7 @@
 
 			<!-- Mobile Content (right half) -->
 			<div
-				class={`bg-surface-50 dark:bg-surface-900 flex h-full flex-col gap-4 px-4 py-6 ${closingFromContent ? 'absolute inset-0 w-full' : 'relative w-1/2'}`}
+				class={`bg-surface-50 flex h-full flex-col gap-4 px-4 py-6 ${closingFromContent ? 'absolute inset-0 w-full' : 'relative w-1/2'}`}
 			>
 				<!-- Back button (go back to tabs list) -->
 				<button

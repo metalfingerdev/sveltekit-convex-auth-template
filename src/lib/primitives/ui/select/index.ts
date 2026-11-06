@@ -1,46 +1,23 @@
-import { Select as SelectPrimitive } from '@ark-ui/svelte/select';
-
-import Group from './select-group.svelte';
-import Label from './select-label.svelte';
+import Root, { createListCollection } from './select-root.svelte';
 import Item from './select-item.svelte';
+import ItemText from './select-item-text.svelte';
+import ItemIndicator from './select-item-indicator.svelte';
 import Content from './select-content.svelte';
 import Trigger from './select-trigger.svelte';
-import Separator from './select-separator.svelte';
-import ScrollDownButton from './select-scroll-down-button.svelte';
-import ScrollUpButton from './select-scroll-up-button.svelte';
-import GroupHeading from './select-group-heading.svelte';
-
-const Root = SelectPrimitive.Root;
-const Positioner = SelectPrimitive.Positioner;
-const ItemText = SelectPrimitive.ItemText;
-const ItemIndicator = SelectPrimitive.ItemIndicator;
 
 export {
 	Root,
-	Group,
-	Label,
 	Item,
 	ItemText,
 	ItemIndicator,
-	Positioner,
 	Content,
 	Trigger,
-	Separator,
-	ScrollDownButton,
-	ScrollUpButton,
-	GroupHeading,
+	createListCollection,
 	//
 	Root as Select,
-	Group as SelectGroup,
-	Label as SelectLabel,
 	Item as SelectItem,
-	Positioner as SelectPositioner,
 	ItemText as SelectItemText,
 	ItemIndicator as SelectItemIndicator,
 	Content as SelectContent,
-	Trigger as SelectTrigger,
-	Separator as SelectSeparator,
-	ScrollDownButton as SelectScrollDownButton,
-	ScrollUpButton as SelectScrollUpButton,
-	GroupHeading as SelectGroupHeading
+	Trigger as SelectTrigger
 };

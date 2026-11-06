@@ -13,13 +13,14 @@ code came from the `@auth/svelte` jsrepo registry (see `jsrepo.config.ts`).
 | [06 – Phone sign-in](./06-phone-otp.md) | Phone OTP architecture and the textbee → WhatsApp/Truecaller → Fast2SMS rollout |
 | [07 – Email verification](./07-email-verification.md) | Resend setup, the verification flow, rate limits, troubleshooting |
 | [08 – Environments and deployment](./08-environments-and-deployment.md) | Local / staging / production, the Vercel + Convex pipeline, CI, moving to production |
+| [09 – Testing](./09-testing.md) | What Vitest and Playwright each test, running the e2e suite against dev |
 
 ## Stack
 
 - **SvelteKit 3** with Svelte 5 (runes) and TypeScript
 - **Convex**: database, server functions, file storage, realtime (`convex-svelte`)
 - **Better Auth**, running inside Convex via `@convex-dev/better-auth`
-- **Tailwind CSS 4** + **Skeleton UI 5**, plus Ark UI / svelte-toolbelt primitives
+- **Tailwind CSS 4** + **Bits UI** primitives with our own palette (`src/themes/palette.css`), plus svelte-toolbelt
 - **Resend** (Convex component) for transactional email
 - **Phone OTP** via Better Auth's `phoneNumber` plugin, delivered by textbee / WhatsApp / Fast2SMS (`src/convex/otp/`)
 - **pnpm** as the package manager
