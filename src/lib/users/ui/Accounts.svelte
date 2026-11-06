@@ -532,14 +532,14 @@
     @apply text-sm text-text-muted;
   }
   .loading {
-    @apply h-14 w-full rounded-container;
+    @apply h-14 w-full rounded-xl;
   }
   .list {
     @apply flex flex-col gap-2;
   }
   .row {
     --fill: var(--color-midground);
-    @apply edge-flat flex flex-col gap-3 rounded-container bg-midground p-3;
+    @apply edge-flat flex flex-col gap-3 rounded-xl bg-midground p-3;
   }
   .line {
     @apply flex items-center justify-between gap-2;

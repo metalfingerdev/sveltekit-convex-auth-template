@@ -309,9 +309,9 @@
 
 {#snippet roleBadge(label: string, owner = false)}
 	<span
-		class="badge border capitalize {owner
-			? 'preset-filled-primary-50-950 border-primary-200-800'
-			: 'preset-tonal border-transparent'}"
+		class="tag border capitalize {owner
+			? 'tone-primary-soft border-primary'
+			: 'tone-raised border-transparent'}"
 	>
 		{label}
 	</span>
@@ -320,7 +320,7 @@
 <div class="flex flex-col gap-6 py-4">
 	<button
 		type="button"
-		class="btn hover:preset-tonal w-fit gap-2 px-2 text-sm"
+		class="button hover:tone-raised w-fit gap-2 px-2 text-sm"
 		data-admin-back
 		onclick={onBack}
 	>
@@ -329,27 +329,27 @@
 	</button>
 
 	{#if detailsQuery.error}
-		<div class="text-error-600-400 text-sm">{detailsQuery.error.message}</div>
+		<div class="text-danger text-sm">{detailsQuery.error.message}</div>
 	{:else if details === undefined}
-		<div class="text-surface-600-400 flex items-center gap-2 text-sm" role="status">
+		<div class="text-text-muted flex items-center gap-2 text-sm" role="status">
 			<Loader2Icon class="size-4 animate-spin" aria-hidden="true" />
 			Loading organization...
 		</div>
 	{:else if !details || !organization}
-		<div class="text-surface-600-400 text-sm">This organization doesn't exist anymore.</div>
+		<div class="text-text-muted text-sm">This organization doesn't exist anymore.</div>
 	{:else}
 		<!-- Header -->
 		<header class="flex items-start gap-4">
-			<Avatar.Root class="rounded-container size-16 shrink-0">
+			<Avatar.Root class="rounded-xl size-16 shrink-0">
 				<Avatar.Image src={organization.logo ?? undefined} alt={organization.name} />
-				<Avatar.Fallback class="rounded-container">
+				<Avatar.Fallback class="rounded-xl">
 					<Avatar.Marble name={organization.name} />
 				</Avatar.Fallback>
 			</Avatar.Root>
 			<div class="flex min-w-0 flex-1 flex-col gap-1">
-				<h2 class="h4 truncate">{organization.name}</h2>
-				<p class="text-surface-600-400 truncate text-sm">{organization.slug}</p>
-				<div class="text-surface-600-400 flex items-center gap-1 text-xs">
+				<h2 class="text-xl font-extrabold truncate">{organization.name}</h2>
+				<p class="text-text-muted truncate text-sm">{organization.slug}</p>
+				<div class="text-text-muted flex items-center gap-1 text-xs">
 					<span class="shrink-0">Organization ID</span>
 					<code class="truncate">{organization._id}</code>
 					<CopyButton
@@ -364,36 +364,36 @@
 		</header>
 
 		<!-- Profile -->
-		<section class="card border-surface-300-700 flex flex-col gap-4 border p-4">
-			<h3 class="h6">Profile</h3>
+		<section class="panel border-border-muted flex flex-col gap-4 border p-4">
+			<h3 class="font-extrabold">Profile</h3>
 			<div class="flex items-center gap-4">
 				<ImageCropper.Root bind:src={cropSrc} accept="image/*" onCropped={handleCropped}>
 					<!-- Unusable while a logo uploads, so uploads don't overlap -->
 					<ImageCropper.UploadTrigger
-						class="rounded-container block cursor-pointer"
+						class="rounded-xl block cursor-pointer"
 						aria-label="Upload a new logo"
 						inert={logoBusy}
 						aria-disabled={logoBusy}
 					>
 						<div class="relative">
-							<Avatar.Root class="rounded-container size-16">
+							<Avatar.Root class="rounded-xl size-16">
 								<Avatar.Image
 									src={logoPreview ?? organization.logo ?? undefined}
 									alt={organization.name}
 								/>
-								<Avatar.Fallback class="bg-surface-300-700 rounded-container">
-									<Building2Icon class="text-surface-700-300 size-8" aria-hidden="true" />
+								<Avatar.Fallback class="bg-border-muted rounded-xl">
+									<Building2Icon class="text-text-muted size-8" aria-hidden="true" />
 								</Avatar.Fallback>
 							</Avatar.Root>
 							{#if logoBusy}
 								<div
-									class="bg-surface-50-950/70 rounded-container absolute inset-0 flex items-center justify-center"
+									class="bg-foreground/70 rounded-xl absolute inset-0 flex items-center justify-center"
 								>
 									<Loader2Icon class="size-5 animate-spin" aria-hidden="true" />
 								</div>
 							{/if}
 							<div
-								class="badge-icon preset-filled-surface-300-700 ring-surface-50-950 absolute -right-1.5 -bottom-1.5 size-3 rounded-full ring-4"
+								class="tag tone-sunken ring-foreground absolute -right-1.5 -bottom-1.5 size-3 rounded-full ring-4"
 							>
 								<PencilIcon class="size-4" aria-hidden="true" />
 							</div>
@@ -409,11 +409,11 @@
 				</ImageCropper.Root>
 				<div class="flex flex-col gap-1">
 					<span class="text-sm">Logo</span>
-					<span class="text-surface-600-400 text-xs">Click the logo to upload a new one.</span>
+					<span class="text-text-muted text-xs">Click the logo to upload a new one.</span>
 					{#if organization.logo}
 						<button
 							type="button"
-							class="btn btn-sm hover:preset-tonal text-error-600-400 -ml-2 w-fit"
+							class="button button-sm hover:tone-raised text-danger -ml-2 w-fit"
 							onclick={handleRemoveLogo}
 							disabled={logoBusy}
 						>
@@ -424,15 +424,15 @@
 			</div>
 			<form class="flex flex-col gap-3" onsubmit={handleSave}>
 				<fieldset class="grid gap-3 sm:grid-cols-2" disabled={saving}>
-					<label class="label">
-						<span class="label-text">Name</span>
-						<input type="text" class="input" bind:value={name} autocomplete="off" required />
+					<label class="field-label">
+						<span class="field-caption">Name</span>
+						<input type="text" class="control" bind:value={name} autocomplete="off" required />
 					</label>
-					<label class="label">
-						<span class="label-text">Slug</span>
+					<label class="field-label">
+						<span class="field-caption">Slug</span>
 						<input
 							type="text"
-							class="input"
+							class="control"
 							bind:value={slug}
 							autocomplete="off"
 							pattern="[a-z0-9\-]+"
@@ -442,12 +442,12 @@
 					</label>
 				</fieldset>
 				<div class="flex flex-wrap items-center justify-between gap-3">
-					<p class="text-surface-600-400 text-xs">
+					<p class="text-text-muted text-xs">
 						The slug can show in URLs: links with the old slug stop working.
 					</p>
 					<button
 						type="submit"
-						class="btn preset-filled-primary-500"
+						class="button tone-primary"
 						disabled={!isDirty || saving}
 						aria-busy={saving}
 					>
@@ -460,50 +460,50 @@
 					</button>
 				</div>
 			</form>
-			<dl class="border-surface-300-700 grid gap-3 border-t pt-4 text-sm sm:grid-cols-3">
+			<dl class="border-border-muted grid gap-3 border-t pt-4 text-sm sm:grid-cols-3">
 				<div>
-					<dt class="text-surface-600-400 text-xs">Created</dt>
+					<dt class="text-text-muted text-xs">Created</dt>
 					<dd>{formatDate(organization.createdAt)}</dd>
 				</div>
 				<div>
-					<dt class="text-surface-600-400 text-xs">Owner</dt>
+					<dt class="text-text-muted text-xs">Owner</dt>
 					<dd class="truncate">
 						{owners.map((owner) => owner.user?.name ?? 'Deleted user').join(', ') || 'None'}
 					</dd>
 				</div>
 				<div>
-					<dt class="text-surface-600-400 text-xs">Members</dt>
+					<dt class="text-text-muted text-xs">Members</dt>
 					<dd>{members.length}</dd>
 				</div>
 			</dl>
 		</section>
 
 		<!-- Members -->
-		<section class="card border-surface-300-700 flex flex-col gap-3 border p-4">
+		<section class="panel border-border-muted flex flex-col gap-3 border p-4">
 			<div class="flex items-center justify-between gap-3">
-				<h3 class="h6">Members</h3>
-				<button type="button" class="btn btn-sm preset-tonal gap-2" onclick={openAdd}>
+				<h3 class="font-extrabold">Members</h3>
+				<button type="button" class="button button-sm tone-raised gap-2" onclick={openAdd}>
 					<PlusIcon class="size-4" aria-hidden="true" />
 					Add member
 				</button>
 			</div>
 			{#if hasLockedMembers}
-				<p class="text-surface-600-400 text-xs">
+				<p class="text-text-muted text-xs">
 					Members who are app admins keep their role and membership here until their admin role is
 					removed.
 				</p>
 			{/if}
 			{#if members.length === 0}
-				<p class="text-surface-600-400 text-sm">No members.</p>
+				<p class="text-text-muted text-sm">No members.</p>
 			{:else}
-				<table class="table w-full">
+				<table class="data-table w-full">
 					<thead>
 						<tr>
-							<th class="text-surface-600-400 p-2 !pl-0 text-left text-xs font-semibold">User</th>
-							<th class="text-surface-600-400 hidden w-28 p-2 text-left text-xs md:table-cell">
+							<th class="text-text-muted p-2 !pl-0 text-left text-xs font-semibold">User</th>
+							<th class="text-text-muted hidden w-28 p-2 text-left text-xs md:table-cell">
 								Joined
 							</th>
-							<th class="text-surface-600-400 w-36 p-2 text-left text-xs">Role</th>
+							<th class="text-text-muted w-36 p-2 text-left text-xs">Role</th>
 							<th class="w-12 p-2"><span class="sr-only">Actions</span></th>
 						</tr>
 					</thead>
@@ -513,8 +513,8 @@
 							{@const owner = isOwner(member)}
 							{@const locked = isLocked(member)}
 							<tr
-								class="!border-surface-300-700 !border-t {memberUser
-									? 'hover:bg-surface-100-900 cursor-pointer'
+								class="!border-border-muted !border-t {memberUser
+									? 'hover:bg-midground cursor-pointer'
 									: ''}"
 								onclick={() => memberUser && onViewProfile(memberUser._id)}
 							>
@@ -545,31 +545,31 @@
 														{memberUser.name}
 													</button>
 												{:else}
-													<span class="text-surface-600-400 truncate text-sm">Deleted user</span>
+													<span class="text-text-muted truncate text-sm">Deleted user</span>
 												{/if}
 												{#if memberUser && memberUser._id === activeUserId}
-													<span class="badge preset-tonal shrink-0">You</span>
+													<span class="tag tone-raised shrink-0">You</span>
 												{/if}
 												{#if memberUser?.isAppAdmin}
 													<span
-														class="badge preset-filled-warning-50-950 border-warning-200-800 shrink-0 border"
+														class="tag tone-warning-soft border-warning shrink-0 border"
 													>
 														Admin
 													</span>
 												{/if}
 												{#if memberUser?.banned}
 													<span
-														class="badge preset-filled-error-50-950 border-error-200-800 shrink-0 border"
+														class="tag tone-danger-soft border-danger shrink-0 border"
 													>
 														Banned
 													</span>
 												{/if}
 											</div>
-											<span class="text-surface-600-400 truncate text-xs">{memberUser?.email}</span>
+											<span class="text-text-muted truncate text-xs">{memberUser?.email}</span>
 										</div>
 									</div>
 								</td>
-								<td class="text-surface-600-400 hidden text-sm md:table-cell">
+								<td class="text-text-muted hidden text-sm md:table-cell">
 									{formatDate(member.createdAt)}
 								</td>
 								<!-- Clicks on the role and the menu don't open the profile -->
@@ -608,13 +608,13 @@
 								<td class="text-right" onclick={(event) => event.stopPropagation()}>
 									<Menu.Root>
 										<Menu.Trigger
-											class="btn-icon hover:preset-tonal"
+											class="button button-icon hover:tone-raised"
 											aria-label={`Actions for ${memberUser?.name ?? 'deleted user'}`}
 										>
 											<EllipsisVerticalIcon class="size-4" aria-hidden="true" />
 										</Menu.Trigger>
 										<Portal>
-											<Menu.Content class="bg-surface-50-950 min-w-52">
+											<Menu.Content class="bg-foreground min-w-52">
 												{#if memberUser}
 													<Menu.Item value="profile" onclick={() => onViewProfile(memberUser._id)}>
 														<CircleUserIcon aria-hidden="true" />
@@ -660,12 +660,12 @@
 					</tbody>
 				</table>
 				{#if owners.length > 0 && !canTransfer}
-					<p class="text-surface-600-400 text-xs">
+					<p class="text-text-muted text-xs">
 						The owner is an app admin: remove their admin role to hand over the ownership or delete
 						the organization.
 					</p>
 				{:else if owners.length > 0 && successors.length === 0}
-					<p class="text-surface-600-400 text-xs">
+					<p class="text-text-muted text-xs">
 						To hand over the ownership, add another member first.
 					</p>
 				{/if}
@@ -678,28 +678,28 @@
 		<Dialog.Content class="md:max-w-108">
 			<Dialog.Header class="pr-8">
 				<Dialog.Title>Transfer ownership of {organization?.name}</Dialog.Title>
-				<Dialog.Description class="text-surface-700-300">
+				<Dialog.Description class="text-text-muted">
 					The new owner can manage and delete the organization, and can't be removed from it until
 					they hand it over.
 				</Dialog.Description>
 			</Dialog.Header>
 			<form id={`${formId}-transfer`} class="flex w-full flex-col gap-3" onsubmit={handleTransfer}>
-				<label class="label">
-					<span class="label-text">New owner</span>
-					<select class="select" bind:value={successorId} required>
+				<label class="field-label">
+					<span class="field-caption">New owner</span>
+					<select class="control" bind:value={successorId} required>
 						{#each successors as member (member._id)}
 							<option value={member._id}>{member.user?.name} ({member.user?.email})</option>
 						{/each}
 					</select>
 				</label>
 				{#if owners.length > 0}
-					<label class="label">
-						<span class="label-text">
+					<label class="field-label">
+						<span class="field-caption">
 							{owners.length === 1
 								? `${owners[0].user?.name ?? 'The previous owner'} becomes`
 								: 'The previous owners become'}
 						</span>
-						<select class="select" bind:value={previousOwner}>
+						<select class="control" bind:value={previousOwner}>
 							<option value="admin">Admin</option>
 							<option value="member">Member</option>
 							<option value="remove">Removed from the organization</option>
@@ -708,11 +708,11 @@
 				{/if}
 			</form>
 			<Dialog.Footer>
-				<Dialog.Close class="btn preset-tonal" disabled={transferring}>Cancel</Dialog.Close>
+				<Dialog.Close class="button tone-raised" disabled={transferring}>Cancel</Dialog.Close>
 				<button
 					type="submit"
 					form={`${formId}-transfer`}
-					class="btn preset-filled-primary-500"
+					class="button tone-primary"
 					disabled={transferring || !successorId}
 					aria-busy={transferring}
 				>
@@ -733,13 +733,13 @@
 		<Dialog.Content class="md:max-w-108">
 			<Dialog.Header class="pr-8">
 				<Dialog.Title>Add a member to {organization?.name}</Dialog.Title>
-				<Dialog.Description class="text-surface-700-300">
+				<Dialog.Description class="text-text-muted">
 					They become a member right away, without an invitation.
 				</Dialog.Description>
 			</Dialog.Header>
 			<form id={`${formId}-add`} class="flex w-full flex-col gap-3" onsubmit={handleAdd}>
-				<div class="label">
-					<label class="label-text" for={`${formId}-add-user`}>User</label>
+				<div class="field-label">
+					<label class="field-caption" for={`${formId}-add-user`}>User</label>
 					<UserSelect
 						id={`${formId}-add-user`}
 						bind:value={addUser}
@@ -750,20 +750,20 @@
 								: undefined}
 					/>
 				</div>
-				<label class="label">
-					<span class="label-text">Role</span>
-					<select class="select" bind:value={addRole}>
+				<label class="field-label">
+					<span class="field-caption">Role</span>
+					<select class="control" bind:value={addRole}>
 						<option value="member">Member</option>
 						<option value="admin">Admin</option>
 					</select>
 				</label>
 			</form>
 			<Dialog.Footer>
-				<Dialog.Close class="btn preset-tonal" disabled={adding}>Cancel</Dialog.Close>
+				<Dialog.Close class="button tone-raised" disabled={adding}>Cancel</Dialog.Close>
 				<button
 					type="submit"
 					form={`${formId}-add`}
-					class="btn preset-filled-primary-500"
+					class="button tone-primary"
 					disabled={adding || !addUser}
 					aria-busy={adding}
 				>

@@ -65,12 +65,12 @@
 </script>
 
 <Menu.Root>
-	<Menu.Trigger class="btn-icon hover:preset-tonal" aria-label={`Actions for ${organization.name}`}>
+	<Menu.Trigger class="button button-icon hover:tone-raised" aria-label={`Actions for ${organization.name}`}>
 		<EllipsisVerticalIcon class="size-4" aria-hidden="true" />
 	</Menu.Trigger>
 	<!-- Portaled so the table's scroll container doesn't clip the menu -->
 	<Portal>
-		<Menu.Content class="bg-surface-50-950 min-w-52">
+		<Menu.Content class="bg-foreground min-w-52">
 			<Menu.Item value="copy-id" onclick={copyId}>
 				<CopyIcon aria-hidden="true" />
 				Copy organization ID
@@ -100,16 +100,16 @@
 	<Dialog.Content class="md:max-w-108">
 		<Dialog.Header class="pr-8">
 			<Dialog.Title>Delete {organization.name}</Dialog.Title>
-			<Dialog.Description class="text-surface-700-300">
+			<Dialog.Description class="text-text-muted">
 				This permanently deletes the organization with its memberships and pending invitations.
 				Members who had it active switch to another of their organizations. This can't be undone.
 			</Dialog.Description>
 		</Dialog.Header>
 		<Dialog.Footer>
-			<Dialog.Close class="btn preset-tonal" disabled={deleting}>Cancel</Dialog.Close>
+			<Dialog.Close class="button tone-raised" disabled={deleting}>Cancel</Dialog.Close>
 			<button
 				type="button"
-				class="btn preset-filled-error-500"
+				class="button tone-danger"
 				onclick={handleDelete}
 				disabled={deleting}
 				aria-busy={deleting}

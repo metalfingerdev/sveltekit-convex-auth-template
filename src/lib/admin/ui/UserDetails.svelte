@@ -253,7 +253,7 @@
 <div class="flex flex-col gap-6 py-4">
 	<button
 		type="button"
-		class="btn hover:preset-tonal w-fit gap-2 px-2 text-sm"
+		class="button hover:tone-raised w-fit gap-2 px-2 text-sm"
 		data-admin-back
 		onclick={onBack}
 	>
@@ -262,14 +262,14 @@
 	</button>
 
 	{#if detailsQuery.error}
-		<div class="text-error-600-400 text-sm">{detailsQuery.error.message}</div>
+		<div class="text-danger text-sm">{detailsQuery.error.message}</div>
 	{:else if details === undefined}
-		<div class="text-surface-600-400 flex items-center gap-2 text-sm" role="status">
+		<div class="text-text-muted flex items-center gap-2 text-sm" role="status">
 			<Loader2Icon class="size-4 animate-spin" aria-hidden="true" />
 			Loading user...
 		</div>
 	{:else if !details || !user}
-		<div class="text-surface-600-400 text-sm">This user doesn't exist anymore.</div>
+		<div class="text-text-muted text-sm">This user doesn't exist anymore.</div>
 	{:else}
 		<!-- Header -->
 		<header class="flex items-start gap-4">
@@ -281,13 +281,13 @@
 			</Avatar.Root>
 			<div class="flex min-w-0 flex-1 flex-col gap-1">
 				<div class="flex flex-wrap items-center gap-2">
-					<h2 class="h4 truncate">{user.name}</h2>
+					<h2 class="text-xl font-extrabold truncate">{user.name}</h2>
 					{#if isSelf}
-						<span class="badge preset-tonal">You</span>
+						<span class="tag tone-raised">You</span>
 					{/if}
 					{#if user.isAppAdmin}
 						<span
-							class="badge preset-filled-warning-50-950 border-warning-200-800 border"
+							class="tag tone-warning-soft border-warning border"
 							title={user.isBootstrapAdmin
 								? 'Admin through the ADMIN_USER_IDS environment variable'
 								: undefined}
@@ -296,11 +296,11 @@
 						</span>
 					{/if}
 					{#if user.banned}
-						<span class="badge preset-filled-error-50-950 border-error-200-800 border">Banned</span>
+						<span class="tag tone-danger-soft border-danger border">Banned</span>
 					{/if}
 				</div>
-				<p class="text-surface-600-400 truncate text-sm">{user.email}</p>
-				<div class="text-surface-600-400 flex items-center gap-1 text-xs">
+				<p class="text-text-muted truncate text-sm">{user.email}</p>
+				<div class="text-text-muted flex items-center gap-1 text-xs">
 					<span class="shrink-0">User ID</span>
 					<code class="truncate">{user.id}</code>
 					<CopyButton text={user.id} class="size-6" tabindex={0} aria-label="Copy user ID" />
@@ -311,13 +311,13 @@
 
 		{#if user.banned}
 			<div
-				class="card preset-tonal-error border-error-200-800 flex flex-wrap items-center justify-between gap-3 border p-4 text-sm"
+				class="panel tone-danger-soft border-danger flex flex-wrap items-center justify-between gap-3 border p-4 text-sm"
 			>
 				<p class="min-w-0">{banDescription}</p>
 				{#if !isSelf}
 					<button
 						type="button"
-						class="btn btn-sm preset-filled-surface-50-950 shrink-0 gap-2"
+						class="button button-sm tone-raised shrink-0 gap-2"
 						onclick={handleUnban}
 						disabled={unbanning}
 						aria-busy={unbanning}
@@ -334,21 +334,21 @@
 		{/if}
 
 		<!-- Profile -->
-		<section class="card border-surface-300-700 flex flex-col gap-4 border p-4">
-			<h3 class="h6">Profile</h3>
+		<section class="panel border-border-muted flex flex-col gap-4 border p-4">
+			<h3 class="font-extrabold">Profile</h3>
 			<form class="flex flex-col gap-3" onsubmit={handleSave}>
 				<fieldset class="grid gap-3 sm:grid-cols-2" disabled={!canManage || saving}>
-					<label class="label">
-						<span class="label-text">Name</span>
-						<input type="text" class="input" bind:value={name} autocomplete="off" required />
+					<label class="field-label">
+						<span class="field-caption">Name</span>
+						<input type="text" class="control" bind:value={name} autocomplete="off" required />
 					</label>
-					<label class="label">
-						<span class="label-text">Email</span>
-						<input type="email" class="input" bind:value={email} autocomplete="off" required />
+					<label class="field-label">
+						<span class="field-caption">Email</span>
+						<input type="email" class="control" bind:value={email} autocomplete="off" required />
 					</label>
 				</fieldset>
 				<div class="flex flex-wrap items-center justify-between gap-3">
-					<p class="text-surface-600-400 text-xs">
+					<p class="text-text-muted text-xs">
 						{#if canManage}
 							A new email counts as verified, and they sign in with it from now on.
 						{:else}
@@ -358,7 +358,7 @@
 					{#if canManage}
 						<button
 							type="submit"
-							class="btn preset-filled-primary-500"
+							class="button tone-primary"
 							disabled={!isDirty || saving}
 							aria-busy={saving}
 						>
@@ -372,17 +372,17 @@
 					{/if}
 				</div>
 			</form>
-			<dl class="border-surface-300-700 grid gap-3 border-t pt-4 text-sm sm:grid-cols-3">
+			<dl class="border-border-muted grid gap-3 border-t pt-4 text-sm sm:grid-cols-3">
 				<div>
-					<dt class="text-surface-600-400 text-xs">Joined</dt>
+					<dt class="text-text-muted text-xs">Joined</dt>
 					<dd>{formatDate(user.createdAt)}</dd>
 				</div>
 				<div>
-					<dt class="text-surface-600-400 text-xs">Email</dt>
+					<dt class="text-text-muted text-xs">Email</dt>
 					<dd>{user.emailVerified ? 'Verified' : 'Not verified'}</dd>
 				</div>
 				<div>
-					<dt class="text-surface-600-400 text-xs">Role</dt>
+					<dt class="text-text-muted text-xs">Role</dt>
 					<dd>
 						{#if user.isBootstrapAdmin}
 							Admin (ADMIN_USER_IDS)
@@ -396,35 +396,35 @@
 
 		<!-- Organizations -->
 		{#if organizationsEnabled}
-			<section class="card border-surface-300-700 flex flex-col gap-3 border p-4">
+			<section class="panel border-border-muted flex flex-col gap-3 border p-4">
 				<div class="flex items-center justify-between gap-3">
-					<h3 class="h6">Organizations</h3>
+					<h3 class="font-extrabold">Organizations</h3>
 					{#if canManage}
-						<button type="button" class="btn btn-sm preset-tonal gap-2" onclick={openAddDialog}>
+						<button type="button" class="button button-sm tone-raised gap-2" onclick={openAddDialog}>
 							<PlusIcon class="size-4" aria-hidden="true" />
 							Add to organization
 						</button>
 					{/if}
 				</div>
 				{#if !canManage}
-					<p class="text-surface-600-400 text-xs">
+					<p class="text-text-muted text-xs">
 						Remove their admin role to change their organizations.
 					</p>
 				{/if}
 				{#if details.memberships.length === 0}
-					<p class="text-surface-600-400 text-sm">Not a member of any organization.</p>
+					<p class="text-text-muted text-sm">Not a member of any organization.</p>
 				{:else}
 					<ul class="flex flex-col">
 						{#each details.memberships as membership (membership._id)}
 							<li
-								class="border-surface-300-700 flex items-center gap-3 border-t py-3 first:border-t-0"
+								class="border-border-muted flex items-center gap-3 border-t py-3 first:border-t-0"
 							>
-								<Avatar.Root class="rounded-container size-8 shrink-0">
+								<Avatar.Root class="rounded-xl size-8 shrink-0">
 									<Avatar.Image
 										src={membership.organization.logo ?? undefined}
 										alt={membership.organization.name}
 									/>
-									<Avatar.Fallback class="rounded-container">
+									<Avatar.Fallback class="rounded-xl">
 										<Avatar.Marble name={membership.organization.name} />
 									</Avatar.Fallback>
 								</Avatar.Root>
@@ -436,13 +436,13 @@
 									>
 										{membership.organization.name}
 									</button>
-									<span class="text-surface-600-400 max-w-full truncate text-xs">
+									<span class="text-text-muted max-w-full truncate text-xs">
 										{membership.organization.slug}
 									</span>
 								</div>
 								{#if isOwner(membership)}
 									<span
-										class="badge preset-filled-primary-50-950 border-primary-200-800 border"
+										class="tag tone-primary-soft border-primary border"
 										title="Hand over the ownership on the organization's page to change their role or remove them"
 									>
 										Owner
@@ -450,7 +450,7 @@
 									<!-- Keeps the role column aligned with the rows that have a remove button -->
 									<span class="size-8 shrink-0" aria-hidden="true"></span>
 								{:else if !canManage}
-									<span class="badge preset-tonal capitalize">{roleOf(membership)}</span>
+									<span class="tag tone-raised capitalize">{roleOf(membership)}</span>
 									<span class="size-8 shrink-0" aria-hidden="true"></span>
 								{:else}
 									<div class="w-32 shrink-0">
@@ -481,7 +481,7 @@
 									</div>
 									<button
 										type="button"
-										class="btn-icon hover:preset-tonal size-8 shrink-0"
+										class="button button-icon hover:tone-raised size-8 shrink-0"
 										aria-label={`Remove from ${membership.organization.name}`}
 										title={`Remove from ${membership.organization.name}`}
 										onclick={() => handleRemoveMembership(membership)}
@@ -497,36 +497,36 @@
 		{/if}
 
 		<!-- Sessions -->
-		<section class="card border-surface-300-700 flex flex-col gap-3 border p-4">
-			<h3 class="h6">
+		<section class="panel border-border-muted flex flex-col gap-3 border p-4">
+			<h3 class="font-extrabold">
 				Active sessions
 				{#if sessionsQuery.data?.length}
-					<span class="text-surface-600-400 font-normal">({sessionsQuery.data.length})</span>
+					<span class="text-text-muted font-normal">({sessionsQuery.data.length})</span>
 				{/if}
 			</h3>
 			{#if sessionsQuery.error}
-				<p class="text-error-600-400 text-sm">{sessionsQuery.error.message}</p>
+				<p class="text-danger text-sm">{sessionsQuery.error.message}</p>
 			{:else if !sessionsQuery.data}
-				<p class="text-surface-600-400 flex items-center gap-2 text-sm" role="status">
+				<p class="text-text-muted flex items-center gap-2 text-sm" role="status">
 					<Loader2Icon class="size-4 animate-spin" aria-hidden="true" />
 					Loading sessions...
 				</p>
 			{:else if sessionsQuery.data.length === 0}
-				<p class="text-surface-600-400 text-sm">Not signed in anywhere.</p>
+				<p class="text-text-muted text-sm">Not signed in anywhere.</p>
 			{:else}
 				<ul class="flex flex-col">
 					{#each sessions ?? [] as session (session.id)}
 						<li
-							class="border-surface-300-700 flex items-center gap-3 border-t py-3 first:border-t-0"
+							class="border-border-muted flex items-center gap-3 border-t py-3 first:border-t-0"
 						>
 							<div class="flex min-w-0 flex-1 flex-col">
 								<div class="flex items-center gap-2">
 									<span class="truncate text-sm">{describeUserAgent(session.userAgent)}</span>
 									{#if session.impersonatedBy}
-										<span class="badge preset-tonal shrink-0">Impersonation</span>
+										<span class="tag tone-raised shrink-0">Impersonation</span>
 									{/if}
 								</div>
-								<span class="text-surface-600-400 truncate text-xs">
+								<span class="text-text-muted truncate text-xs">
 									{session.ipAddress ? `${session.ipAddress} · ` : ''}Signed in {formatDateTime(
 										session.createdAt
 									)}
@@ -535,7 +535,7 @@
 							{#if canManage}
 								<button
 									type="button"
-									class="btn btn-sm hover:preset-tonal shrink-0 gap-2"
+									class="button button-sm hover:tone-raised shrink-0 gap-2"
 									onclick={() => handleRevokeSession(session.id)}
 								>
 									<LogOutIcon class="size-4" aria-hidden="true" />
@@ -548,7 +548,7 @@
 				{#if sessionsQuery.data.length > SESSIONS_SHOWN}
 					<button
 						type="button"
-						class="btn btn-sm hover:preset-tonal w-fit"
+						class="button button-sm hover:tone-raised w-fit"
 						onclick={() => (showAllSessions = !showAllSessions)}
 					>
 						{showAllSessions ? 'Show fewer' : `Show all ${sessionsQuery.data.length} sessions`}
@@ -565,33 +565,33 @@
 		<Dialog.Content class="md:max-w-108">
 			<Dialog.Header class="pr-8">
 				<Dialog.Title>Add {user?.name} to an organization</Dialog.Title>
-				<Dialog.Description class="text-surface-700-300">
+				<Dialog.Description class="text-text-muted">
 					They become a member right away, without an invitation.
 				</Dialog.Description>
 			</Dialog.Header>
 			<form id={`${formId}-add`} class="flex w-full flex-col gap-3" onsubmit={handleAdd}>
-				<div class="label">
-					<label class="label-text" for={`${formId}-add-organization`}>Organization</label>
+				<div class="field-label">
+					<label class="field-caption" for={`${formId}-add-organization`}>Organization</label>
 					<OrganizationSelect
 						id={`${formId}-add-organization`}
 						bind:value={addOrganization}
 						excludeIds={memberOrganizationIds}
 					/>
 				</div>
-				<label class="label">
-					<span class="label-text">Role</span>
-					<select class="select" bind:value={addRole}>
+				<label class="field-label">
+					<span class="field-caption">Role</span>
+					<select class="control" bind:value={addRole}>
 						<option value="member">Member</option>
 						<option value="admin">Admin</option>
 					</select>
 				</label>
 			</form>
 			<Dialog.Footer>
-				<Dialog.Close class="btn preset-tonal" disabled={adding}>Cancel</Dialog.Close>
+				<Dialog.Close class="button tone-raised" disabled={adding}>Cancel</Dialog.Close>
 				<button
 					type="submit"
 					form={`${formId}-add`}
-					class="btn preset-filled-primary-500"
+					class="button tone-primary"
 					disabled={adding || !addOrganization}
 					aria-busy={adding}
 				>

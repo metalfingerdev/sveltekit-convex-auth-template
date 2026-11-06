@@ -261,10 +261,10 @@
 	<div class="flex w-full flex-col items-start gap-6">
 		<ImageCropper.Root bind:src={cropSrc} accept="image/*" onCropped={handleCropped}>
 			<ImageCropper.UploadTrigger>
-				<div class="rounded-container relative cursor-pointer transition-all duration-200">
+				<div class="rounded-xl relative cursor-pointer transition-all duration-200">
 					{#key logoKey}
 						<Avatar.Root
-							class="rounded-container size-20"
+							class="rounded-xl size-20"
 							onStatusChange={(e) => (imageLoadingStatus = e.status)}
 						>
 							<Avatar.Image
@@ -272,16 +272,16 @@
 								alt={activeOrganization.name || 'Organization'}
 							/>
 							<Avatar.Fallback
-								class="bg-surface-300-700 hover:bg-surface-400-600/80 rounded-container duration-150 ease-in-out"
+								class="bg-border-muted hover:bg-border/80 rounded-xl duration-150 ease-in-out"
 							>
-								<Building2Icon class="text-surface-700-300 size-10" />
+								<Building2Icon class="text-text-muted size-10" />
 							</Avatar.Fallback>
 						</Avatar.Root>
 					{/key}
 
 					{#if showLogoOverlay}
 						<div
-							class="bg-surface-50-950 rounded-container pointer-events-none absolute inset-0 flex items-center justify-center"
+							class="bg-foreground rounded-xl pointer-events-none absolute inset-0 flex items-center justify-center"
 						>
 							<div
 								class="h-6 w-6 animate-spin rounded-full border-2 border-white border-b-transparent"
@@ -290,7 +290,7 @@
 					{/if}
 
 					<div
-						class="badge-icon preset-filled-surface-300-700 ring-surface-50-950 absolute -right-1.5 -bottom-1.5 size-3 rounded-full ring-4"
+						class="tag tone-sunken ring-foreground absolute -right-1.5 -bottom-1.5 size-3 rounded-full ring-4"
 					>
 						<PencilIcon class="size-4" />
 					</div>
@@ -309,11 +309,11 @@
 		<div class="flex w-full flex-col gap-3">
 			<div
 				class={[
-					'border-surface-300-700 rounded-container relative w-full border px-3.5 py-2 transition-all duration-200 ease-in-out',
+					'border-border-muted rounded-xl relative w-full border px-3.5 py-2 transition-all duration-200 ease-in-out',
 					{
 						'cursor-pointer': isOwnerOrAdmin && !isEditingName,
-						'hover:bg-surface-200-800': isOwnerOrAdmin && !isEditingName,
-						'hover:border-surface-200-800': isOwnerOrAdmin && !isEditingName
+						'hover:bg-background': isOwnerOrAdmin && !isEditingName,
+						'hover:border-background': isOwnerOrAdmin && !isEditingName
 					}
 				]}
 			>
@@ -321,7 +321,7 @@
 					class="flex items-center justify-between gap-3 transition-all duration-200 ease-in-out"
 				>
 					<div class="flex w-full flex-col gap-0">
-						<span class="text-surface-600-400 text-xs">Organization name</span>
+						<span class="text-text-muted text-xs">Organization name</span>
 						<!-- View mode (collapses when editing) -->
 						<div
 							class={[
@@ -352,13 +352,13 @@
 									<input
 										bind:this={nameInputEl}
 										type="text"
-										class="input w-full"
+										class="control w-full"
 										bind:value={name}
 									/>
 									<div class="mb-1 flex gap-1.5">
 										<button
 											type="button"
-											class="btn btn-sm preset-tonal w-full"
+											class="button button-sm tone-raised w-full"
 											onclick={() => {
 												name = activeOrganization.name;
 												isEditingName = false;
@@ -368,7 +368,7 @@
 										</button>
 										<button
 											type="submit"
-											class="btn btn-sm preset-filled-primary-500 w-full"
+											class="button button-sm tone-primary w-full"
 											disabled={!name ||
 												name.trim() === '' ||
 												name.trim() === activeOrganization.name.trim()}
@@ -383,7 +383,7 @@
 					<!-- Edit affordance and full-area overlay button in view mode -->
 					{#if isOwnerOrAdmin && !isEditingName}
 						<div class="shrink-0">
-							<span class="btn-icon preset-filled-surface-50-950 pointer-events-none p-2">
+							<span class="button button-icon tone-raised pointer-events-none p-2">
 								<PencilIcon class="size-4" />
 							</span>
 						</div>
@@ -406,11 +406,11 @@
 			<!-- Inline editable organization slug -->
 			<div
 				class={[
-					'border-surface-300-700 rounded-container relative w-full border px-3.5 py-2 transition-all duration-200 ease-in-out',
+					'border-border-muted rounded-xl relative w-full border px-3.5 py-2 transition-all duration-200 ease-in-out',
 					{
 						'cursor-pointer': isOwnerOrAdmin && !isEditingSlug,
-						'hover:bg-surface-200-800': isOwnerOrAdmin && !isEditingSlug,
-						'hover:border-surface-200-800': isOwnerOrAdmin && !isEditingSlug
+						'hover:bg-background': isOwnerOrAdmin && !isEditingSlug,
+						'hover:border-background': isOwnerOrAdmin && !isEditingSlug
 					}
 				]}
 			>
@@ -418,7 +418,7 @@
 					class="flex items-center justify-between gap-3 transition-all duration-200 ease-in-out"
 				>
 					<div class="flex w-full flex-col gap-0">
-						<span class="text-surface-600-400 text-xs">Slug</span>
+						<span class="text-text-muted text-xs">Slug</span>
 						<!-- View mode (collapses when editing) -->
 						<div
 							class={[
@@ -449,14 +449,14 @@
 									<input
 										bind:this={slugInputEl}
 										type="text"
-										class="input w-full"
+										class="control w-full"
 										bind:value={slug}
 										disabled={isSavingSlug}
 									/>
 									<div class="mb-1 flex gap-1.5">
 										<button
 											type="button"
-											class="btn btn-sm preset-tonal w-full"
+											class="button button-sm tone-raised w-full"
 											disabled={isSavingSlug}
 											onclick={() => {
 												slug = activeOrganization.slug || '';
@@ -467,7 +467,7 @@
 										</button>
 										<button
 											type="submit"
-											class="btn btn-sm preset-filled-primary-500 w-full"
+											class="button button-sm tone-primary w-full"
 											disabled={isSavingSlug ||
 												!slug ||
 												slug.trim() === '' ||
@@ -482,7 +482,7 @@
 					</div>
 					{#if isOwnerOrAdmin && !isEditingSlug}
 						<div class="shrink-0">
-							<span class="btn-icon preset-filled-surface-50-950 pointer-events-none p-2">
+							<span class="button button-icon tone-raised pointer-events-none p-2">
 								<PencilIcon class="size-4" />
 							</span>
 						</div>

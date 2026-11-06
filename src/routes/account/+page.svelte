@@ -98,7 +98,7 @@
   }
   .who {
     --fill: var(--color-foreground);
-    @apply edge flex items-center gap-4 rounded-container bg-foreground p-4;
+    @apply edge flex items-center gap-4 rounded-xl bg-foreground p-4;
   }
   .who :global(.photo),
   .photo {
@@ -122,7 +122,7 @@
   }
   .menu {
     --fill: var(--color-foreground);
-    @apply edge flex flex-col overflow-hidden rounded-container bg-foreground;
+    @apply edge flex flex-col overflow-hidden rounded-xl bg-foreground;
   }
   .item {
     @apply flex min-h-16 w-full items-center gap-3 border-b border-border-muted px-4 py-3 text-left last:border-b-0;

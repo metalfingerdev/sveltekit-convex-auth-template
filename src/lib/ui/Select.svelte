@@ -41,14 +41,14 @@
   /* Bits renders these elements itself, so they are styled with :global */
   :global(.ui-select-trigger) {
     --fill: var(--color-foreground);
-    @apply edge edge-press inline-flex min-h-11 items-center justify-between gap-2 rounded-base bg-foreground px-3 font-bold;
+    @apply edge edge-press inline-flex min-h-11 items-center justify-between gap-2 rounded-lg bg-foreground px-3 font-bold;
   }
   :global(.ui-select-menu) {
     --fill: var(--color-foreground);
-    @apply edge z-30 min-w-44 rounded-container bg-foreground p-1;
+    @apply edge z-30 min-w-44 rounded-xl bg-foreground p-1;
   }
   :global(.ui-select-option) {
-    @apply flex min-h-11 cursor-pointer items-center justify-between gap-3 rounded-base px-3 font-semibold;
+    @apply flex min-h-11 cursor-pointer items-center justify-between gap-3 rounded-lg px-3 font-semibold;
   }
   :global(.ui-select-option[data-highlighted]) {
     @apply bg-midground;

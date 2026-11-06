@@ -44,7 +44,7 @@
   }
   :global(.ui-sheet) {
     --fill: var(--color-midground);
-    @apply edge fixed inset-x-0 bottom-0 z-50 flex max-h-[88dvh] flex-col rounded-t-container bg-midground text-text;
+    @apply edge fixed inset-x-0 bottom-0 z-50 flex max-h-[88dvh] flex-col rounded-t-xl bg-midground text-text;
     box-shadow: none;
   }
   :global(.ui-sheet-head) {
@@ -54,14 +54,14 @@
     @apply text-lg font-extrabold;
   }
   :global(.ui-sheet-close) {
-    @apply grid size-11 place-items-center rounded-base;
+    @apply grid size-11 place-items-center rounded-lg;
   }
   :global(.ui-sheet-body) {
     @apply flex flex-col gap-3 overflow-y-auto overscroll-contain p-4;
   }
   @media (min-width: 768px) {
     :global(.ui-sheet) {
-      @apply inset-y-0 right-0 left-auto max-h-none w-[28rem] max-w-full rounded-t-none rounded-l-container;
+      @apply inset-y-0 right-0 left-auto max-h-none w-[28rem] max-w-full rounded-t-none rounded-l-xl;
     }
   }
 </style>

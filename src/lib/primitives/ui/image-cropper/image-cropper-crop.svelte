@@ -24,7 +24,7 @@
 <button
 	{...rest}
 	bind:this={ref}
-	class={cn('btn preset-filled-primary-500', className)}
+	class={cn('button tone-primary', className)}
 	onclick={(
 		e: MouseEvent & {
 			currentTarget: EventTarget & HTMLButtonElement;

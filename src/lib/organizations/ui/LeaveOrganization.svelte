@@ -140,7 +140,7 @@
 {#if activeOrganization && members && members.length > 1}
 	<Dialog.Root bind:open={isOpen}>
 		<Dialog.Trigger
-			class="btn btn-sm preset-faded-surface-50-950 text-surface-600-400 hover:bg-error-300-700 hover:text-error-950-50 w-fit justify-between gap-1 text-sm"
+			class="button button-sm tone-raised text-text-muted hover:bg-danger-tint hover:text-text w-fit justify-between gap-1 text-sm"
 		>
 			Leave organization
 		</Dialog.Trigger>
@@ -159,7 +159,7 @@
 
 			{#if isOwner}
 				<div class="w-full space-y-2">
-					<label for="successor" class="label"> New owner: </label>
+					<label for="successor" class="field-label"> New owner: </label>
 					<Select.Root collection={successorCollection} bind:value={selectedSuccessor}>
 						<Select.Trigger class="w-full" placeholder="Choose a successor" />
 						<Select.Content>
@@ -175,12 +175,12 @@
 			{/if}
 
 			<Dialog.Footer>
-				<button class="btn preset-tonal" onclick={() => (isOpen = false)} disabled={isLeaving}>
+				<button class="button tone-raised" onclick={() => (isOpen = false)} disabled={isLeaving}>
 					Cancel
 				</button>
 				<button
 					type="button"
-					class="btn bg-error-500 hover:bg-error-600 text-white"
+					class="button bg-danger hover:bg-danger text-white"
 					onclick={handleLeaveOrganization}
 					disabled={isLeaving || (isOwner && !selectedSuccessor)}
 					aria-busy={isLeaving}

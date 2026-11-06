@@ -184,11 +184,11 @@
 		<div class="flex flex-shrink-0 items-center gap-3 py-4">
 			<div class="relative flex-1">
 				<div class="pointer-events-none absolute inset-y-0 left-3 flex items-center">
-					<SearchIcon class="text-surface-400-600 size-4" />
+					<SearchIcon class="text-border size-4" />
 				</div>
 				<input
 					type="text"
-					class="input w-hug w-full !border-0 border-transparent pl-9 text-sm"
+					class="control w-hug w-full !border-0 border-transparent pl-9 text-sm"
 					placeholder="Search members..."
 					bind:value={searchQuery}
 				/>
@@ -200,8 +200,8 @@
 			<div class="flex max-h-[calc(100vh-12rem)] flex-col gap-2 overflow-y-auto pb-24">
 				{#each filteredMembers as member (member.id)}
 					<div
-						class={`border-surface-200-800 rounded-container flex items-center justify-between border-b pr-6 pb-4 ${
-							canEditMember(member) ? 'hover:bg-surface-100-900 cursor-pointer' : ''
+						class={`border-background rounded-xl flex items-center justify-between border-b pr-6 pb-4 ${
+							canEditMember(member) ? 'hover:bg-midground cursor-pointer' : ''
 						}`}
 						onclick={() => handleMemberCardClick(member)}
 						role="button"
@@ -228,20 +228,20 @@
 									<span class="font-medium">{member.user.name}</span>
 									{#if member.role === 'owner'}
 										<span
-											class="badge preset-filled-primary-50-950 border-primary-200-800 h-6 border px-2"
+											class="tag tone-primary-soft border-primary h-6 border px-2"
 										>
 											Owner
 										</span>
 									{/if}
 									{#if member.role === 'admin'}
 										<span
-											class="badge preset-filled-warning-50-950 border-warning-200-800 h-6 border px-2"
+											class="tag tone-warning-soft border-warning h-6 border px-2"
 										>
 											Admin
 										</span>
 									{/if}
 								</div>
-								<span class="text-surface-700-300 text-sm">{member.user.email}</span>
+								<span class="text-text-muted text-sm">{member.user.email}</span>
 							</div>
 						</div>
 						{#if canEditMember(member)}
@@ -259,14 +259,14 @@
 				<div
 					class=" max-h-[calc(90vh-12rem)] overflow-hidden overflow-y-auto pb-12 sm:max-h-[calc(80vh-12rem)] md:max-h-[calc(70vh-12rem)]"
 				>
-					<table class="table w-full !table-fixed">
+					<table class="data-table w-full !table-fixed">
 						<thead class="sticky top-0 z-20">
 							<tr>
-								<th class="text-surface-600-400 !w-48 p-2 !pl-3 text-left text-xs font-semibold"
+								<th class="text-text-muted !w-48 p-2 !pl-3 text-left text-xs font-semibold"
 									>Name</th
 								>
-								<th class="text-surface-600-400 hidden p-2 text-left text-xs sm:flex">Email</th>
-								<th class="text-surface-600-400 !w-32 p-2 text-left text-xs">Role</th>
+								<th class="text-text-muted hidden p-2 text-left text-xs sm:flex">Email</th>
+								<th class="text-text-muted !w-32 p-2 text-left text-xs">Role</th>
 								{#if isOwnerOrAdmin}
 									<th class="!w-16 p-2 text-right"></th>
 								{/if}
@@ -274,7 +274,7 @@
 						</thead>
 						<tbody>
 							{#each filteredMembers as member (member.id)}
-								<tr class="!border-surface-300-700 !border-t">
+								<tr class="!border-border-muted !border-t">
 									<!-- Member Name -->
 									<td class="!w-48 !max-w-48 !truncate !py-3 !pl-3">
 										<div class="flex items-center space-x-2">
@@ -292,14 +292,14 @@
 											<div class="flex flex-col truncate">
 												<span class="truncate text-sm">{member.user.name}</span>
 												<!-- Email visible only on mobile (hidden on sm and above) -->
-												<span class="text-surface-700-300 truncate text-xs sm:hidden">
+												<span class="text-text-muted truncate text-xs sm:hidden">
 													{member.user.email}
 												</span>
 											</div>
 										</div>
 									</td>
 									<!-- Member Email -->
-									<td class="!text-surface-600-400 hidden !h-fit !w-full !truncate sm:table-cell">
+									<td class="!text-text-muted hidden !h-fit !w-full !truncate sm:table-cell">
 										{member.user.email}
 									</td>
 									<!-- Member Role -->
@@ -325,19 +325,19 @@
 												</Select.Root>
 											{:else if member.role === 'owner'}
 												<span
-													class="badge preset-filled-primary-50-950 border-primary-200-800 h-7 border px-2"
+													class="tag tone-primary-soft border-primary h-7 border px-2"
 												>
 													Owner
 												</span>
 											{:else if member.role === 'admin'}
 												<span
-													class="badge preset-filled-warning-50-950 border-warning-200-800 h-7 border px-2"
+													class="tag tone-warning-soft border-warning h-7 border px-2"
 												>
 													Admin
 												</span>
 											{:else}
 												<span
-													class="badge preset-filled-surface-300-700 border-surface-400-600 h-7 border px-2"
+													class="tag tone-sunken border-border h-7 border px-2"
 												>
 													Member
 												</span>
@@ -350,7 +350,7 @@
 											{#if canEditMember(member)}
 												<button
 													type="button"
-													class="btn-icon preset-filled-surface-200-800 hover:preset-filled-error-300-700"
+													class="button button-icon tone-sunken hover:tone-danger"
 													onclick={() => {
 														selectedUserId = member.id;
 														isDialogOpen = true;
@@ -382,10 +382,10 @@
 				</Dialog.Description>
 
 				<Dialog.Footer class="flex-shrink-0">
-					<button type="button" class="btn preset-tonal" onclick={() => (isDialogOpen = false)}>
+					<button type="button" class="button tone-raised" onclick={() => (isDialogOpen = false)}>
 						Cancel
 					</button>
-					<button type="button" class="btn preset-filled-error-500" onclick={handleRemoveMember}>
+					<button type="button" class="button tone-danger" onclick={handleRemoveMember}>
 						Confirm
 					</button>
 				</Dialog.Footer>
@@ -414,7 +414,7 @@
 							</div>
 							<div class="flex flex-col">
 								<span>{selectedMember.user.name}</span>
-								<p class="text-surface-700-300 text-sm">{selectedMember.user.email}</p>
+								<p class="text-text-muted text-sm">{selectedMember.user.email}</p>
 							</div>
 						</div>
 
@@ -422,7 +422,7 @@
 						<div class="flex flex-col gap-3">
 							<!-- Role Select -->
 							<label class="flex-1">
-								<span class="label">Role</span>
+								<span class="field-label">Role</span>
 								<Select.Root
 									collection={rolesCollection}
 									value={[selectedMember.role]}
@@ -446,7 +446,7 @@
 							<div class="flex flex-col justify-end">
 								<button
 									type="button"
-									class="btn preset-filled-surface-300-700"
+									class="button tone-sunken"
 									onclick={() => {
 										selectedUserId = selectedMember!.id;
 										isDrawerOpen = false;
@@ -458,7 +458,7 @@
 							</div>
 						</div>
 					{:else}
-						<div class="text-surface-500 p-4 text-center">No member selected</div>
+						<div class="text-text-muted p-4 text-center">No member selected</div>
 					{/if}
 				</div></Drawer.Content
 			>

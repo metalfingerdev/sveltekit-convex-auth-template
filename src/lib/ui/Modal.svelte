@@ -43,14 +43,14 @@
     @apply fixed inset-0 z-50 flex flex-col overflow-y-auto bg-foreground text-text;
   }
   :global(.ui-modal-close) {
-    @apply absolute top-2 right-2 z-10 grid size-11 place-items-center rounded-base;
+    @apply absolute top-2 right-2 z-10 grid size-11 place-items-center rounded-lg;
   }
   :global(.ui-modal-body) {
     @apply flex flex-1 flex-col justify-center p-2;
   }
   @media (min-width: 640px) {
     :global(.ui-modal) {
-      @apply edge inset-auto top-1/2 left-1/2 max-h-[90dvh] w-[28rem] max-w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 rounded-container;
+      @apply edge inset-auto top-1/2 left-1/2 max-h-[90dvh] w-[28rem] max-w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 rounded-xl;
     }
     :global(.ui-modal-body) {
       @apply p-6;

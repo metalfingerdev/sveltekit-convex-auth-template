@@ -53,7 +53,7 @@
   .field :global(select),
   .field :global(textarea) {
     --fill: var(--color-foreground);
-    @apply edge-flat min-h-11 w-full rounded-base bg-foreground px-3 py-2 text-text;
+    @apply edge-flat min-h-11 w-full rounded-lg bg-foreground px-3 py-2 text-text;
   }
   .field :global(textarea) {
     @apply min-h-20;

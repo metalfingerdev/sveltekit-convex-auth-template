@@ -21,7 +21,7 @@
 
   .notice {
     --fill: var(--color-foreground);
-    @apply edge-flat flex flex-col items-start gap-2 rounded-container bg-foreground p-3 text-sm;
+    @apply edge-flat flex flex-col items-start gap-2 rounded-xl bg-foreground p-3 text-sm;
   }
   .warn {
     --fill: var(--color-secondary);

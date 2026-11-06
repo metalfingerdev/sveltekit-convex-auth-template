@@ -30,7 +30,7 @@
 	@reference 'src/app.css';
 
 	:global(.ui-menu-item) {
-		@apply flex min-h-10 cursor-pointer items-center gap-2 rounded-base px-2 text-sm font-semibold outline-none select-none;
+		@apply flex min-h-10 cursor-pointer items-center gap-2 rounded-lg px-2 text-sm font-semibold outline-none select-none;
 	}
 	:global(.ui-menu-item[data-highlighted]) {
 		@apply bg-midground;

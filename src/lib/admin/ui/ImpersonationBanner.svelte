@@ -50,7 +50,7 @@
 -->
 {#if impersonation}
 	<div
-		class="preset-filled-warning-500 sticky top-0 z-50 flex min-w-0 items-center justify-center gap-3 px-4 py-2 text-sm"
+		class="tone-warning sticky top-0 z-50 flex min-w-0 items-center justify-center gap-3 px-4 py-2 text-sm"
 		role="status"
 	>
 		<VenetianMaskIcon class="size-4 shrink-0" aria-hidden="true" />
@@ -59,7 +59,7 @@
 		</span>
 		<button
 			type="button"
-			class="btn btn-sm preset-outlined shrink-0"
+			class="button button-sm tone-outline shrink-0"
 			onclick={handleStop}
 			disabled={stopping}
 			aria-busy={stopping}

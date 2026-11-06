@@ -262,7 +262,7 @@
 		@apply flex flex-col gap-4;
 	}
 	.loading {
-		@apply h-16 w-full rounded-container;
+		@apply h-16 w-full rounded-xl;
 	}
 	.who {
 		@apply flex items-center gap-4;

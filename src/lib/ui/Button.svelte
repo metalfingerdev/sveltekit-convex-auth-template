@@ -30,7 +30,7 @@
 {#if href}
   <a
     {href}
-    class="button {variant}"
+    class="ui-button {variant}"
     class:block
     class:icon
     class:large
@@ -41,7 +41,7 @@
 {:else}
   <button
     type="button"
-    class="button {variant}"
+    class="ui-button {variant}"
     class:block
     class:icon
     class:large
@@ -54,9 +54,9 @@
 <style lang="postcss">
   @reference 'src/app.css';
 
-  .button {
+  .ui-button {
     --fill: var(--color-foreground);
-    @apply edge edge-press inline-flex min-h-11 items-center justify-center gap-2 rounded-base bg-foreground px-4 font-bold disabled:opacity-50;
+    @apply edge edge-press inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-foreground px-4 font-bold disabled:opacity-50;
   }
   .primary {
     --fill: var(--color-primary);

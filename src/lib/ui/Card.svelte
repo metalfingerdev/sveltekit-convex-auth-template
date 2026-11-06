@@ -34,10 +34,10 @@
 
   .ui-card {
     --fill: var(--color-foreground);
-    @apply edge block rounded-container bg-foreground p-3;
+    @apply edge block rounded-xl bg-foreground p-3;
   }
   .dense {
-    @apply edge-flat rounded-base p-2.5;
+    @apply edge-flat rounded-lg p-2.5;
     box-shadow: none;
   }
   .pressable {

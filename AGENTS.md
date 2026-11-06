@@ -48,10 +48,11 @@ table, a string or static data, and nothing tested twice across Vitest and Playw
   Bits wrappers in `src/lib/primitives/ui`. Borders and hard shadows are never black: use the
   `edge`, `edge-flat` and `edge-press` utilities in `src/app.css` and set `--fill` to the element's
   own background.
-- **`src/themes/compat.css` implements Skeleton's old class and colour names** (`btn`,
-  `preset-tonal`, `input`, `surface-600-400`, `h3`, ...) so the account, user and organization
-  screens keep working. Never use those names in new code; when you touch one of those files, move
-  it to `src/lib/ui` components and drop the names nothing uses.
+- **Skeleton's class and colour names are gone** (`btn`, `preset-*`, `surface-*-*`, `h1`-`h6`,
+  `badge`, `card`, `input`, ...). Use `src/lib/ui` components first. For elements that can't be one
+  (triggers, links, native controls) `src/app.css` has our own utilities: `button`, `tone-*`,
+  `tag`, `panel`, `control`, `field-label`, `data-table`, `bone`. Colours are the palette names only (`bg-foreground`, `text-text-muted`,
+  `border-border-muted`, `bg-danger-tint`, ...).
 - **No long Tailwind class lists inline.** Give the element a short semantic class and put the
   Tailwind in the component's style block: `<style lang="postcss">`, `@reference 'src/app.css';`,
   then rules with `@apply`. One or two layout utilities in markup are fine.

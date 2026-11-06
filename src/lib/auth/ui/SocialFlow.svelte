@@ -187,7 +187,7 @@
 	<div class={'flex flex-col gap-3 ' + (className ?? '')}>
 		{#each activeProviders as p (p.id)}
 			<button
-				class="btn preset-outlined-surface-400-600 hover:border-surface-600-400 w-full"
+				class="button tone-outline hover:border-border w-full"
 				onclick={() => handleSocialSignIn(p.id)}
 				disabled={!!submittingProvider}
 				aria-busy={submittingProvider === p.id}
@@ -208,9 +208,9 @@
 
 		{#if dividerAfter}
 			<div class="relative flex items-center px-1">
-				<div class="border-surface-600-400/30 flex-1 border-t"></div>
-				<span class="text-surface-500 px-2 text-xs">or</span>
-				<div class="border-surface-600-400/30 flex-1 border-t"></div>
+				<div class="border-border/30 flex-1 border-t"></div>
+				<span class="text-text-muted px-2 text-xs">or</span>
+				<div class="border-border/30 flex-1 border-t"></div>
 			</div>
 		{/if}
 	</div>

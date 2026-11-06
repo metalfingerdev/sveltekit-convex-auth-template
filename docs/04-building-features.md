@@ -145,9 +145,9 @@ copy-button, dialog, drawer, image-cropper, menu, password, popover, select, son
 
 Colours come only from `src/themes/palette.css` (change the values there to rebrand). Put a
 component's styling in its `<style lang="postcss">` block with `@reference 'src/app.css';` and
-`@apply`, not in long inline class lists. `src/themes/compat.css` keeps the old Skeleton class names
-(`btn`, `preset-*`, `surface-*`) alive for the account, user and organization screens; don't use
-them in new code.
+`@apply`, not in long inline class lists. Skeleton's class names (`btn`, `preset-*`, `surface-*`)
+no longer exist. For a link or native control that can't be a component, `src/app.css` has the
+`button` and `tone-*` utilities, and colours are the palette names only.
 
 Private pages that are opened by client-side navigation should call `useRequireSignIn()`
 (`src/lib/auth/requireSignIn.svelte.ts`), as `/account` does.

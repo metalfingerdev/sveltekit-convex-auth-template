@@ -58,7 +58,7 @@
 	/* A toast is a small raised card; success and error get a coloured edge */
 	:global(.ui-toast) {
 		--fill: var(--color-foreground);
-		@apply edge pointer-events-auto flex w-full items-start gap-2 rounded-container bg-foreground p-3 font-semibold text-text md:w-96;
+		@apply edge pointer-events-auto flex w-full items-start gap-2 rounded-xl bg-foreground p-3 font-semibold text-text md:w-96;
 	}
 	:global(.ui-toast-success) {
 		--fill: var(--color-success);

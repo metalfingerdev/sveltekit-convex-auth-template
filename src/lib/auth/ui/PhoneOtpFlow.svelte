@@ -274,7 +274,7 @@
 	}
 	.prefix {
 		--fill: var(--color-background);
-		@apply edge-flat flex shrink-0 items-center rounded-base bg-background px-3 text-sm font-bold text-text-muted;
+		@apply edge-flat flex shrink-0 items-center rounded-lg bg-background px-3 text-sm font-bold text-text-muted;
 	}
 	.phone :global(input) {
 		@apply min-w-0 flex-1;

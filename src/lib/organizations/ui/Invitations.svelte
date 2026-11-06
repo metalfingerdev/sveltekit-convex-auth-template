@@ -122,7 +122,7 @@
 {#if !invitationList}
 	<div>Loading invitations...</div>
 {:else if filteredInvitations.length === 0 && !searchQuery}
-	<div class="text-surface-600-400 p-8 text-center">
+	<div class="text-text-muted p-8 text-center">
 		<p>No pending invitations.</p>
 	</div>
 {:else}
@@ -131,11 +131,11 @@
 		<div class="flex flex-shrink-0 items-center gap-3 py-4">
 			<div class="relative flex-1">
 				<div class="pointer-events-none absolute inset-y-0 left-3 flex items-center">
-					<SearchIcon class="text-surface-400-600 size-4" />
+					<SearchIcon class="text-border size-4" />
 				</div>
 				<input
 					type="text"
-					class="input w-hug w-full !border-0 !border-transparent pl-9 text-sm"
+					class="control w-hug w-full !border-0 !border-transparent pl-9 text-sm"
 					placeholder="Search invitations..."
 					value={searchQuery}
 					onchange={handleSearchChange}
@@ -146,7 +146,7 @@
 		<!-- Table Section - Scrollable area -->
 		<div class="min-h-0 flex-1">
 			{#if filteredInvitations.length === 0 && searchQuery}
-				<div class="text-surface-600-400 p-8 text-center">
+				<div class="text-text-muted p-8 text-center">
 					<p>No invitations match your search.</p>
 				</div>
 			{:else}
@@ -155,14 +155,14 @@
 					<div
 						class="max-h-[calc(90vh-12rem)] overflow-y-auto pb-12 sm:max-h-[calc(80vh-12rem)] md:max-h-[calc(70vh-12rem)]"
 					>
-						<table class="table w-full !table-fixed">
-							<thead class="border-surface-300-700 sticky top-0 z-20 border-b">
+						<table class="data-table w-full !table-fixed">
+							<thead class="border-border-muted sticky top-0 z-20 border-b">
 								<tr>
-									<th class="text-surface-700-300 w-64 truncate p-2 !pl-0 text-left text-xs">
+									<th class="text-text-muted w-64 truncate p-2 !pl-0 text-left text-xs">
 										User
 									</th>
-									<th class="text-surface-700-300 w-32 p-2 !pl-0 text-left text-xs"> Expires </th>
-									<th class="text-surface-700-300 hidden w-32 p-2 text-left text-xs sm:table-cell">
+									<th class="text-text-muted w-32 p-2 !pl-0 text-left text-xs"> Expires </th>
+									<th class="text-text-muted hidden w-32 p-2 text-left text-xs sm:table-cell">
 										Role
 									</th>
 									{#if isOwnerOrAdmin}
@@ -172,7 +172,7 @@
 							</thead>
 							<tbody>
 								{#each filteredInvitations as invitation (invitation.id)}
-									<tr class="!border-surface-300-700 !border-t">
+									<tr class="!border-border-muted !border-t">
 										<!-- User -->
 										<td class="!w-64 !max-w-64 !truncate !py-3 !pl-0">
 											<span class="truncate font-medium">{invitation.email}</span>
@@ -184,23 +184,23 @@
 											</span>
 										</td>
 										<!-- Role -->
-										<td class="!text-surface-700-300 hidden !w-32 sm:table-cell">
+										<td class="!text-text-muted hidden !w-32 sm:table-cell">
 											<div class="flex items-center">
 												{#if invitation.role === 'owner'}
 													<span
-														class="badge preset-filled-primary-50-950 border-primary-200-800 h-6 border px-2"
+														class="tag tone-primary-soft border-primary h-6 border px-2"
 													>
 														Owner
 													</span>
 												{:else if invitation.role === 'admin'}
 													<span
-														class="badge preset-filled-warning-50-950 border-warning-200-800 h-6 border px-2"
+														class="tag tone-warning-soft border-warning h-6 border px-2"
 													>
 														Admin
 													</span>
 												{:else}
 													<span
-														class="badge preset-filled-surface-300-700 border-surface-400-600 h-6 border px-2"
+														class="tag tone-sunken border-border h-6 border px-2"
 													>
 														Member
 													</span>
@@ -213,7 +213,7 @@
 												{#if isOwnerOrAdmin}
 													<button
 														type="button"
-														class="btn btn-sm preset-filled-surface-300-700"
+														class="button button-sm tone-sunken"
 														onclick={() => {
 															selectedInvitationId = invitation.id;
 															isRevokeDialogOpen = true;
@@ -254,7 +254,7 @@
 			<Dialog.Footer class="w-full flex-shrink-0 p-6">
 				<button
 					type="button"
-					class="btn preset-tonal"
+					class="button tone-raised"
 					disabled={isRevoking}
 					onclick={() => (isRevokeDialogOpen = false)}
 				>
@@ -263,7 +263,7 @@
 
 				<button
 					type="button"
-					class="btn preset-filled-error-500"
+					class="button tone-danger"
 					onclick={handleRevokeInvitation}
 					disabled={isRevoking}
 					aria-busy={isRevoking}

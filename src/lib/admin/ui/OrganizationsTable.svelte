@@ -51,11 +51,11 @@
 	<div class="flex shrink-0 items-center gap-3 py-4">
 		<div class="relative flex-1">
 			<div class="pointer-events-none absolute inset-y-0 left-3 flex items-center">
-				<SearchIcon class="text-surface-400-600 size-4" aria-hidden="true" />
+				<SearchIcon class="text-border size-4" aria-hidden="true" />
 			</div>
 			<input
 				type="search"
-				class="input w-full !border-0 border-transparent pl-9 text-sm"
+				class="control w-full !border-0 border-transparent pl-9 text-sm"
 				placeholder="Search by name or slug..."
 				aria-label="Search organizations by name or slug"
 				bind:value={searchInput}
@@ -64,14 +64,14 @@
 	</div>
 
 	{#if orgsQuery.error}
-		<div class="text-error-600-400 p-4 text-sm">{orgsQuery.error.message}</div>
+		<div class="text-danger p-4 text-sm">{orgsQuery.error.message}</div>
 	{:else if !orgsQuery.data}
-		<div class="text-surface-600-400 flex items-center gap-2 p-4 text-sm" role="status">
+		<div class="text-text-muted flex items-center gap-2 p-4 text-sm" role="status">
 			<Loader2Icon class="size-4 animate-spin" aria-hidden="true" />
 			Loading organizations...
 		</div>
 	{:else if organizations.length === 0}
-		<div class="text-surface-600-400 p-4 text-sm">
+		<div class="text-text-muted p-4 text-sm">
 			{searchQuery ? `No organizations match "${searchQuery}".` : 'No organizations yet.'}
 		</div>
 	{:else}
@@ -79,13 +79,13 @@
 			class="max-h-[calc(80vh-12rem)] overflow-y-auto pb-12 transition-opacity"
 			class:opacity-60={isStale}
 		>
-			<table class="table w-full">
-				<thead class="bg-surface-50-950 sticky top-0 z-20">
+			<table class="data-table w-full">
+				<thead class="bg-foreground sticky top-0 z-20">
 					<tr>
-						<th class="text-surface-600-400 p-2 !pl-3 text-left text-xs font-semibold">
+						<th class="text-text-muted p-2 !pl-3 text-left text-xs font-semibold">
 							Organization
 						</th>
-						<th class="text-surface-600-400 hidden w-32 p-2 text-left text-xs sm:table-cell">
+						<th class="text-text-muted hidden w-32 p-2 text-left text-xs sm:table-cell">
 							Created
 						</th>
 						<th class="w-12 p-2"><span class="sr-only">Actions</span></th>
@@ -94,14 +94,14 @@
 				<tbody>
 					{#each organizations as org (org._id)}
 						<tr
-							class="!border-surface-300-700 hover:bg-surface-100-900 cursor-pointer !border-t"
+							class="!border-border-muted hover:bg-midground cursor-pointer !border-t"
 							onclick={() => onViewOrganization(org._id)}
 						>
 							<td class="max-w-0 !py-3 !pl-3">
 								<div class="flex items-center gap-3">
-									<Avatar.Root class="rounded-container size-9 shrink-0">
+									<Avatar.Root class="rounded-xl size-9 shrink-0">
 										<Avatar.Image src={org.logo ?? undefined} alt={org.name} />
-										<Avatar.Fallback class="rounded-container">
+										<Avatar.Fallback class="rounded-xl">
 											<Avatar.Marble name={org.name} />
 										</Avatar.Fallback>
 									</Avatar.Root>
@@ -118,11 +118,11 @@
 										>
 											{org.name}
 										</button>
-										<span class="text-surface-600-400 truncate text-sm">{org.slug}</span>
+										<span class="text-text-muted truncate text-sm">{org.slug}</span>
 									</div>
 								</div>
 							</td>
-							<td class="text-surface-600-400 hidden text-sm sm:table-cell">
+							<td class="text-text-muted hidden text-sm sm:table-cell">
 								{new Date(org.createdAt).toLocaleDateString()}
 							</td>
 							<!-- Clicks on the menu don't open the organization -->
@@ -137,19 +137,19 @@
 				</tbody>
 			</table>
 			{#if searchQuery && !isStale && organizations.length >= PAGE_SIZE}
-				<p class="text-surface-600-400 py-3 text-center text-xs">
+				<p class="text-text-muted py-3 text-center text-xs">
 					Showing the first {PAGE_SIZE} matches. Refine your search to narrow them down.
 				</p>
 			{/if}
 			{#if orgsQuery.data.hasMore && limit >= LIST_MAX}
-				<p class="text-surface-600-400 py-3 text-center text-xs">
+				<p class="text-text-muted py-3 text-center text-xs">
 					Showing the newest {LIST_MAX} organizations. Search to find the others.
 				</p>
 			{:else if orgsQuery.data.hasMore}
 				<div class="flex justify-center py-3">
 					<button
 						type="button"
-						class="btn preset-tonal"
+						class="button tone-raised"
 						onclick={() => (limit = Math.min(limit + PAGE_SIZE, LIST_MAX))}
 						disabled={isStale}
 					>

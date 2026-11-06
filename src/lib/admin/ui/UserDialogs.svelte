@@ -146,16 +146,16 @@
 	<Dialog.Content class="md:max-w-108">
 		<Dialog.Header class="pr-8">
 			<Dialog.Title>Make {user?.name} an admin?</Dialog.Title>
-			<Dialog.Description class="text-surface-700-300">
+			<Dialog.Description class="text-text-muted">
 				Admins can see and change every user and organization, and sign in as any user who isn't an
 				admin. You can remove the role again at any time.
 			</Dialog.Description>
 		</Dialog.Header>
 		<Dialog.Footer>
-			<Dialog.Close class="btn preset-tonal" disabled={submitting}>Cancel</Dialog.Close>
+			<Dialog.Close class="button tone-raised" disabled={submitting}>Cancel</Dialog.Close>
 			<button
 				type="button"
-				class="btn preset-filled-primary-500"
+				class="button tone-primary"
 				onclick={handleMakeAdmin}
 				disabled={submitting}
 				aria-busy={submitting}
@@ -172,18 +172,18 @@
 	<Dialog.Content class="md:max-w-108">
 		<Dialog.Header class="pr-8">
 			<Dialog.Title>Ban {user?.name}</Dialog.Title>
-			<Dialog.Description class="text-surface-700-300">
+			<Dialog.Description class="text-text-muted">
 				They are signed out everywhere and can't sign in until the ban ends or you lift it.
 			</Dialog.Description>
 		</Dialog.Header>
 		<form id={`${formId}-ban`} class="flex w-full flex-col gap-3" onsubmit={handleBanSubmit}>
-			<label class="label">
-				<span class="label-text">Reason (optional)</span>
-				<input type="text" class="input" bind:value={banReason} placeholder="Violation of terms" />
+			<label class="field-label">
+				<span class="field-caption">Reason (optional)</span>
+				<input type="text" class="control" bind:value={banReason} placeholder="Violation of terms" />
 			</label>
-			<label class="label">
-				<span class="label-text">Duration</span>
-				<select class="select" bind:value={banExpiresIn}>
+			<label class="field-label">
+				<span class="field-caption">Duration</span>
+				<select class="control" bind:value={banExpiresIn}>
 					{#each banDurations as duration (duration.value)}
 						<option value={duration.value}>{duration.label}</option>
 					{/each}
@@ -191,11 +191,11 @@
 			</label>
 		</form>
 		<Dialog.Footer>
-			<Dialog.Close class="btn preset-tonal" disabled={submitting}>Cancel</Dialog.Close>
+			<Dialog.Close class="button tone-raised" disabled={submitting}>Cancel</Dialog.Close>
 			<button
 				type="submit"
 				form={`${formId}-ban`}
-				class="btn preset-filled-error-500"
+				class="button tone-danger"
 				disabled={submitting}
 				aria-busy={submitting}
 			>
@@ -211,14 +211,14 @@
 	<Dialog.Content class="md:max-w-108">
 		<Dialog.Header class="pr-8">
 			<Dialog.Title>Set password for {user?.name}</Dialog.Title>
-			<Dialog.Description class="text-surface-700-300">
+			<Dialog.Description class="text-text-muted">
 				If they sign in without a password today, they can also use their email and this password
 				from now on. Their existing sessions stay signed in.
 			</Dialog.Description>
 		</Dialog.Header>
 		<form id={`${formId}-password`} class="w-full" onsubmit={handlePasswordSubmit}>
-			<label class="label">
-				<span class="label-text">New password</span>
+			<label class="field-label">
+				<span class="field-caption">New password</span>
 				<Password.Root minScore={0}>
 					<Password.Input
 						bind:value={newPassword}
@@ -232,11 +232,11 @@
 			</label>
 		</form>
 		<Dialog.Footer>
-			<Dialog.Close class="btn preset-tonal" disabled={submitting}>Cancel</Dialog.Close>
+			<Dialog.Close class="button tone-raised" disabled={submitting}>Cancel</Dialog.Close>
 			<button
 				type="submit"
 				form={`${formId}-password`}
-				class="btn preset-filled-primary-500"
+				class="button tone-primary"
 				disabled={submitting}
 				aria-busy={submitting}
 			>
@@ -252,17 +252,17 @@
 	<Dialog.Content class="md:max-w-108">
 		<Dialog.Header class="pr-8">
 			<Dialog.Title>Delete {user?.name}</Dialog.Title>
-			<Dialog.Description class="text-surface-700-300">
+			<Dialog.Description class="text-text-muted">
 				This permanently deletes the account, its sessions and its organization memberships. If they
 				own an organization with other members, delete it or make someone else its owner first. This
 				can't be undone.
 			</Dialog.Description>
 		</Dialog.Header>
 		<Dialog.Footer>
-			<Dialog.Close class="btn preset-tonal" disabled={submitting}>Cancel</Dialog.Close>
+			<Dialog.Close class="button tone-raised" disabled={submitting}>Cancel</Dialog.Close>
 			<button
 				type="button"
-				class="btn preset-filled-error-500"
+				class="button tone-danger"
 				onclick={handleDelete}
 				disabled={submitting}
 				aria-busy={submitting}
