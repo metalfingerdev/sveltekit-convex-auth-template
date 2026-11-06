@@ -81,6 +81,9 @@ npx convex env set ADMIN_USER_IDS "<your-user-id>"
 | `npx convex dev` | Sync backend + regenerate types (keep running) |
 | `pnpm dev` | SvelteKit dev server |
 | `pnpm check` | Type-check Svelte + TS |
+| `npx tsc -p src/convex --noEmit` | Type-check the Convex functions |
+| `pnpm test` | Unit tests (Vitest) |
+| `pnpm test:e2e` | Browser tests (Playwright), against the dev deployment only: [09](./09-testing.md) |
 | `pnpm build` / `pnpm preview` | Production build / preview |
 | `npx convex dashboard` | Open the Convex dashboard (data, logs, env) |
 | `npx convex env list` | Show deployment env vars |

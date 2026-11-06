@@ -88,6 +88,8 @@ These become `api.products.queries.listMine`, `api.products.mutations.create`, a
 <script lang="ts">
 	import { useQuery, useMutation } from 'convex-svelte';
 	import { api } from '#convex/_generated/api.js';
+	import Button from '#lib/ui/Button.svelte';
+	import Field from '#lib/ui/Field.svelte';
 
 	const products = useQuery(api.products.queries.listMine, {});
 	const create = useMutation(api.products.mutations.create);
@@ -102,10 +104,10 @@ These become `api.products.queries.listMine`, `api.products.mutations.create`, a
 	}
 </script>
 
-<form onsubmit={add} class="flex gap-2 p-4">
-	<input class="input" bind:value={name} placeholder="Name" required />
-	<input class="input" type="number" step="0.01" bind:value={price} />
-	<button class="btn preset-filled">Add</button>
+<form onsubmit={add} class="flex items-end gap-2 p-4">
+	<Field label="Name"><input bind:value={name} required /></Field>
+	<Field label="Price"><input type="number" step="0.01" bind:value={price} /></Field>
+	<Button type="submit" variant="primary">Add</Button>
 </form>
 
 {#if products.isLoading}Loading…{:else}
@@ -136,10 +138,19 @@ the returned URL, then save the resulting `storageId` with a mutation. Serve it 
 
 ## Reusable UI
 
-`src/lib/primitives/ui/` has avatar, combobox, copy-button, dialog, drawer, image-cropper, menu,
-password, popover, select, separator, sonner (toasts: `import { toast } from 'svelte-sonner'`),
-tabs and toggle. For styling, use Skeleton classes (`btn`, `input`, `card`, `preset-*`) and
-Tailwind utilities. The theme lives in `src/themes/auth.css`.
+Build screens from `src/lib/ui`: Button, Card, Pill, Field, Choice, Notice, Select, Switch, Sheet,
+Modal, ConfirmDialog and Spinner. `src/lib/primitives/ui/` holds the Bits UI wrappers: avatar,
+copy-button, dialog, drawer, image-cropper, menu, password, popover, select, sonner (toasts:
+`import { toast } from 'svelte-sonner'`) and tabs.
+
+Colours come only from `src/themes/palette.css` (change the values there to rebrand). Put a
+component's styling in its `<style lang="postcss">` block with `@reference 'src/app.css';` and
+`@apply`, not in long inline class lists. `src/themes/compat.css` keeps the old Skeleton class names
+(`btn`, `preset-*`, `surface-*`) alive for the account, user and organization screens; don't use
+them in new code.
+
+Private pages that are opened by client-side navigation should call `useRequireSignIn()`
+(`src/lib/auth/requireSignIn.svelte.ts`), as `/account` does.
 
 ## Common tasks
 
@@ -151,7 +162,7 @@ Tailwind utilities. The theme lives in `src/themes/auth.css`.
 | Webhook endpoint | `src/convex/http.ts` (`http.route(...)`) |
 | Call a third-party API | an `action` in Convex (use `"use node"` only if you need Node built-ins) |
 | Change data shape on a live deployment | `src/convex/migrations.ts` (`@convex-dev/migrations`) |
-| Tests | `convex-test` + Vitest (not installed yet) |
+| Tests | `*.test.ts` next to the code (Vitest, `convex-test`), pages in `tests/e2e`: [09](./09-testing.md) |
 
 ## Tips
 
